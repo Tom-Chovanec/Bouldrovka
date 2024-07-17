@@ -1,0 +1,163 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3 Replace com.test.game with the identifier of your game below, e.g.
+4     com.gamemaker.game
+5-->
+6<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+7    package="org.libsdl.app"
+8    android:installLocation="auto"
+9    android:versionCode="1"
+10    android:versionName="1.0" >
+11
+12    <uses-sdk
+13        android:minSdkVersion="19"
+14        android:targetSdkVersion="34" />
+15
+16    <!-- OpenGL ES 2.0 -->
+17    <uses-feature android:glEsVersion="0x00020000" />
+17-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:11:5-54
+17-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:11:19-51
+18
+19    <!-- Touchscreen support -->
+20    <uses-feature
+20-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:14:5-16:36
+21        android:name="android.hardware.touchscreen"
+21-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:15:9-52
+22        android:required="false" />
+22-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:16:9-33
+23
+24    <!-- Game controller support -->
+25    <uses-feature
+25-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:19:5-21:36
+26        android:name="android.hardware.bluetooth"
+26-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:20:9-50
+27        android:required="false" />
+27-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:21:9-33
+28    <uses-feature
+28-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:22:5-24:36
+29        android:name="android.hardware.gamepad"
+29-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:23:9-48
+30        android:required="false" />
+30-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:24:9-33
+31    <uses-feature
+31-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:25:5-27:36
+32        android:name="android.hardware.usb.host"
+32-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:26:9-49
+33        android:required="false" />
+33-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:27:9-33
+34
+35    <!-- External mouse input events -->
+36    <uses-feature
+36-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:30:5-32:36
+37        android:name="android.hardware.type.pc"
+37-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:31:9-48
+38        android:required="false" />
+38-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:32:9-33
+39
+40    <!-- Audio recording support -->
+41    <!-- if you want to capture audio, uncomment this. -->
+42    <!--
+43         <uses-feature
+44        android:name="android.hardware.microphone"
+45        android:required="false" />
+46    -->
+47
+48
+49    <!-- Allow downloading to the external storage on Android 5.1 and older -->
+50    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="22" /> -->
+51
+52
+53    <!-- Allow access to Bluetooth devices -->
+54    <!-- Currently this is just for Steam Controller support and requires setting SDL_HINT_JOYSTICK_HIDAPI_STEAM -->
+55    <!-- <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" /> -->
+56    <!-- <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> -->
+57
+58
+59    <!-- Allow access to the vibrator -->
+60    <uses-permission android:name="android.permission.VIBRATE" />
+60-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:49:5-66
+60-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:49:22-63
+61    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+61-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:5-81
+61-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:22-78
+62    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+62-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:5-79
+62-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:22-77
+63
+64    <!-- if you want to capture audio, uncomment this. -->
+65    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
+66    <!--
+67 Create a Java class extending SDLActivity and place it in a
+68         directory under app/src/main/java matching the package, e.g. app/src/main/java/com/gamemaker/game/MyGame.java
+69 
+70         then replace "SDLActivity" with the name of your class (e.g. "MyGame")
+71         in the XML below.
+72
+73         An example Java class can be found in README-android.md
+74    -->
+75    <application
+75-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:5-101:19
+76        android:allowBackup="true"
+76-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:67:9-35
+77        android:debuggable="true"
+78        android:extractNativeLibs="true"
+79        android:hardwareAccelerated="true"
+79-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:69:9-43
+80        android:icon="@mipmap/ic_launcher"
+80-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:66:9-43
+81        android:label="@string/app_name"
+81-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:18-50
+82        android:testOnly="true"
+83        android:theme="@style/AppTheme" >
+83-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:68:9-40
+84
+85        <!--
+86        Example of setting SDL hints from AndroidManifest.xml:
+87        <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
+88        -->
+89
+90        <activity
+90-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:9-99:20
+91            android:name="org.libsdl.app.SDLActivity"
+91-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:19-45
+92            android:alwaysRetainTaskState="true"
+92-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:77:13-49
+93            android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+93-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:79:13-156
+94            android:exported="true"
+94-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:81:13-36
+95            android:label="@string/app_name"
+95-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:76:13-45
+96            android:launchMode="singleInstance"
+96-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:78:13-48
+97            android:preferMinimalPostProcessing="true" >
+97-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:80:13-55
+98            <intent-filter>
+98-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:83:13-86:29
+99                <action android:name="android.intent.action.MAIN" />
+99-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:17-69
+99-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:25-66
+100
+101                <category android:name="android.intent.category.LAUNCHER" />
+101-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:17-77
+101-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:27-74
+102            </intent-filter>
+103            <!-- Let Android know that we can handle some USB devices and should receive this event -->
+104            <intent-filter>
+104-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:88:13-90:29
+105                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+105-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:17-90
+105-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:25-87
+106            </intent-filter>
+107            <!-- Drop file event -->
+108            <!--
+109            <intent-filter>
+110                <action android:name="android.intent.action.VIEW" />
+111                <category android:name="android.intent.category.DEFAULT" />
+112                <data android:mimeType="*/*" />
+113            </intent-filter>
+114            -->
+115        </activity>
+116    </application>
+117
+118</manifest>

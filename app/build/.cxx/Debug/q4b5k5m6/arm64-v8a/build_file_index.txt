@@ -1,0 +1,2 @@
+C:\Creative\C++\Android\projects\boulder\app\jni\Android.mk
+C:\Creative\C++\Android\projects\boulder\app\jni\Application.mk

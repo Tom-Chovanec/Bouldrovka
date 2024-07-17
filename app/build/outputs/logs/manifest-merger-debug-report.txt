@@ -1,0 +1,119 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:5:1-103:12
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:5:1-103:12
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:5:1-103:12
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:5:1-103:12
+	package
+		INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:7:5-30
+		INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:5:11-69
+	android:versionCode
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:6:5-28
+		INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+	android:installLocation
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:8:5-35
+uses-feature#0x00020000
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:11:5-54
+	android:glEsVersion
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:11:19-51
+uses-feature#android.hardware.touchscreen
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:14:5-16:36
+	android:required
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:16:9-33
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:15:9-52
+uses-feature#android.hardware.bluetooth
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:19:5-21:36
+	android:required
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:21:9-33
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:20:9-50
+uses-feature#android.hardware.gamepad
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:22:5-24:36
+	android:required
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:24:9-33
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:23:9-48
+uses-feature#android.hardware.usb.host
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:25:5-27:36
+	android:required
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:27:9-33
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:26:9-49
+uses-feature#android.hardware.type.pc
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:30:5-32:36
+	android:required
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:32:9-33
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:31:9-48
+uses-permission#android.permission.VIBRATE
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:49:5-66
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:49:22-63
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:5-81
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:22-78
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:5-79
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:22-77
+application
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:5-101:19
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:5-101:19
+	android:extractNativeLibs
+		INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+	android:label
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:18-50
+	android:hardwareAccelerated
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:69:9-43
+	android:icon
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:66:9-43
+	android:allowBackup
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:67:9-35
+	android:theme
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:68:9-40
+activity#org.libsdl.app.SDLActivity
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:9-99:20
+	android:label
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:76:13-45
+	android:launchMode
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:78:13-48
+	android:exported
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:81:13-36
+	android:configChanges
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:79:13-156
+	android:alwaysRetainTaskState
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:77:13-49
+	android:preferMinimalPostProcessing
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:80:13-55
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:19-45
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:83:13-86:29
+action#android.intent.action.MAIN
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:17-69
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:17-77
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:27-74
+intent-filter#action:name:android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:88:13-90:29
+action#android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:17-90
+	android:name
+		ADDED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:25-87
+uses-sdk
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml

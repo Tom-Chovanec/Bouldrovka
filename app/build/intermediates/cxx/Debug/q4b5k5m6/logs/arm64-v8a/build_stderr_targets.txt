@@ -1,4 +1,0 @@
-C:/Creative/C++/Android/projects/boulder/app/jni/src/main.cpp:210:29: warning: enumeration value 'DELETE' not handled in switch [-Wswitch]
-                    switch (state) {
-                            ^~~~~
-1 warning generated.

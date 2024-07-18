@@ -1,4 +1,4 @@
 make: Nothing to be done for 'SDL2'.
 make: Nothing to be done for 'SDL2_image'.
-[arm64-v8a] Compile++      : main <= main.cpp
+[arm64-v8a] Compile++      : main <= holds.cpp
 [arm64-v8a] SharedLibrary  : libmain.so

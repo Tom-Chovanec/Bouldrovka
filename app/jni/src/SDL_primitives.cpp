@@ -6,9 +6,7 @@
 
 #include <SDL.h>
 
-int SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color) {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
+int SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius) {
     int offsetx, offsety, d;
     int status;
 
@@ -51,8 +49,7 @@ int SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_C
     return status;
 }
 
-int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color) {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius) {
     int status = 0;
 
     // Array to hold points
@@ -76,7 +73,9 @@ int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius, SDL_C
     return status;
 }
 
-
+void SetRenderDrawColor(SDL_Renderer* renderer, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+}
 
 
 

@@ -3,34 +3,49 @@
 //
 
 #include "../headers/ui.h"
+#include "../headers/SDL_primitives.h"
+#include "../headers/holds.h"
 
-Button::Button(SDL_Renderer* renderer, int x, int y, int w, int h, std::string name, TTF_Font* font) {
-    this->x = x;
-    this->y = y;
-    this->w = w;
-    this->h = h;
-    this->name = name;
-    this->rect = {x, y, w, h};
-    SDL_Surface* textSurf = TTF_RenderText_Solid(font, name.c_str(), {0, 0, 0, 255});
-    this->textTexture = SDL_CreateTextureFromSurface(renderer, textSurf);
-    SDL_FreeSurface(textSurf);
+void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
+    SDL_RenderCopy(renderer, buttonImage, nullptr, buttonRect);
 }
 
-Button::~Button() {
-    SDL_DestroyTexture(textTexture);
+void drawSettingsButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
+    SDL_RenderCopy(renderer, buttonImage, nullptr, buttonRect);
 }
 
-void Button::draw(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 186, 168, 152, 255);
-    SDL_RenderFillRect(renderer, &rect);
-    SDL_RenderCopy(renderer, textTexture, NULL, &rect);
+void drawGenerateButton(SDL_Renderer* renderer, int windowW, SDL_Texture* buttonImage, SDL_Rect* imageRect) {
+    bool corners[4] = {true, false, true, false};
+    SDL_RenderFillRoundedRect(renderer, windowW- 170, 150, 170, 130, 40, corners);
+    SDL_RenderCopy(renderer, buttonImage, nullptr, imageRect);
 }
 
-bool Button::collides(int x, int y) {
-    SDL_Point point = {x, y};
-    if (SDL_PointInRect(&point, &rect)) {
-        return true;
-    } else {
-        return false;
+void drawMainImage(SDL_Renderer* renderer, int windowH, int windowW, SDL_Texture* mainImage, SDL_Rect* mainImageRect, SDL_Texture* mainImageMask) {
+    SDL_SetRenderDrawColor(renderer, 255, 241, 233, 255);
+    bool corners[4] = {true, true, false, false};
+    SDL_RenderFillRoundedRect(renderer, 0, windowH - mainImageRect->h - 35, mainImageRect->w,
+                              mainImageRect->h + 35, 50, corners); // image background
+
+    if (mainImage != nullptr) {
+        renderImageWithMask(renderer, mainImage, mainImageRect, mainImageMask); // render main image
     }
+}
+
+void drawSelectHoldMenu(SDL_Renderer* renderer, int x, int y, int w, int h, int holdRadius, int holdWidth, SDL_Texture* deleteImage) {
+    bool corners[4] = {true, false, true, false};
+    SDL_RenderFillRoundedRect(renderer, x, y, w, h, 50, corners);
+    for(int i = 0; i < 5; i++) {
+        SetRenderDrawColor(renderer, solidColors[i]);
+        SDL_RenderDrawCircle(renderer, x + w / 2, y + 30 + holdRadius + (30 + 76) * i, holdRadius, holdWidth);
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawCircle(renderer, x + w / 2, y + 30 + holdRadius + (30 + 76) * 5, holdRadius, holdWidth);
+    SDL_Rect rect = {
+            x + w / 2 - 18,
+            y + h - w / 2 - 25,
+            36,
+           36
+    };
+    SDL_RenderCopy(renderer, deleteImage, nullptr, &rect);
 }

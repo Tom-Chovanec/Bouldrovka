@@ -9,10 +9,12 @@
 #include "vector"
 #include "memory"
 #include "fstream"
+#include "cmath"
 #include "filesystem"
 #include "../headers/holds.h"
 #include "../headers/ui.h"
 #include "../headers/SDL_primitives.h"
+#include "../headers/utility.h"
 
 bool changeImage = true;
 
@@ -53,7 +55,7 @@ int init() {
 
 SDL_Window* createWindow(int width, int height) {
     SDL_Window* window = nullptr;
-    window = SDL_CreateWindow("Boulder gen", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Boulder gen", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_FULLSCREEN);
     if (window == nullptr) {
         std::cout << "Error while creating window: " << SDL_GetError();
         return nullptr;
@@ -102,7 +104,7 @@ int main(int argc, char *args[]) {
         return -1;
     }
 
-    TTF_Font* gFont = TTF_OpenFont("fonts/Roboto-Regular.ttf", 72);
+    TTF_Font* gFont = TTF_OpenFont("fonts/JosefinSans-Bold.ttf", 72);
     if (gFont == NULL) {
         printf("TTF_OpenFont Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(gRenderer);
@@ -113,23 +115,133 @@ int main(int argc, char *args[]) {
     }
     SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND);
     SDL_GetWindowSize(gWindow, &WINDOW_WIDTH, &WINDOW_HEIGHT);
-    std::array<int, 3> backgroundColor = {120, 75, 43};
 
-    HoldType state = NONE;
+    // -----------------------------------------------------------------------------------------------------------
+    enum {
+        INTRO = 0,
+        SELECT,
+        MAIN,
+        OPTIONS,
+    } scene;
+
+    scene = MAIN;
+
+    enum {
+       PLACING = 0,
+       DELETING,
+       OPENING_GALLERY,
+       GENERATING,
+    } state;
+
+    HoldType holdType;
+
     bool placeHolds = true;
-    SDL_Texture* mainImage = nullptr ;
-    std::vector<std::unique_ptr<Button>> buttons;
-    buttons.push_back(std::make_unique<Button>(gRenderer, 0, 0, 200, 100, "Gallery", gFont));
-    buttons.push_back(std::make_unique<Button>(gRenderer, 200, 0, 200, 100, "START", gFont));
-    buttons.push_back(std::make_unique<Button>(gRenderer, 400, 0, 200, 100, "MIDDLE", gFont));
-    buttons.push_back(std::make_unique<Button>(gRenderer, 600, 0, 200, 100, "END", gFont));
-    buttons.push_back(std::make_unique<Button>(gRenderer, 700, 0, 200, 100, "DELETE", gFont));
+    SDL_Texture* mainImage = nullptr;
+    SDL_Texture* generateButtonImage = nullptr;
+    SDL_Texture* settingsButtonImage = nullptr;
+    SDL_Texture* arrowImage = nullptr;
+    SDL_Texture* crossImage = nullptr;
+    SDL_Texture* topRightArrowImage = nullptr;
+    SDL_Texture* penImage = nullptr;
+    generateButtonImage = loadTexture("images/generate_button.png", gRenderer);
+    settingsButtonImage = loadTexture("images/settings_button.png", gRenderer);
+    arrowImage = loadTexture("images/arrow.png", gRenderer);
+    crossImage = loadTexture("images/cross.png", gRenderer);
+    topRightArrowImage = loadTexture("images/top_right_arrow.png", gRenderer);
+    penImage = loadTexture("images/pen.png", gRenderer);
 
-    float b = 0;
-    float prevX;
-    SDL_Rect imageRect = {0 , 100, WINDOW_WIDTH - 100 , WINDOW_HEIGHT - 100};
+    SDL_Texture* optionCardIcons[3] = {
+            penImage,
+            penImage,
+            topRightArrowImage
+    };
+
+    float ratio = 9.0f / 16.0f;
+    SDL_Rect mainImageRect;
+    mainImageRect.w = WINDOW_WIDTH;
+    mainImageRect.h = static_cast<int>(mainImageRect.w / ratio);
+    mainImageRect.x = 0;
+    mainImageRect.y = WINDOW_HEIGHT - mainImageRect.h;
+
+    SDL_Texture* mainImageMask = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
+
+    SDL_Rect generateButtonRect = {
+            WINDOW_WIDTH - 145,
+            170,
+            90,
+            90
+    };
+
+    SDL_Rect settingsButtonRect = {
+            WINDOW_WIDTH - 120,
+            150 / 2 - 30,
+            60,
+            60
+    };
+
+    SDL_Rect backButtonRect = {
+            60,
+            150 / 2 - 30,
+            60,
+            60
+    };
+
+    SDL_Rect optionCardRects[4];
+
+    for (int i = 0; i < 4; i++) {
+        optionCardRects[i].x = 50;
+        optionCardRects[i].h = 200;
+        optionCardRects[i].w = WINDOW_WIDTH - 2 * optionCardRects[i].x;
+        optionCardRects[i].y = 170 + 55 + (optionCardRects[i].h + optionCardRects[i].x) * i;
+    }
+
+    SDL_Rect optionCardIconRect[3];
+
+    for (int i = 0; i < 3; i++) {
+        optionCardIconRect[i].w = 76;
+        optionCardIconRect[i].h = 76;
+        optionCardIconRect[i].x = WINDOW_WIDTH - 150 - optionCardIconRect[i].w / 2;
+        optionCardIconRect[i].y = optionCardRects[i].y + optionCardRects[i].h / 2 - optionCardIconRect[i].h / 2;
+    }
+
+    int selectMenuX = WINDOW_WIDTH - 120;
+    int selectMenuY = 500;
+    int selectMenuW = 120;
+    int selectMenuH = 666;
+    int selectMenuHoldRadius = 38;
+    int selectMenuHoldWidth = 10;
+    SDL_Rect selectMenuRect = {selectMenuX, selectMenuY, selectMenuW, selectMenuH};
+    SDL_Rect selectMenuHitBoxes[6];
+
+    for (int i = 0; i < 6; i++) {
+        int x = selectMenuX + (selectMenuW / 2) - selectMenuHoldRadius;
+        int y = selectMenuY + 30 + (selectMenuHoldRadius * 2 + 30) * i;
+        int w = selectMenuHoldRadius * 2;
+        selectMenuHitBoxes[i] = {x, y, w, w};
+    }
 
     std::vector<std::unique_ptr<Hold>> holds;
+    std::vector<std::unique_ptr<Hold>> generatedHolds;
+    int holdCount[5] = {
+            2,
+            2,
+            2,
+            2,
+            0
+    };
+
+    std::string title = "kamenny boulder";
+
+    SDL_Color mainTextColor = {0, 0, 0, 255};
+    SDL_Surface* titleSurface = TTF_RenderUTF8_Solid(gFont, title.c_str(), mainTextColor);
+    SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(gRenderer, titleSurface);
+    SDL_FreeSurface(titleSurface);
+    int titleWidth, titleHeight;
+    TTF_SizeUTF8(gFont, title.c_str(), &titleWidth, &titleHeight);
+    SDL_Rect titleRect;
+
+   // --------------------------------------------------------------- main loop ------------------------------------------------------------
+
     SDL_Event e;
     bool running = true;
 
@@ -139,102 +251,166 @@ int main(int argc, char *args[]) {
             changeImage = false;
         }
         placeHolds = true;
-        SDL_SetRenderDrawColor(gRenderer, backgroundColor[0], backgroundColor[1], backgroundColor[2], 255);
-        SDL_RenderClear(gRenderer);
+
+        SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+        SDL_RenderClear(gRenderer); // set background
 
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 running = false;
             }
 
-
-            if (e.type == SDL_FINGERMOTION) {
-            }
-            if (e.type == SDL_FINGERUP) {
-            }
-            if (e.type == SDL_MULTIGESTURE) {
-                float pinchDistance = e.mgesture.dDist;
-                float pinchCenterX = e.mgesture.x;
-                float pinchCenterY = e.mgesture.y;
-
-                if (pinchDistance > 0) {
-                    b += 0.02f;
-                } else {
-                    b -= 0.02f;
-                }
-                if (b < 0) { b = 0; }
-                if (b > 2) { b = 2.0f; }
-
-                imageRect = {static_cast<int>(0 - (WINDOW_WIDTH * (b)) / 2), static_cast<int>(100 - (WINDOW_HEIGHT * (b)) / 2), static_cast<int>(WINDOW_WIDTH * (b + 1) - 100), static_cast<int>(WINDOW_HEIGHT * (b + 1) - 100)};
-                break;
-            }
-
             if (e.type == SDL_FINGERDOWN) {
-                SDL_Log("???");
                 SDL_TouchFingerEvent tf = e.tfinger;
 
                 int x = static_cast<int>(tf.x * WINDOW_WIDTH);
                 int y = static_cast<int>(tf.y * WINDOW_HEIGHT);
+                SDL_Point mousePos = {x, y};
 
-                if (state == DELETE) {
-
+                if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
+                    if (scene == MAIN) scene = OPTIONS;
+                    else if (scene == OPTIONS) scene = MAIN;
                 }
 
-                for (auto &button : buttons)  {
-                    if (button->collides(x, y)) {
+                if(SDL_PointInRect(&mousePos, &backButtonRect)) {
+                    if(scene == OPTIONS) scene = MAIN;
+                }
+
+                if (scene == MAIN) {
+                    if (SDL_PointInRect(&mousePos, &generateButtonRect)) {
+                        state = GENERATING;
+                        generatedHolds = getGeneratedHolds(holds, holdCount);
+                    }
+
+                    if (SDL_PointInRect(&mousePos, &selectMenuRect) || not SDL_PointInRect(&mousePos, &mainImageRect)) {
                         placeHolds = false;
-                        if (button->name == "Gallery") {
-                            openImagePicker();
-                            break;
+                    }
+
+                    if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[0])) {
+                        state = PLACING;
+                        holdType = TOP;
+                    }
+                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[1])) {
+                        state = PLACING;
+                        holdType = UPPER;
+                    }
+                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[2])) {
+                        state = PLACING;
+                        holdType = LOWER;
+                    }
+                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[3])) {
+                        state = PLACING;
+                        holdType = START;
+                    }
+                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[4])) {
+                        state = PLACING;
+                        holdType = FOOT;
+                    }
+                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[5])) {
+                        state = DELETING;
+                    }
+
+                    if (state == PLACING && placeHolds) {
+                        switch (holdType) {
+                            case TOP:
+                                holds.push_back(std::make_unique<Hold>(x, y, TOP));
+                                break;
+                            case UPPER:
+                                holds.push_back(std::make_unique<Hold>(x, y, UPPER));
+                                break;
+                            case LOWER:
+                                holds.push_back(std::make_unique<Hold>(x, y, LOWER));
+                                break;
+                            case START:
+                                holds.push_back(std::make_unique<Hold>(x, y, START));
+                                break;
+                            case FOOT:
+                                holds.push_back(std::make_unique<Hold>(x, y, FOOT));
+                                break;
+
                         }
-                        else if (button->name == "START") {
-                            state = START;
-                            break;
-                        }
-                        else if (button->name == "MIDDLE") {
-                            state = MIDDLE;
-                            break;
-                        }
-                        else if (button->name == "END") {
-                            state = END;
-                            break;
-                        }
-                        else if (button->name == "DELETE") {
-                            state = DELETE;
-                            break;
-                        }
+                    }
+
+                    if (state == DELETING) {
+                        holds.erase(
+                                std::remove_if(holds.begin(), holds.end(),
+                                               [&](const std::unique_ptr<Hold>& hold) {
+                                                   float dx = mousePos.x - hold->x;
+                                                   float dy = mousePos.y - hold->y;
+                                                   return std::sqrt(dx * dx + dy * dy) <= hold->radius;
+                                               }),
+                                holds.end());
                     }
                 }
 
-                if (placeHolds) {
-                    switch (state) {
-                        case NONE:
-                            break;
-                        case START:
-                            holds.push_back(std::make_unique<Hold>(x, y, START));
-                            break;
-                        case MIDDLE:
-                            holds.push_back(std::make_unique<Hold>(x, y, MIDDLE));
-                            break;
-                        case END:
-                            holds.push_back(std::make_unique<Hold>(x, y, END));
-                            break;
+                if (scene == OPTIONS) {
+                    if (SDL_PointInRect(&mousePos, &optionCardRects[2])) {
+                        openImagePicker();
                     }
                 }
             }
         }
-        if (mainImage != nullptr) {
-            SDL_RenderCopy(gRenderer, mainImage, nullptr, &imageRect);
+
+        // -----------------------------------------------  rendering   ------------------------------------------
+
+        if (scene == MAIN) {
+
+            titleRect = {
+                    100,
+                    170,
+                    titleWidth,
+                    titleHeight
+            };
+
+            drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, mainImage, &mainImageRect, mainImageMask);
+
+            if (state == GENERATING) drawHolds(gRenderer, generatedHolds);
+            else drawHolds(gRenderer, holds);
+
+            SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
+            drawGenerateButton(gRenderer, WINDOW_WIDTH, generateButtonImage, &generateButtonRect);
+            drawSelectHoldMenu(gRenderer, selectMenuX, selectMenuY, selectMenuW, selectMenuH, selectMenuHoldRadius, selectMenuHoldWidth, crossImage);
         }
-        for (auto &button : buttons) {
-            button->draw(gRenderer);
+
+        if (scene == OPTIONS) {
+
+            titleRect = {
+                    100,
+                    optionCardRects[0].y + optionCardRects[0].h / 2 - titleHeight / 2,
+                    titleWidth,
+                    titleHeight
+            };
+
+            bool corners[4] = {true, true, false, false};
+            bool cardCorners[4] = {true, true, true, true};
+
+            SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
+            SDL_RenderFillRoundedRect(gRenderer, 0, 170, mainImageRect.w, mainImageRect.h + 35, 50, corners);
+
+            SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+            for (int i = 0; i < 4; i++) {
+                SDL_RenderFillRoundedRect(gRenderer, optionCardRects[i].x, optionCardRects[i].y, optionCardRects[i].w, optionCardRects[i].h, 50, cardCorners);
+            }
+            for (int i = 0; i < 3; i++) {
+                SDL_RenderDrawCircle(gRenderer, )
+                SDL_RenderCopy(gRenderer, optionCardIcons[i], nullptr, &optionCardIconRect[i]);
+            }
         }
-        //for (auto &hold : holds) {
-        //    hold->draw(gRenderer);
-        //}
-        drawHolds(gRenderer, holds);
+
+        drawSettingsButton(gRenderer, settingsButtonImage, &settingsButtonRect);
+        drawBackButton(gRenderer, arrowImage, &backButtonRect);
+        SDL_RenderCopy(gRenderer, titleTexture, nullptr, &titleRect);
         SDL_RenderPresent(gRenderer);
     }
+    // --------------------------------------------------- clean up -----------------------------------------------
+    SDL_DestroyTexture(mainImageMask);
+    SDL_DestroyTexture(mainImage);
+    SDL_DestroyTexture(topRightArrowImage);
+    SDL_DestroyTexture(penImage);
+    SDL_DestroyTexture(crossImage);
+    SDL_DestroyTexture(arrowImage);
+    SDL_DestroyTexture(settingsButtonImage);
+    SDL_DestroyTexture(generateButtonImage);
     TTF_CloseFont(gFont);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);

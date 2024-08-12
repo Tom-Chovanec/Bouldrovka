@@ -271,17 +271,23 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
 
     private static final int YOUR_PERMISSIONS_REQUEST_READ_STORAGE = 58;
+    private static final int YOUR_PERMISSIONS_REQUEST_READ_MEDIA_IMAGES = 59;
+    private static final int YOUR_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 60;
+    private static final int YOUR_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 61;
 
     public void openImagePicker() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSIONS_REQUEST_READ_STORAGE);
-            } else {
-               Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-               startActivityForResult(intent, YOUR_REQUEST_CODE); // Define YOUR_REQUEST_CODE as a constant
+/*
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, YOUR_PERMISSIONS_REQUEST_READ_MEDIA_IMAGES);
+            } else if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+               requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            } else if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, YOUR_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+          } else {
             }
-        }
-
+*/
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, YOUR_REQUEST_CODE); // Define YOUR_REQUEST_CODE as a constant
     }
 
     public native void onImagePicked();
@@ -329,7 +335,9 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         return null;
     }
 
-
+    public static void requestPermission(String permission, int requestCode) {
+        // Implementation to request permission
+    }
     /**
      * This method returns the name of the shared object with the application entry point
      * It can be overridden by derived classes.
@@ -1865,24 +1873,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     /**
      * This method is called by SDL using JNI.
      */
-    public static void requestPermission(String permission, int requestCode) {
-        if (Build.VERSION.SDK_INT < 23 /* Android 6.0 (M) */) {
-            nativePermissionResult(requestCode, true);
-            return;
-        }
-
-        Activity activity = (Activity)getContext();
-        if (activity.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-            activity.requestPermissions(new String[]{permission}, requestCode);
-        } else {
-            nativePermissionResult(requestCode, true);
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        boolean result = (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED);
-        nativePermissionResult(requestCode, result);
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, open the image picker
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, YOUR_REQUEST_CODE);
+            }
     }
 
     /**

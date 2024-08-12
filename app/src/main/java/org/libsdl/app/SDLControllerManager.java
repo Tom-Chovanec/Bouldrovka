@@ -425,9 +425,9 @@ class SDLJoystickHandler_API19 extends SDLJoystickHandler_API16 {
             (1 << 2),   // X -> X
             (1 << 3),   // Y -> Y
             (1 << 4),   // BACK -> BACK
-            (1 << 6),   // MENU -> START
+            (1 << 6),   // MENU -> TOP
             (1 << 5),   // MODE -> GUIDE
-            (1 << 6),   // START -> START
+            (1 << 6),   // TOP -> TOP
             (1 << 7),   // THUMBL -> LEFTSTICK
             (1 << 8),   // THUMBR -> RIGHTSTICK
             (1 << 9),   // L1 -> LEFTSHOULDER

@@ -12,12 +12,14 @@
 #include "vector"
 #include "memory"
 
+extern SDL_Color solidColors[5];
+
 enum HoldType {
-    NONE = 0,
-    DELETE,
+    TOP,
+    UPPER,
+    LOWER,
     START,
-    MIDDLE,
-    END,
+    FOOT,
 };
 
 
@@ -31,6 +33,8 @@ public:
 };
 
 void drawHolds(SDL_Renderer* renderer, const std::vector<std::unique_ptr<Hold>>& holds);
+
+std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::unique_ptr<Hold>>& holds, int amount[5]);
 
 #endif //BOULDER_HOLDS_H
 

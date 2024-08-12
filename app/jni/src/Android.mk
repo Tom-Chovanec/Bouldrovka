@@ -9,7 +9,7 @@ SDL_PATH := ../SDL
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include $(LOCAL_PATH)/../SDL2_image/ $(LOCAL_PATH)/../SDL2_ttf/
 
 # Add your application source files here..:w.
-LOCAL_SRC_FILES := main.cpp holds.cpp SDL_primitives.cpp ui.cpp
+LOCAL_SRC_FILES := main.cpp holds.cpp SDL_primitives.cpp ui.cpp utility.cpp
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_ttf
 

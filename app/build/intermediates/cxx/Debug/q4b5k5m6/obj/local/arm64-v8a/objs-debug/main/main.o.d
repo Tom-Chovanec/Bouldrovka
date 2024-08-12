@@ -128,10 +128,12 @@ C:\Creative\C++\Android\projects\boulder\app\build\intermediates\cxx\Debug\q4b5k
   C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/stack \
   C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/deque \
   C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/iomanip \
+  C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cmath \
   C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/holds.h \
   C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h \
   C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/SDL_primitives.h \
-  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/ui.h
+  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/ui.h \
+  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/utility.h
 
 C:/Creative/C++/Android/projects/boulder/app/jni/SDL2/include/SDL.h:
 
@@ -389,6 +391,8 @@ C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-s
 
 C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/iomanip:
 
+C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/cmath:
+
 C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/holds.h:
 
 C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h:
@@ -396,3 +400,5 @@ C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xc
 C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/SDL_primitives.h:
 
 C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/ui.h:
+
+C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/utility.h:

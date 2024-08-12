@@ -74,90 +74,91 @@
 57
 58
 59    <!-- Allow access to the vibrator -->
-60    <uses-permission android:name="android.permission.VIBRATE" />
-60-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:49:5-66
-60-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:49:22-63
-61    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-61-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:5-81
-61-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:22-78
+60
+61    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+61-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:50:5-76
+61-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:50:22-73
 62    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-62-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:5-79
-62-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:22-77
-63
-64    <!-- if you want to capture audio, uncomment this. -->
-65    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
-66    <!--
-67 Create a Java class extending SDLActivity and place it in a
-68         directory under app/src/main/java matching the package, e.g. app/src/main/java/com/gamemaker/game/MyGame.java
-69 
-70         then replace "SDLActivity" with the name of your class (e.g. "MyGame")
-71         in the XML below.
-72
-73         An example Java class can be found in README-android.md
-74    -->
-75    <application
-75-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:5-101:19
-76        android:allowBackup="true"
-76-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:67:9-35
-77        android:debuggable="true"
-78        android:extractNativeLibs="true"
-79        android:hardwareAccelerated="true"
-79-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:69:9-43
-80        android:icon="@mipmap/ic_launcher"
-80-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:66:9-43
-81        android:label="@string/app_name"
-81-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:18-50
-82        android:testOnly="true"
-83        android:theme="@style/AppTheme" >
-83-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:68:9-40
-84
-85        <!--
-86        Example of setting SDL hints from AndroidManifest.xml:
-87        <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
-88        -->
-89
-90        <activity
-90-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:9-99:20
-91            android:name="org.libsdl.app.SDLActivity"
-91-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:19-45
-92            android:alwaysRetainTaskState="true"
-92-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:77:13-49
-93            android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-93-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:79:13-156
-94            android:exported="true"
-94-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:81:13-36
-95            android:label="@string/app_name"
-95-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:76:13-45
-96            android:launchMode="singleInstance"
-96-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:78:13-48
-97            android:preferMinimalPostProcessing="true" >
-97-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:80:13-55
-98            <intent-filter>
-98-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:83:13-86:29
-99                <action android:name="android.intent.action.MAIN" />
-99-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:17-69
-99-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:25-66
-100
-101                <category android:name="android.intent.category.LAUNCHER" />
-101-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:17-77
-101-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:27-74
-102            </intent-filter>
-103            <!-- Let Android know that we can handle some USB devices and should receive this event -->
-104            <intent-filter>
-104-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:88:13-90:29
-105                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-105-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:17-90
-105-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:25-87
-106            </intent-filter>
-107            <!-- Drop file event -->
-108            <!--
-109            <intent-filter>
-110                <action android:name="android.intent.action.VIEW" />
-111                <category android:name="android.intent.category.DEFAULT" />
-112                <data android:mimeType="*/*" />
-113            </intent-filter>
-114            -->
-115        </activity>
-116    </application>
-117
-118</manifest>
+62-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:5-80
+62-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:51:22-77
+63    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+63-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:5-81
+63-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:52:22-78
+64
+65    <!-- if you want to capture audio, uncomment this. -->
+66    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
+67    <!--
+68 Create a Java class extending SDLActivity and place it in a
+69         directory under app/src/main/java matching the package, e.g. app/src/main/java/com/gamemaker/game/MyGame.java
+70 
+71         then replace "SDLActivity" with the name of your class (e.g. "MyGame")
+72         in the XML below.
+73
+74         An example Java class can be found in README-android.md
+75    -->
+76    <application
+76-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:5-101:19
+77        android:allowBackup="true"
+77-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:67:9-35
+78        android:debuggable="true"
+79        android:extractNativeLibs="true"
+80        android:hardwareAccelerated="true"
+80-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:69:9-43
+81        android:icon="@mipmap/ic_launcher"
+81-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:66:9-43
+82        android:label="@string/app_name"
+82-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:65:18-50
+83        android:testOnly="true"
+84        android:theme="@style/AppTheme" >
+84-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:68:9-40
+85
+86        <!--
+87        Example of setting SDL hints from AndroidManifest.xml:
+88        <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
+89        -->
+90
+91        <activity
+91-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:9-99:20
+92            android:name="org.libsdl.app.SDLActivity"
+92-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:75:19-45
+93            android:alwaysRetainTaskState="true"
+93-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:77:13-49
+94            android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+94-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:79:13-156
+95            android:exported="true"
+95-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:81:13-36
+96            android:label="@string/app_name"
+96-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:76:13-45
+97            android:launchMode="singleInstance"
+97-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:78:13-48
+98            android:preferMinimalPostProcessing="true" >
+98-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:80:13-55
+99            <intent-filter>
+99-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:83:13-86:29
+100                <action android:name="android.intent.action.MAIN" />
+100-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:17-69
+100-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:84:25-66
+101
+102                <category android:name="android.intent.category.LAUNCHER" />
+102-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:17-77
+102-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:85:27-74
+103            </intent-filter>
+104            <!-- Let Android know that we can handle some USB devices and should receive this event -->
+105            <intent-filter>
+105-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:88:13-90:29
+106                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+106-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:17-90
+106-->C:\Creative\C++\Android\projects\boulder\app\src\main\AndroidManifest.xml:89:25-87
+107            </intent-filter>
+108            <!-- Drop file event -->
+109            <!--
+110            <intent-filter>
+111                <action android:name="android.intent.action.VIEW" />
+112                <category android:name="android.intent.category.DEFAULT" />
+113                <data android:mimeType="*/*" />
+114            </intent-filter>
+115            -->
+116        </activity>
+117    </application>
+118
+119</manifest>

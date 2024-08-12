@@ -104,7 +104,7 @@ int main(int argc, char *args[]) {
         return -1;
     }
 
-    TTF_Font* gFont = TTF_OpenFont("fonts/JosefinSans-Bold.ttf", 72);
+    TTF_Font* gFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 78);
     if (gFont == NULL) {
         printf("TTF_OpenFont Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(gRenderer);
@@ -135,26 +135,35 @@ int main(int argc, char *args[]) {
 
     HoldType holdType;
 
+    SDL_Color primaryColor = {255, 106, 20 ,255};
+    SDL_Color secondaryColor = {255, 241, 233 ,255};
+    SDL_Color blueAccentColor = {255, 241, 233 ,255};
+    SDL_Color orangeAccentColor = {255, 241, 233 ,255};
+    SDL_Color redAccentColor = {255, 241, 233 ,255};
+    SDL_Color darkRedAccentColor = {255, 241, 233 ,255};
+    SDL_Color blackColor = {0, 0, 0 ,255};
+    SDL_Color whiteColor = {255, 255, 255 ,255};
+
     bool placeHolds = true;
     SDL_Texture* mainImage = nullptr;
-    SDL_Texture* generateButtonImage = nullptr;
-    SDL_Texture* settingsButtonImage = nullptr;
-    SDL_Texture* arrowImage = nullptr;
-    SDL_Texture* crossImage = nullptr;
-    SDL_Texture* topRightArrowImage = nullptr;
-    SDL_Texture* penImage = nullptr;
-    generateButtonImage = loadTexture("images/generate_button.png", gRenderer);
-    settingsButtonImage = loadTexture("images/settings_button.png", gRenderer);
-    arrowImage = loadTexture("images/arrow.png", gRenderer);
-    crossImage = loadTexture("images/cross.png", gRenderer);
-    topRightArrowImage = loadTexture("images/top_right_arrow.png", gRenderer);
-    penImage = loadTexture("images/pen.png", gRenderer);
+    SDL_Texture* logoImage = loadTexture("images/logo.png", gRenderer);
+    SDL_Texture* threeBarsImage = loadTexture("images/3_bars.png", gRenderer);
+    SDL_Texture* leftArrowImage = loadTexture("images/left_arrow.png", gRenderer);
+    SDL_Texture* crossImage = loadTexture("images/cross.png", gRenderer);
+    SDL_Texture* topRightArrowImage = loadTexture("images/top_right_arrow.png", gRenderer);
+    SDL_Texture* penImage = loadTexture("images/pen.png", gRenderer);
+    SDL_Texture* backgroundBlobsImage = loadTexture("images/background_blobs.png", gRenderer);
+    SDL_Texture* blackMinusImage = loadTexture("images/black_minus.png", gRenderer);
+    SDL_Texture* blackPlusImage = loadTexture("images/black_plus.png", gRenderer);
+    SDL_Texture* whiteMinusImage = loadTexture("images/white.png", gRenderer);
+    SDL_Texture* whitePlusImage = loadTexture("images/black_plus.png", gRenderer);
 
-    SDL_Texture* optionCardIcons[3] = {
+    SDL_Texture* generalOptionCardIcons[3] = {
             penImage,
             penImage,
             topRightArrowImage
     };
+
 
     float ratio = 9.0f / 16.0f;
     SDL_Rect mainImageRect;
@@ -163,7 +172,9 @@ int main(int argc, char *args[]) {
     mainImageRect.x = 0;
     mainImageRect.y = WINDOW_HEIGHT - mainImageRect.h;
 
+    SDL_SetRenderDrawColor(gRenderer, secondaryColor);
     SDL_Texture* mainImageMask = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
+
 
     SDL_Rect generateButtonRect = {
             WINDOW_WIDTH - 145,
@@ -186,22 +197,22 @@ int main(int argc, char *args[]) {
             60
     };
 
-    SDL_Rect optionCardRects[4];
+    SDL_Rect generalOptionCardRects[4];
 
     for (int i = 0; i < 4; i++) {
-        optionCardRects[i].x = 50;
-        optionCardRects[i].h = 200;
-        optionCardRects[i].w = WINDOW_WIDTH - 2 * optionCardRects[i].x;
-        optionCardRects[i].y = 170 + 55 + (optionCardRects[i].h + optionCardRects[i].x) * i;
+        generalOptionCardRects[i].x = 50;
+        generalOptionCardRects[i].h = 200;
+        generalOptionCardRects[i].w = WINDOW_WIDTH - 2 * generalOptionCardRects[i].x;
+        generalOptionCardRects[i].y = 170 + 55 + (generalOptionCardRects[i].h + generalOptionCardRects[i].x) * i;
     }
 
-    SDL_Rect optionCardIconRect[3];
+    SDL_Rect generalOptionCardIconRect[3];
 
     for (int i = 0; i < 3; i++) {
-        optionCardIconRect[i].w = 76;
-        optionCardIconRect[i].h = 76;
-        optionCardIconRect[i].x = WINDOW_WIDTH - 150 - optionCardIconRect[i].w / 2;
-        optionCardIconRect[i].y = optionCardRects[i].y + optionCardRects[i].h / 2 - optionCardIconRect[i].h / 2;
+        generalOptionCardIconRect[i].w = 76;
+        generalOptionCardIconRect[i].h = 76;
+        generalOptionCardIconRect[i].x = WINDOW_WIDTH - 150 - generalOptionCardIconRect[i].w / 2;
+        generalOptionCardIconRect[i].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - generalOptionCardIconRect[i].h / 2;
     }
 
     int selectMenuX = WINDOW_WIDTH - 120;
@@ -230,17 +241,29 @@ int main(int argc, char *args[]) {
             0
     };
 
-    std::string title = "kamenny boulder";
+    std::string generalOptionCardTexts[4] = {
+        "Kamenný boulder",
+        "Popis steny",
+        "Vymeniť fotku",
+        "Počet chytov",
+    };
+    SDL_Rect generalOptionCardTextRects[4];
+    SDL_Texture* generalOptionCardTextTextures[4];
+    for (int i = 0; i < 4; i++) {
+        generalOptionCardTextRects[i].x = 100;
+        generalOptionCardTextTextures[i] = getTextureFromText(gRenderer, gFont, generalOptionCardTexts[i], &blackColor, &generalOptionCardTextRects[i].w, &generalOptionCardTextRects[i].h);
+        generalOptionCardTextRects[i].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - generalOptionCardTextRects[i].h / 2;
+    }
 
-    SDL_Color mainTextColor = {0, 0, 0, 255};
-    SDL_Surface* titleSurface = TTF_RenderUTF8_Solid(gFont, title.c_str(), mainTextColor);
-    SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(gRenderer, titleSurface);
-    SDL_FreeSurface(titleSurface);
-    int titleWidth, titleHeight;
-    TTF_SizeUTF8(gFont, title.c_str(), &titleWidth, &titleHeight);
-    SDL_Rect titleRect;
+    SDL_Rect titleRect = {
+            100,
+            200,
+            generalOptionCardTextRects[0].w,
+            generalOptionCardTextRects[0].h
+    };
 
-   // --------------------------------------------------------------- main loop ------------------------------------------------------------
+
+    // --------------------------------------------------------------- main loop ------------------------------------------------------------
 
     SDL_Event e;
     bool running = true;
@@ -251,9 +274,6 @@ int main(int argc, char *args[]) {
             changeImage = false;
         }
         placeHolds = true;
-
-        SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
-        SDL_RenderClear(gRenderer); // set background
 
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
@@ -344,7 +364,7 @@ int main(int argc, char *args[]) {
                 }
 
                 if (scene == OPTIONS) {
-                    if (SDL_PointInRect(&mousePos, &optionCardRects[2])) {
+                    if (SDL_PointInRect(&mousePos, &generalOptionCardRects[2])) {
                         openImagePicker();
                     }
                 }
@@ -353,53 +373,57 @@ int main(int argc, char *args[]) {
 
         // -----------------------------------------------  rendering   ------------------------------------------
 
+        // set background
+        SDL_SetRenderDrawColor(gRenderer, whiteColor);
+        SDL_RenderClear(gRenderer);
+
         if (scene == MAIN) {
 
-            titleRect = {
-                    100,
-                    170,
-                    titleWidth,
-                    titleHeight
-            };
+            // image background
+            SDL_SetRenderDrawColor(gRenderer, secondaryColor);
+            bool corners[4] = {true, true, false, false};
+            SDL_RenderFillRoundedRect(gRenderer, 0, WINDOW_HEIGHT - mainImageRect.h - 35, mainImageRect.w, mainImageRect.h + 35, 60, corners);
 
+            //main image
             drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, mainImage, &mainImageRect, mainImageMask);
 
+            // holds
             if (state == GENERATING) drawHolds(gRenderer, generatedHolds);
             else drawHolds(gRenderer, holds);
 
-            SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
-            drawGenerateButton(gRenderer, WINDOW_WIDTH, generateButtonImage, &generateButtonRect);
+            // buttons
+            SDL_SetRenderDrawColor(gRenderer, secondaryColor);
+            drawGenerateButton(gRenderer, WINDOW_WIDTH, logoImage, &generateButtonRect);
             drawSelectHoldMenu(gRenderer, selectMenuX, selectMenuY, selectMenuW, selectMenuH, selectMenuHoldRadius, selectMenuHoldWidth, crossImage);
+
+            // title
+            SDL_RenderCopy(gRenderer, generalOptionCardTextTextures[0], nullptr, &titleRect);
         }
 
         if (scene == OPTIONS) {
-
-            titleRect = {
-                    100,
-                    optionCardRects[0].y + optionCardRects[0].h / 2 - titleHeight / 2,
-                    titleWidth,
-                    titleHeight
-            };
-
             bool corners[4] = {true, true, false, false};
             bool cardCorners[4] = {true, true, true, true};
 
+            // background
             SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
-            SDL_RenderFillRoundedRect(gRenderer, 0, 170, mainImageRect.w, mainImageRect.h + 35, 50, corners);
+            SDL_RenderFillRoundedRect(gRenderer, 0, 170, mainImageRect.w, WINDOW_HEIGHT * 2, 50, corners);
 
+            //cards
             SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
             for (int i = 0; i < 4; i++) {
-                SDL_RenderFillRoundedRect(gRenderer, optionCardRects[i].x, optionCardRects[i].y, optionCardRects[i].w, optionCardRects[i].h, 50, cardCorners);
+                SDL_RenderFillRoundedRect(gRenderer, generalOptionCardRects[i].x, generalOptionCardRects[i].y, generalOptionCardRects[i].w, generalOptionCardRects[i].h, 50, cardCorners);
+                SDL_RenderCopy(gRenderer, generalOptionCardTextTextures[i], nullptr, &generalOptionCardTextRects[i]);
             }
+
+            //card icons
+            SDL_SetRenderDrawColor(gRenderer, primaryColor);
             for (int i = 0; i < 3; i++) {
-                SDL_RenderCopy(gRenderer, optionCardIcons[i], nullptr, &optionCardIconRect[i]);
+                renderIconInCircle(gRenderer, WINDOW_WIDTH - 200, generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2, 38, 10, 5, generalOptionCardIcons[i]);
             }
         }
 
-        drawSettingsButton(gRenderer, settingsButtonImage, &settingsButtonRect);
-        drawBackButton(gRenderer, arrowImage, &backButtonRect);
-        SDL_RenderCopy(gRenderer, titleTexture, nullptr, &titleRect);
-        renderIconInCircle(gRenderer, 300, 100, 38, 10, 5, optionCardIcons[0]);
+        drawSettingsButton(gRenderer, threeBarsImage, &settingsButtonRect);
+        drawBackButton(gRenderer, leftArrowImage, &backButtonRect);
         SDL_RenderPresent(gRenderer);
     }
 
@@ -409,9 +433,17 @@ int main(int argc, char *args[]) {
     SDL_DestroyTexture(topRightArrowImage);
     SDL_DestroyTexture(penImage);
     SDL_DestroyTexture(crossImage);
-    SDL_DestroyTexture(arrowImage);
-    SDL_DestroyTexture(settingsButtonImage);
-    SDL_DestroyTexture(generateButtonImage);
+    SDL_DestroyTexture(leftArrowImage);
+    SDL_DestroyTexture(threeBarsImage);
+    SDL_DestroyTexture(logoImage);
+    SDL_DestroyTexture(backgroundBlobsImage);
+    SDL_DestroyTexture(blackMinusImage);
+    SDL_DestroyTexture(blackPlusImage);
+    SDL_DestroyTexture(whiteMinusImage);
+    SDL_DestroyTexture(whitePlusImage);
+    for(int i = 0; i < 4; i++) {
+        SDL_DestroyTexture(generalOptionCardTextTextures[i]);
+    }
     TTF_CloseFont(gFont);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);

@@ -52,7 +52,7 @@ void drawHolds(SDL_Renderer* renderer, const std::vector<std::unique_ptr<Hold>>&
     }
 
     for (int i = 0; i < 5; i++) {
-        SetRenderDrawColor(renderer, solidColors[i]);
+        SDL_SetRenderDrawColor(renderer, solidColors[i]);
         for (auto& y : x[i]) {
             SDL_RenderDrawCircle(renderer, y->x, y->y, y->radius, 10);
         }

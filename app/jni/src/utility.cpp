@@ -32,3 +32,10 @@ bool isPointInRoundedRect(int x, int y, SDL_Rect rect, int radius) {
     return false;
 }
 
+SDL_Texture* getTextureFromText(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Color* color, int* w, int* h) {
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, text.c_str(), *color);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_FreeSurface(textSurface);
+    TTF_SizeUTF8(font, text.c_str(), w, h);
+    return textTexture;
+}

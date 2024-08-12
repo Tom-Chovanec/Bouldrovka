@@ -130,7 +130,6 @@ void SDL_RenderInverseRoundedRect(SDL_Renderer *renderer, int x, int y, int w, i
 SDL_Texture* createRoundedRectMask(SDL_Renderer* renderer, int w, int h, int radius) {
     SDL_Texture* mask = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
     SDL_SetRenderTarget(renderer, mask);
-    SDL_SetRenderDrawColor(renderer, 255, 241, 233, 255);
     //SDL_RenderClear(renderer);
 
     //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -157,7 +156,7 @@ void renderImageWithMask(SDL_Renderer* renderer, SDL_Texture* mainImage, SDL_Rec
     SDL_DestroyTexture(result);
 }
 
-void SetRenderDrawColor(SDL_Renderer* renderer, SDL_Color color) {
+void SDL_SetRenderDrawColor(SDL_Renderer* renderer, SDL_Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 

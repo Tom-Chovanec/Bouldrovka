@@ -21,11 +21,6 @@ void drawGenerateButton(SDL_Renderer* renderer, int windowW, SDL_Texture* button
 }
 
 void drawMainImage(SDL_Renderer* renderer, int windowH, int windowW, SDL_Texture* mainImage, SDL_Rect* mainImageRect, SDL_Texture* mainImageMask) {
-    SDL_SetRenderDrawColor(renderer, 255, 241, 233, 255);
-    bool corners[4] = {true, true, false, false};
-    SDL_RenderFillRoundedRect(renderer, 0, windowH - mainImageRect->h - 35, mainImageRect->w,
-                              mainImageRect->h + 35, 50, corners); // image background
-
     if (mainImage != nullptr) {
         renderImageWithMask(renderer, mainImage, mainImageRect, mainImageMask); // render main image
     }
@@ -35,7 +30,7 @@ void drawSelectHoldMenu(SDL_Renderer* renderer, int x, int y, int w, int h, int 
     bool corners[4] = {true, false, true, false};
     SDL_RenderFillRoundedRect(renderer, x, y, w, h, 50, corners);
     for(int i = 0; i < 5; i++) {
-        SetRenderDrawColor(renderer, solidColors[i]);
+        SDL_SetRenderDrawColor(renderer, solidColors[i]);
         SDL_RenderDrawCircle(renderer, x + w / 2, y + 30 + holdRadius + (30 + 76) * i, holdRadius, holdWidth);
     }
 

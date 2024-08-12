@@ -90,5 +90,3 @@ google-services.json
 *.hprof
 
 .vscode
-
-gradle

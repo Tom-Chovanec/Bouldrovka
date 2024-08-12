@@ -64,7 +64,6 @@ build/
 local.properties
 
 # Log/OS Files
-*.log
 
 # Android Studio generated files and folders
 captures/
@@ -89,3 +88,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+.vscode
+
+gradle

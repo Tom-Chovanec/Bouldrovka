@@ -1,2 +1,0 @@
-C:\Creative\C++\Android\projects\boulder\android-project\app\jni\Android.mk
-C:\Creative\C++\Android\projects\boulder\android-project\app\jni\Application.mk

@@ -1,0 +1,4 @@
+C:/Creative/C++/Android/projects/boulder/app/jni/src/rendering.cpp:5:9: warning: #pragma once in main file [-Wpragma-once-outside-header]
+#pragma once
+        ^
+1 warning generated.

@@ -51,6 +51,44 @@
       "output": "C:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6\\obj\\local\\arm64-v8a\\libmain.so",
       "runtimeFiles": []
     },
+    "SDL2_ttf-debug-arm64-v8a": {
+      "artifactName": "SDL2_ttf",
+      "buildCommandComponents": [
+        "C:\\Users\\PvPSk\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393\\ndk-build.cmd",
+        "NDK_PROJECT_PATH\u003dnull",
+        "APP_BUILD_SCRIPT\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\jni\\Application.mk",
+        "APP_ABI\u003darm64-v8a",
+        "NDK_ALL_ABIS\u003darm64-v8a",
+        "NDK_DEBUG\u003d1",
+        "NDK_OUT\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6/obj",
+        "NDK_LIBS_OUT\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6/lib",
+        "APP_PLATFORM\u003dandroid-19",
+        "C:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6/obj/local/arm64-v8a/libSDL2_ttf.so"
+      ],
+      "abi": "arm64-v8a",
+      "output": "C:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6\\obj\\local\\arm64-v8a\\libSDL2_ttf.so",
+      "runtimeFiles": []
+    },
+    "freetype-debug-arm64-v8a": {
+      "artifactName": "freetype",
+      "buildCommandComponents": [
+        "C:\\Users\\PvPSk\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393\\ndk-build.cmd",
+        "NDK_PROJECT_PATH\u003dnull",
+        "APP_BUILD_SCRIPT\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\jni\\Android.mk",
+        "NDK_APPLICATION_MK\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\jni\\Application.mk",
+        "APP_ABI\u003darm64-v8a",
+        "NDK_ALL_ABIS\u003darm64-v8a",
+        "NDK_DEBUG\u003d1",
+        "NDK_OUT\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6/obj",
+        "NDK_LIBS_OUT\u003dC:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6/lib",
+        "APP_PLATFORM\u003dandroid-19",
+        "C:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6/obj/local/arm64-v8a/libfreetype.a"
+      ],
+      "abi": "arm64-v8a",
+      "output": "C:\\Creative\\C++\\Android\\projects\\boulder\\app\\build\\intermediates\\cxx\\Debug\\q4b5k5m6\\obj\\local\\arm64-v8a\\libfreetype.a",
+      "runtimeFiles": []
+    },
     "SDL2-debug-arm64-v8a": {
       "artifactName": "SDL2",
       "buildCommandComponents": [

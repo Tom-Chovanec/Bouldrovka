@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h"
-#include "SDL_primitives.h"
+#include "rendering.h"
 #include "SDL.h"
 #include "vector"
 #include "memory"

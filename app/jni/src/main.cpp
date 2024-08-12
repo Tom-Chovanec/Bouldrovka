@@ -13,7 +13,7 @@
 #include "filesystem"
 #include "../headers/holds.h"
 #include "../headers/ui.h"
-#include "../headers/SDL_primitives.h"
+#include "../headers/rendering.h"
 #include "../headers/utility.h"
 
 bool changeImage = true;
@@ -392,7 +392,6 @@ int main(int argc, char *args[]) {
                 SDL_RenderFillRoundedRect(gRenderer, optionCardRects[i].x, optionCardRects[i].y, optionCardRects[i].w, optionCardRects[i].h, 50, cardCorners);
             }
             for (int i = 0; i < 3; i++) {
-                SDL_RenderDrawCircle(gRenderer, )
                 SDL_RenderCopy(gRenderer, optionCardIcons[i], nullptr, &optionCardIconRect[i]);
             }
         }
@@ -400,8 +399,10 @@ int main(int argc, char *args[]) {
         drawSettingsButton(gRenderer, settingsButtonImage, &settingsButtonRect);
         drawBackButton(gRenderer, arrowImage, &backButtonRect);
         SDL_RenderCopy(gRenderer, titleTexture, nullptr, &titleRect);
+        renderIconInCircle(gRenderer, 300, 100, 38, 10, 5, optionCardIcons[0]);
         SDL_RenderPresent(gRenderer);
     }
+
     // --------------------------------------------------- clean up -----------------------------------------------
     SDL_DestroyTexture(mainImageMask);
     SDL_DestroyTexture(mainImage);

@@ -120,9 +120,10 @@ C:\Creative\C++\Android\projects\boulder\app\build\intermediates\cxx\Debug\q4b5k
   C:/Creative/C++/Android/projects/boulder/app/jni/SDL2/include/SDL_locale.h \
   C:/Creative/C++/Android/projects/boulder/app/jni/SDL2/include/SDL_misc.h \
   C:/Creative/C++/Android/projects/boulder/app/jni/src/../SDL2_ttf/SDL_ttf.h \
-  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/SDL_primitives.h \
-  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h \
+  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/rendering.h \
+  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/utility.h \
   C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/holds.h \
+  C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h \
   C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/vector \
   C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/__split_buffer
 
@@ -366,11 +367,13 @@ C:/Creative/C++/Android/projects/boulder/app/jni/SDL2/include/SDL_misc.h:
 
 C:/Creative/C++/Android/projects/boulder/app/jni/src/../SDL2_ttf/SDL_ttf.h:
 
-C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/SDL_primitives.h:
+C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/rendering.h:
 
-C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h:
+C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/utility.h:
 
 C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/holds.h:
+
+C:/Creative/C++/Android/projects/boulder/app/jni/src/../headers/../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h:
 
 C:/Users/PvPSk/AppData/Local/Android/Sdk/ndk/25.1.8937393/build/../sources/cxx-stl/llvm-libc++/include/vector:
 

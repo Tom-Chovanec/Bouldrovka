@@ -3,7 +3,7 @@
 //
 
 #include "../headers/ui.h"
-#include "../headers/SDL_primitives.h"
+#include "../headers/rendering.h"
 #include "../headers/holds.h"
 
 void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {

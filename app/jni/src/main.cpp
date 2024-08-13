@@ -209,7 +209,7 @@ int main(int argc, char *args[]) {
         generalOptionCardRects[i].x = 50;
         generalOptionCardRects[i].h = 200;
         generalOptionCardRects[i].w = WINDOW_WIDTH - 2 * generalOptionCardRects[i].x;
-        generalOptionCardRects[i].y = 170 + 55 + (generalOptionCardRects[i].h + generalOptionCardRects[i].x) * i;
+        generalOptionCardRects[i].y = 170 + 155 + (generalOptionCardRects[i].h + generalOptionCardRects[i].x) * i;
     }
 
     SDL_Rect generalOptionCardIconRect[3];
@@ -257,6 +257,8 @@ int main(int argc, char *args[]) {
     std::unordered_map<std::string, SDL_Texture*> texts;
     std::unordered_map<std::string, SDL_Rect> textRects;
     texts["title"] = getTextureFromText(gRenderer, gFont, "Drevený boulder", &colors["blackColor"], &textRects["title"].w, &textRects["title"].h);
+    texts["generalOptionsTitle"] = getTextureFromText(gRenderer, gFont, "Nastavenia steny", &colors["blackColor"], &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
+    texts["generationOptionsTitle"] = getTextureFromText(gRenderer, gFont, "Nastavenia generácie", &colors["blackColor"], &textRects["generationOptionsTitle"].w, &textRects["generationOptionsTitle"].h);
     texts["description"] = getTextureFromText(gRenderer, gFont, "Popis steny", &colors["blackColor"], &textRects["description"].w, &textRects["description"].h);
     texts["changePhoto"] = getTextureFromText(gRenderer, gFont, "Vymeniť fotku", &colors["blackColor"], &textRects["changePhoto"].w, &textRects["changePhoto"].h);
     texts["numOfHolds"] = getTextureFromText(gRenderer, gFont, "Počet chytov", &colors["blackColor"], &textRects["numOfHolds"].w, &textRects["numOfHolds"].h);
@@ -272,6 +274,12 @@ int main(int argc, char *args[]) {
 
     textRects["title"].x = 100;
     textRects["title"].y = 200;
+
+    textRects["generalOptionsTitle"].x = WINDOW_WIDTH / 2 - textRects["generalOptionsTitle"].w / 2;
+    textRects["generalOptionsTitle"].y = generalOptionCardRects[0].y - textRects["generalOptionsTitle"].h - 30;
+
+    textRects["generationOptionsTitle"].x =  WINDOW_WIDTH / 2 - textRects["generationOptionsTitle"].w / 2;
+
 
 
     // --------------------------------------------------------------- main loop ------------------------------------------------------------
@@ -429,9 +437,15 @@ int main(int argc, char *args[]) {
             SDL_RenderFillRoundedRect(gRenderer, 0, 170, mainImageRect.w, WINDOW_HEIGHT * 2, 50, corners);
 
             //general option cards
+            SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr, &textRects["generalOptionsTitle"]);
             for (int i = 0; i < 4; i++) {
                 SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
-                drawCardWithIcon(gRenderer, generalOptionCardRects[i].x, generalOptionCardRects[i].y, generalOptionCardRects[i].w, generalOptionCardRects[i].h, 38, texts[generalOptionCardTexts[i]], textRects[generalOptionCardTexts[i]].w, textRects[generalOptionCardTexts[i]].h, &colors["primaryColor"], generalOptionCardIcons[i]);
+                textureWithDimensions text = {
+                        texts[generalOptionCardTexts[i]],
+                        textRects[generalOptionCardTexts[i]].w,
+                        textRects[generalOptionCardTexts[i]].h,
+                };
+                drawCardWithIcon(gRenderer, &generalOptionCardRects[i], 38, text, &colors["primaryColor"], generalOptionCardIcons[i]);
 
                 // number of holds
                 if (i == 3) {

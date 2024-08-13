@@ -4,6 +4,8 @@
 
 #include "../headers/utility.h"
 
+
+
 bool isWithinRadius(int x1, int y1, int x2, int y2, int radius) {
     int dx = x1 - x2;
     int dy = y1 - y2;
@@ -32,8 +34,8 @@ bool isPointInRoundedRect(int x, int y, SDL_Rect rect, int radius) {
     return false;
 }
 
-SDL_Texture* getTextureFromText(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Color* color, int* w, int* h) {
-    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, text.c_str(), *color);
+SDL_Texture* getTextureFromText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, SDL_Color* color, int* w, int* h) {
+    SDL_Surface* textSurface = TTF_RenderUTF8_Blended(font, text.c_str(), *color);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_FreeSurface(textSurface);
     TTF_SizeUTF8(font, text.c_str(), w, h);

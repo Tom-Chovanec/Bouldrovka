@@ -17,5 +17,6 @@ void SDL_SetRenderDrawColor(SDL_Renderer* renderer, SDL_Color color);
 SDL_Texture* createRoundedRectMask(SDL_Renderer* renderer, int w, int h, int radius);
 void renderImageWithMask(SDL_Renderer* renderer, SDL_Texture* mainImage, SDL_Rect* imageRect, SDL_Texture* mask);
 void renderIconInCircle(SDL_Renderer* renderer, int x, int y, int radius, int width, int padding, SDL_Texture* icon);
-void drawCardWithIcon(SDL_Renderer* renderer, int x, int y, int w, int h, int radius, SDL_Texture* text, int textW, int textH, SDL_Color* iconColor, SDL_Texture* icon);
+void drawCardWithIcon(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions text, SDL_Color* iconColor, SDL_Texture* icon);
+void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, SDL_Texture* title, SDL_Texture* firstValue, SDL_Texture* secondValue, SDL_Texture* value, SDL_Texture* minus, SDL_Texture* plus, SDL_Color* iconColor);
 #endif //BOULDER_RENDERING_H

@@ -11,6 +11,7 @@
 #include "fstream"
 #include "cmath"
 #include "filesystem"
+#include "unordered_map"
 #include "../headers/holds.h"
 #include "../headers/ui.h"
 #include "../headers/rendering.h"
@@ -134,34 +135,38 @@ int main(int argc, char *args[]) {
     } state;
 
     HoldType holdType;
-
-    SDL_Color primaryColor = {255, 106, 20 ,255};
-    SDL_Color secondaryColor = {255, 241, 233 ,255};
-    SDL_Color blueAccentColor = {255, 241, 233 ,255};
-    SDL_Color orangeAccentColor = {255, 241, 233 ,255};
-    SDL_Color redAccentColor = {255, 241, 233 ,255};
-    SDL_Color darkRedAccentColor = {255, 241, 233 ,255};
-    SDL_Color blackColor = {0, 0, 0 ,255};
-    SDL_Color whiteColor = {255, 255, 255 ,255};
-
     bool placeHolds = true;
-    SDL_Texture* mainImage = nullptr;
-    SDL_Texture* logoImage = loadTexture("images/logo.png", gRenderer);
-    SDL_Texture* threeBarsImage = loadTexture("images/3_bars.png", gRenderer);
-    SDL_Texture* leftArrowImage = loadTexture("images/left_arrow.png", gRenderer);
-    SDL_Texture* crossImage = loadTexture("images/cross.png", gRenderer);
-    SDL_Texture* topRightArrowImage = loadTexture("images/top_right_arrow.png", gRenderer);
-    SDL_Texture* penImage = loadTexture("images/pen.png", gRenderer);
-    SDL_Texture* backgroundBlobsImage = loadTexture("images/background_blobs.png", gRenderer);
-    SDL_Texture* blackMinusImage = loadTexture("images/black_minus.png", gRenderer);
-    SDL_Texture* blackPlusImage = loadTexture("images/black_plus.png", gRenderer);
-    SDL_Texture* whiteMinusImage = loadTexture("images/white.png", gRenderer);
-    SDL_Texture* whitePlusImage = loadTexture("images/black_plus.png", gRenderer);
+
+    std::unordered_map<std::string, SDL_Color> colors;
+
+    colors["primaryColor"] = {255, 106, 20 ,255};
+    colors["secondaryColor"] = {255, 241, 233 ,255};
+    colors["blueAccentColor"] = {255, 241, 233 ,255};
+    colors["orangeAccentColor"] = {255, 241, 233 ,255};
+    colors["redAccentColor"] = {255, 241, 233 ,255};
+    colors["darkRedAccentColor"] = {255, 241, 233 ,255};
+    colors["blackColor"] = {0, 0, 0 ,255};
+    colors["whiteColor"] = {255, 255, 255 ,255};
+
+    std::unordered_map<std::string, SDL_Texture*> textures;
+
+    textures["mainImage"] = nullptr;
+    textures["logoImage"]= loadTexture("images/logo.png", gRenderer);
+    textures["threeBarsImage"]= loadTexture("images/3_bars.png", gRenderer);
+    textures["leftArrowImage"]= loadTexture("images/left_arrow.png", gRenderer);
+    textures["crossImage "]= loadTexture("images/cross.png", gRenderer);
+    textures["topRightArrowImage"] = loadTexture("images/top_right_arrow.png", gRenderer);
+    textures["penImage"] = loadTexture("images/pen.png", gRenderer);
+    textures["backgroundBlobsImage"] = loadTexture("images/background_blobs.png", gRenderer);
+    textures["blackMinusImage"] = loadTexture("images/black_minus.png", gRenderer);
+    textures["blackPlusImage"] = loadTexture("images/black_plus.png", gRenderer);
+    textures["whiteMinusImage"] = loadTexture("images/white.png", gRenderer);
+    textures["whitePlusImage"] = loadTexture("images/black_plus.png", gRenderer);
 
     SDL_Texture* generalOptionCardIcons[4] = {
-            penImage,
-            penImage,
-            topRightArrowImage,
+            textures["penImage"],
+            textures["penImage"],
+            textures["topRightArrowImage"],
             nullptr
     };
 
@@ -173,8 +178,8 @@ int main(int argc, char *args[]) {
     mainImageRect.x = 0;
     mainImageRect.y = WINDOW_HEIGHT - mainImageRect.h;
 
-    SDL_SetRenderDrawColor(gRenderer, secondaryColor);
-    SDL_Texture* mainImageMask = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
+    SDL_SetRenderDrawColor(gRenderer, colors["secondaryColor"]);
+    textures["mainImageMask"] = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
 
 
     SDL_Rect generateButtonRect = {
@@ -234,7 +239,7 @@ int main(int argc, char *args[]) {
 
     std::vector<std::unique_ptr<Hold>> holds;
     std::vector<std::unique_ptr<Hold>> generatedHolds;
-    int holdCount[5] = {
+    int holdTypeCount[5] = {
             2,
             2,
             2,
@@ -243,31 +248,30 @@ int main(int argc, char *args[]) {
     };
 
     std::string generalOptionCardTexts[4] = {
-            "Kamenný boulder",
-            "Popis steny",
-            "Vymeniť fotku",
-            "Počet chytov",
+           "title",
+           "description",
+           "changePhoto",
+           "numOfHolds",
     };
-    SDL_Rect generalOptionCardTextRects[4];
-    SDL_Texture* generalOptionCardTextTextures[4];
+
+    std::unordered_map<std::string, SDL_Texture*> texts;
+    std::unordered_map<std::string, SDL_Rect> textRects;
+    texts["title"] = getTextureFromText(gRenderer, gFont, "Drevený boulder", &colors["blackColor"], &textRects["title"].w, &textRects["title"].h);
+    texts["description"] = getTextureFromText(gRenderer, gFont, "Popis steny", &colors["blackColor"], &textRects["description"].w, &textRects["description"].h);
+    texts["changePhoto"] = getTextureFromText(gRenderer, gFont, "Vymeniť fotku", &colors["blackColor"], &textRects["changePhoto"].w, &textRects["changePhoto"].h);
+    texts["numOfHolds"] = getTextureFromText(gRenderer, gFont, "Počet chytov", &colors["blackColor"], &textRects["numOfHolds"].w, &textRects["numOfHolds"].h);
     for (int i = 0; i < 4; i++) {
-        generalOptionCardTextRects[i].x = 100;
-        generalOptionCardTextTextures[i] = getTextureFromText(gRenderer, gFont, generalOptionCardTexts[i], &blackColor, &generalOptionCardTextRects[i].w, &generalOptionCardTextRects[i].h);
-        generalOptionCardTextRects[i].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - generalOptionCardTextRects[i].h / 2;
+        textRects[generalOptionCardTexts[i]].x = 100;
+        textRects[generalOptionCardTexts[i]].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - textRects[generalOptionCardTexts[i]].h / 2;
     }
 
-    int numOfHolds = 0;
-    SDL_Rect numOfHoldsRect;
-    SDL_Texture* numOfHoldsTexture = getTextureFromText(gRenderer, gFont, std::to_string(numOfHolds), &primaryColor, &numOfHoldsRect.w, &numOfHoldsRect.h);
-    numOfHoldsRect.x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - numOfHoldsRect.w / 2;
-    numOfHoldsRect.y = generalOptionCardRects[3].y + generalOptionCardRects[3].h / 2 - numOfHoldsRect.h / 2;
+    int holdCount = 0;
+    texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primaryColor"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+    textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+    textRects["holdCount"].y = textRects["numOfHolds"].y;
 
-    SDL_Rect titleRect = {
-            100,
-            200,
-            generalOptionCardTextRects[0].w,
-            generalOptionCardTextRects[0].h
-    };
+    textRects["title"].x = 100;
+    textRects["title"].y = 200;
 
 
     // --------------------------------------------------------------- main loop ------------------------------------------------------------
@@ -277,7 +281,7 @@ int main(int argc, char *args[]) {
 
     while (running) {
         if (changeImage) {
-            mainImage = loadTexture("/data/user/0/org.libsdl.app/files/boulder/background.jpg", gRenderer);
+            textures["mainImage"] = loadTexture("/data/user/0/org.libsdl.app/files/boulder/background.jpg", gRenderer);
             changeImage = false;
         }
         placeHolds = true;
@@ -306,7 +310,7 @@ int main(int argc, char *args[]) {
                 if (scene == MAIN) {
                     if (SDL_PointInRect(&mousePos, &generateButtonRect)) {
                         state = GENERATING;
-                        generatedHolds = getGeneratedHolds(holds, holdCount);
+                        generatedHolds = getGeneratedHolds(holds, holdTypeCount);
                     }
 
                     if (SDL_PointInRect(&mousePos, &selectMenuRect) || not SDL_PointInRect(&mousePos, &mainImageRect)) {
@@ -356,22 +360,28 @@ int main(int argc, char *args[]) {
                                 break;
 
                         }
-                        numOfHolds++;
-                        numOfHoldsTexture = getTextureFromText(gRenderer, gFont, std::to_string(numOfHolds), &primaryColor, &numOfHoldsRect.w, &numOfHoldsRect.h);
-                        numOfHoldsRect.x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - numOfHoldsRect.w / 2;
-                        numOfHoldsRect.y = generalOptionCardRects[3].y + generalOptionCardRects[3].h / 2 - numOfHoldsRect.h / 2;
+                        holdCount++;
+                        texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primaryColor"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                        textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+
                     }
 
                     if (state == DELETING) {
-                        holds.erase(
-                                std::remove_if(holds.begin(), holds.end(),
-                                               [&](const std::unique_ptr<Hold>& hold) {
-                                                   float dx = mousePos.x - hold->x;
-                                                   float dy = mousePos.y - hold->y;
-                                                   return std::sqrt(dx * dx + dy * dy) <= hold->radius;
-                                               }),
-                                holds.end());
+                        auto it = std::remove_if(holds.begin(), holds.end(),
+                         [&](const std::unique_ptr<Hold>& hold) {
+                             float dx = mousePos.x - hold->x;
+                             float dy = mousePos.y - hold->y;
+                             bool shouldRemove = std::sqrt(dx * dx + dy * dy) <= hold->radius;
+                             if (shouldRemove) {
+                                 holdCount--;
+                                 texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primaryColor"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                                 textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+                             }
+                             return shouldRemove;
+                         } );
+                        holds.erase(it, holds.end());
                     }
+
                 }
 
                 if (scene == OPTIONS) {
@@ -385,30 +395,30 @@ int main(int argc, char *args[]) {
         // -----------------------------------------------  rendering   ------------------------------------------
 
         // set background
-        SDL_SetRenderDrawColor(gRenderer, whiteColor);
+        SDL_SetRenderDrawColor(gRenderer, colors["whiteColor"]);
         SDL_RenderClear(gRenderer);
 
         if (scene == MAIN) {
 
             // image background
-            SDL_SetRenderDrawColor(gRenderer, secondaryColor);
+            SDL_SetRenderDrawColor(gRenderer, colors["secondaryColor"]);
             bool corners[4] = {true, true, false, false};
             SDL_RenderFillRoundedRect(gRenderer, 0, WINDOW_HEIGHT - mainImageRect.h - 35, mainImageRect.w, mainImageRect.h + 35, 60, corners);
 
             //main image
-            drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, mainImage, &mainImageRect, mainImageMask);
+            drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["mainImage"], &mainImageRect, textures["mainImageMask"]);
 
             // holds
             if (state == GENERATING) drawHolds(gRenderer, generatedHolds);
             else drawHolds(gRenderer, holds);
 
             // buttons
-            SDL_SetRenderDrawColor(gRenderer, secondaryColor);
-            drawGenerateButton(gRenderer, WINDOW_WIDTH, logoImage, &generateButtonRect);
-            drawSelectHoldMenu(gRenderer, selectMenuX, selectMenuY, selectMenuW, selectMenuH, selectMenuHoldRadius, selectMenuHoldWidth, crossImage);
+            SDL_SetRenderDrawColor(gRenderer, colors["secondaryColor"]);
+            drawGenerateButton(gRenderer, WINDOW_WIDTH, textures["logoImage"], &generateButtonRect);
+            drawSelectHoldMenu(gRenderer, selectMenuX, selectMenuY, selectMenuW, selectMenuH, selectMenuHoldRadius, selectMenuHoldWidth, textures["crossImage"]);
 
             // title
-            SDL_RenderCopy(gRenderer, generalOptionCardTextTextures[0], nullptr, &titleRect);
+            SDL_RenderCopy(gRenderer, texts["title"], nullptr, &textRects["title"]);
         }
 
         if (scene == OPTIONS) {
@@ -421,38 +431,32 @@ int main(int argc, char *args[]) {
             //general option cards
             for (int i = 0; i < 4; i++) {
                 SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
-                drawCardWithIcon(gRenderer, generalOptionCardRects[i].x, generalOptionCardRects[i].y, generalOptionCardRects[i].w, generalOptionCardRects[i].h, 38, generalOptionCardTextTextures[i], generalOptionCardTextRects[i].w, generalOptionCardTextRects[i].h, &primaryColor, generalOptionCardIcons[i]);
+                drawCardWithIcon(gRenderer, generalOptionCardRects[i].x, generalOptionCardRects[i].y, generalOptionCardRects[i].w, generalOptionCardRects[i].h, 38, texts[generalOptionCardTexts[i]], textRects[generalOptionCardTexts[i]].w, textRects[generalOptionCardTexts[i]].h, &colors["primaryColor"], generalOptionCardIcons[i]);
 
                 // number of holds
                 if (i == 3) {
-                    SDL_RenderCopy(gRenderer, numOfHoldsTexture, nullptr, &numOfHoldsRect);
+                    SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &textRects["holdCount"]);
                 }
             }
 
         }
 
-        drawSettingsButton(gRenderer, threeBarsImage, &settingsButtonRect);
-        drawBackButton(gRenderer, leftArrowImage, &backButtonRect);
+        drawSettingsButton(gRenderer, textures["threeBarsImage"], &settingsButtonRect);
+        drawBackButton(gRenderer, textures["leftArrowImage"], &backButtonRect);
         SDL_RenderPresent(gRenderer);
     }
 
     // --------------------------------------------------- clean up -----------------------------------------------
-    SDL_DestroyTexture(mainImageMask);
-    SDL_DestroyTexture(mainImage);
-    SDL_DestroyTexture(topRightArrowImage);
-    SDL_DestroyTexture(penImage);
-    SDL_DestroyTexture(crossImage);
-    SDL_DestroyTexture(leftArrowImage);
-    SDL_DestroyTexture(threeBarsImage);
-    SDL_DestroyTexture(logoImage);
-    SDL_DestroyTexture(backgroundBlobsImage);
-    SDL_DestroyTexture(blackMinusImage);
-    SDL_DestroyTexture(blackPlusImage);
-    SDL_DestroyTexture(whiteMinusImage);
-    SDL_DestroyTexture(whitePlusImage);
-    for(auto & generalOptionCardTextTexture : generalOptionCardTextTextures) {
-        SDL_DestroyTexture(generalOptionCardTextTexture);
+    for (auto& pair : textures) {
+        SDL_DestroyTexture(pair.second);
     }
+    textures.clear();
+
+    for(auto & pair : texts) {
+        SDL_DestroyTexture(pair.second);
+    }
+    texts.clear();
+
     TTF_CloseFont(gFont);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);

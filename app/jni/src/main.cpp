@@ -30,7 +30,7 @@ void openImagePicker() {
 SDL_Texture* loadTexture(const std::string &path, SDL_Renderer* renderer) {
     // Load image at specified path
     SDL_Texture* newTexture = IMG_LoadTexture(renderer, path.c_str());
-    if (newTexture == NULL) {
+    if (newTexture == nullptr) {
         SDL_Log("Unable to load image %s ! SDL_image Error: %s ", path.c_str(), IMG_GetError());
     }
     return newTexture;
@@ -105,7 +105,7 @@ int main(int argc, char *args[]) {
     }
 
     TTF_Font* gFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 78);
-    if (gFont == NULL) {
+    if (gFont == nullptr) {
         printf("TTF_OpenFont Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(gRenderer);
         SDL_DestroyWindow(gWindow);
@@ -127,10 +127,10 @@ int main(int argc, char *args[]) {
     scene = MAIN;
 
     enum {
-       PLACING = 0,
-       DELETING,
-       OPENING_GALLERY,
-       GENERATING,
+        PLACING = 0,
+        DELETING,
+        OPENING_GALLERY,
+        GENERATING,
     } state;
 
     HoldType holdType;
@@ -158,10 +158,11 @@ int main(int argc, char *args[]) {
     SDL_Texture* whiteMinusImage = loadTexture("images/white.png", gRenderer);
     SDL_Texture* whitePlusImage = loadTexture("images/black_plus.png", gRenderer);
 
-    SDL_Texture* generalOptionCardIcons[3] = {
+    SDL_Texture* generalOptionCardIcons[4] = {
             penImage,
             penImage,
-            topRightArrowImage
+            topRightArrowImage,
+            nullptr
     };
 
 
@@ -242,10 +243,10 @@ int main(int argc, char *args[]) {
     };
 
     std::string generalOptionCardTexts[4] = {
-        "Kamenný boulder",
-        "Popis steny",
-        "Vymeniť fotku",
-        "Počet chytov",
+            "Kamenný boulder",
+            "Popis steny",
+            "Vymeniť fotku",
+            "Počet chytov",
     };
     SDL_Rect generalOptionCardTextRects[4];
     SDL_Texture* generalOptionCardTextTextures[4];
@@ -254,6 +255,12 @@ int main(int argc, char *args[]) {
         generalOptionCardTextTextures[i] = getTextureFromText(gRenderer, gFont, generalOptionCardTexts[i], &blackColor, &generalOptionCardTextRects[i].w, &generalOptionCardTextRects[i].h);
         generalOptionCardTextRects[i].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - generalOptionCardTextRects[i].h / 2;
     }
+
+    int numOfHolds = 0;
+    SDL_Rect numOfHoldsRect;
+    SDL_Texture* numOfHoldsTexture = getTextureFromText(gRenderer, gFont, std::to_string(numOfHolds), &primaryColor, &numOfHoldsRect.w, &numOfHoldsRect.h);
+    numOfHoldsRect.x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - numOfHoldsRect.w / 2;
+    numOfHoldsRect.y = generalOptionCardRects[3].y + generalOptionCardRects[3].h / 2 - numOfHoldsRect.h / 2;
 
     SDL_Rect titleRect = {
             100,
@@ -349,6 +356,10 @@ int main(int argc, char *args[]) {
                                 break;
 
                         }
+                        numOfHolds++;
+                        numOfHoldsTexture = getTextureFromText(gRenderer, gFont, std::to_string(numOfHolds), &primaryColor, &numOfHoldsRect.w, &numOfHoldsRect.h);
+                        numOfHoldsRect.x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - numOfHoldsRect.w / 2;
+                        numOfHoldsRect.y = generalOptionCardRects[3].y + generalOptionCardRects[3].h / 2 - numOfHoldsRect.h / 2;
                     }
 
                     if (state == DELETING) {
@@ -402,24 +413,22 @@ int main(int argc, char *args[]) {
 
         if (scene == OPTIONS) {
             bool corners[4] = {true, true, false, false};
-            bool cardCorners[4] = {true, true, true, true};
 
             // background
             SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
             SDL_RenderFillRoundedRect(gRenderer, 0, 170, mainImageRect.w, WINDOW_HEIGHT * 2, 50, corners);
 
-            //cards
-            SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+            //general option cards
             for (int i = 0; i < 4; i++) {
-                SDL_RenderFillRoundedRect(gRenderer, generalOptionCardRects[i].x, generalOptionCardRects[i].y, generalOptionCardRects[i].w, generalOptionCardRects[i].h, 50, cardCorners);
-                SDL_RenderCopy(gRenderer, generalOptionCardTextTextures[i], nullptr, &generalOptionCardTextRects[i]);
+                SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
+                drawCardWithIcon(gRenderer, generalOptionCardRects[i].x, generalOptionCardRects[i].y, generalOptionCardRects[i].w, generalOptionCardRects[i].h, 38, generalOptionCardTextTextures[i], generalOptionCardTextRects[i].w, generalOptionCardTextRects[i].h, &primaryColor, generalOptionCardIcons[i]);
+
+                // number of holds
+                if (i == 3) {
+                    SDL_RenderCopy(gRenderer, numOfHoldsTexture, nullptr, &numOfHoldsRect);
+                }
             }
 
-            //card icons
-            SDL_SetRenderDrawColor(gRenderer, primaryColor);
-            for (int i = 0; i < 3; i++) {
-                renderIconInCircle(gRenderer, WINDOW_WIDTH - 200, generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2, 38, 10, 5, generalOptionCardIcons[i]);
-            }
         }
 
         drawSettingsButton(gRenderer, threeBarsImage, &settingsButtonRect);
@@ -441,8 +450,8 @@ int main(int argc, char *args[]) {
     SDL_DestroyTexture(blackPlusImage);
     SDL_DestroyTexture(whiteMinusImage);
     SDL_DestroyTexture(whitePlusImage);
-    for(int i = 0; i < 4; i++) {
-        SDL_DestroyTexture(generalOptionCardTextTextures[i]);
+    for(auto & generalOptionCardTextTexture : generalOptionCardTextTextures) {
+        SDL_DestroyTexture(generalOptionCardTextTexture);
     }
     TTF_CloseFont(gFont);
     SDL_DestroyRenderer(gRenderer);

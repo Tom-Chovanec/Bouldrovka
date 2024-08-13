@@ -56,7 +56,7 @@ int SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius, int w
 int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius) {
     int status = 0;
 
-    SDL_Point* points = (SDL_Point*)malloc(4 * radius * radius * sizeof(SDL_Point));
+    auto* points = (SDL_Point*)malloc(4 * radius * radius * sizeof(SDL_Point));
     int pointCount = 0;
 
     for (int dy = -radius; dy <= radius; dy++) {
@@ -149,10 +149,10 @@ void renderImageWithMask(SDL_Renderer* renderer, SDL_Texture* mainImage, SDL_Rec
     SDL_SetTextureBlendMode(mainImage, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(renderer, 0,0,0,0);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, mainImage, NULL, NULL);
-    SDL_RenderCopy(renderer, mask, NULL, NULL);
-    SDL_SetRenderTarget(renderer, NULL);
-    SDL_RenderCopy(renderer,result, NULL, imageRect);
+    SDL_RenderCopy(renderer, mainImage, nullptr, nullptr);
+    SDL_RenderCopy(renderer, mask, nullptr, nullptr);
+    SDL_SetRenderTarget(renderer, nullptr);
+    SDL_RenderCopy(renderer,result, nullptr, imageRect);
     SDL_DestroyTexture(result);
 }
 
@@ -171,3 +171,19 @@ void renderIconInCircle(SDL_Renderer* renderer, int x, int y, int radius, int wi
     SDL_RenderCopy(renderer, icon, nullptr, &rect);
 }
 
+void drawCardWithIcon(SDL_Renderer* renderer, int x, int y, int w, int h, int radius, SDL_Texture* text, int textW, int textH, SDL_Color* iconColor, SDL_Texture* icon) {
+    bool corners[4] = {true, true, true, true};
+    SDL_RenderFillRoundedRect(renderer, x, y, w, h, radius, corners);
+    SDL_Rect textRect = {
+            x + 50,
+            y + h / 2 - textH / 2,
+            textW,
+            textH,
+    };
+    SDL_RenderCopy(renderer, text, nullptr, &textRect);
+
+    if (icon != nullptr) {
+        SDL_SetRenderDrawColor(renderer, *iconColor);
+        renderIconInCircle(renderer, x + w - 100, y + h / 2, radius, 10, 5, icon);
+    }
+}

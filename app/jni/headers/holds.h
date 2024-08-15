@@ -22,6 +22,10 @@ enum HoldType {
     FOOT,
 };
 
+struct twoNum {
+    int a;
+    int b;
+};
 
 class Hold {
 public:
@@ -34,7 +38,7 @@ public:
 
 void drawHolds(SDL_Renderer* renderer, const std::vector<std::unique_ptr<Hold>>& holds);
 
-std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::unique_ptr<Hold>>& holds, int amount[5]);
+std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::unique_ptr<Hold>>& holds, twoNum amount[5]);
 
 #endif //BOULDER_HOLDS_H
 

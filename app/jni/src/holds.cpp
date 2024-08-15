@@ -59,10 +59,11 @@ void drawHolds(SDL_Renderer* renderer, const std::vector<std::unique_ptr<Hold>>&
     }
 }
 
-std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::unique_ptr<Hold>>& holds, int amount[5]) {
+std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::unique_ptr<Hold>>& holds, twoNum amount[5]) {
     std::vector<std::unique_ptr<Hold>> result;
     std::vector<std::unique_ptr<Hold>> x[5];
 
+    // Split the holds into separate categories based on their type
     for (auto& hold : holds) {
         switch (hold->type) {
             case TOP:
@@ -83,15 +84,25 @@ std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::uniq
         }
     }
 
-    for (int i = 0; i < 5; i++) {
-        if (x[i].size() < amount[i]) continue;
-        std::vector<int> indices(x[i].size());
-        std::iota(indices.begin(), indices.end(), 0);
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(indices.begin(), indices.end(), g);
+    // Random device and generator for shuffling
+    std::random_device rd;
+    std::mt19937 g(rd());
 
-        for (int j = 0; j < amount[i]; ++j) {
+    // Iterate through the categories
+    for (int i = 0; i < 5; i++) {
+        std::vector<int> indices(x[i].size());
+        std::iota(indices.begin(), indices.end(), 0); // Create an index sequence
+        std::shuffle(indices.begin(), indices.end(), g); // Shuffle the indices
+
+        // Ensure the amount of holds to generate is within the min and max bounds
+        int count = 0;
+        if (!x[i].empty()) {
+            std::uniform_int_distribution<> dist(amount[i].a, std::min(static_cast<int>(x[i].size()), amount[i].b));
+            count = dist(g);
+        }
+
+        // Select `count` number of holds from the shuffled indices
+        for (int j = 0; j < count; ++j) {
             result.push_back(std::make_unique<Hold>(*x[i][indices[j]]));
         }
     }

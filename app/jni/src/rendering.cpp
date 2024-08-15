@@ -2,11 +2,7 @@
 // Created by PvPSk on 7/12/2024.
 //
 
-#pragma once
 #include "../headers/rendering.h"
-
-#include <SDL.h>
-
 
 
 int SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius, int width) {
@@ -193,7 +189,7 @@ void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textu
     SDL_RenderFillRoundedRect(renderer, rect->x, rect->y, rect->w, rect->h, radius, corners);
     SDL_Rect titleRect = {
             rect->x + 50,
-            rect->y + 20 - title.h ,
+            rect->y + 20 ,
             title.w,
             title.h,
     };

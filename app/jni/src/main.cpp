@@ -139,14 +139,14 @@ int main(int argc, char *args[]) {
 
     std::unordered_map<std::string, SDL_Color> colors;
 
-    colors["primaryColor"] = {255, 106, 20 ,255};
-    colors["secondaryColor"] = {255, 241, 233 ,255};
-    colors["blueAccentColor"] = {255, 241, 233 ,255};
-    colors["orangeAccentColor"] = {255, 241, 233 ,255};
-    colors["redAccentColor"] = {255, 241, 233 ,255};
-    colors["darkRedAccentColor"] = {255, 241, 233 ,255};
-    colors["blackColor"] = {0, 0, 0 ,255};
-    colors["whiteColor"] = {255, 255, 255 ,255};
+    colors["primary"] = {255, 106, 20 ,255};
+    colors["secondary"] = {255, 241, 233 ,255};
+    colors["blueAccent"] = {255, 241, 233 ,255};
+    colors["orangeAccent"] = {255, 241, 233 ,255};
+    colors["redAccent"] = {255, 241, 233 ,255};
+    colors["darkRedAccent"] = {255, 241, 233 ,255};
+    colors["black"] = {0, 0, 0 ,255};
+    colors["white"] = {255, 255, 255 ,255};
 
     std::unordered_map<std::string, SDL_Texture*> textures;
 
@@ -178,7 +178,7 @@ int main(int argc, char *args[]) {
     mainImageRect.x = 0;
     mainImageRect.y = WINDOW_HEIGHT - mainImageRect.h;
 
-    SDL_SetRenderDrawColor(gRenderer, colors["secondaryColor"]);
+    SDL_SetRenderDrawColor(gRenderer, colors["secondary"]);
     textures["mainImageMask"] = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
 
 
@@ -221,6 +221,15 @@ int main(int argc, char *args[]) {
         generalOptionCardIconRect[i].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - generalOptionCardIconRect[i].h / 2;
     }
 
+    SDL_Rect generationOptionCardRects[6];
+
+    for (int i = 0; i < 6; i++) {
+        generationOptionCardRects[i].x = 50;
+        generationOptionCardRects[i].h = 450;
+        generationOptionCardRects[i].w = WINDOW_WIDTH - 2 * generationOptionCardRects[i].x;
+        generationOptionCardRects[i].y = generalOptionCardRects[3].y + generalOptionCardRects[3].h + 170 + (generationOptionCardRects[i].h + generationOptionCardRects[i].x) * i;
+    }
+
     int selectMenuX = WINDOW_WIDTH - 120;
     int selectMenuY = 500;
     int selectMenuW = 120;
@@ -239,12 +248,13 @@ int main(int argc, char *args[]) {
 
     std::vector<std::unique_ptr<Hold>> holds;
     std::vector<std::unique_ptr<Hold>> generatedHolds;
-    int holdTypeCount[5] = {
-            2,
-            2,
-            2,
-            2,
-            0
+
+    twoNum holdTypeCount[5] = {
+            //{1, 2},
+            {2, 6},
+            {2, 6},
+            {1, 2},
+            {1, 2},
     };
 
     std::string generalOptionCardTexts[4] = {
@@ -254,21 +264,53 @@ int main(int argc, char *args[]) {
            "numOfHolds",
     };
 
+    std::string generationOptionCardTexts[6] = {
+            //"topHolds",
+            "topSection",
+            "bottomSection",
+            "startHolds",
+            "startFootHolds",
+            "footHolds",
+    };
+
+    std::string generationValues[6] = {
+            //"topHoldsValue",
+            "topSectionValue",
+            "bottomSectionValue",
+            "startHoldsValue",
+            "startFootHoldsValue",
+            "footHoldsValue",
+    };
+
     std::unordered_map<std::string, SDL_Texture*> texts;
     std::unordered_map<std::string, SDL_Rect> textRects;
-    texts["title"] = getTextureFromText(gRenderer, gFont, "Drevený boulder", &colors["blackColor"], &textRects["title"].w, &textRects["title"].h);
-    texts["generalOptionsTitle"] = getTextureFromText(gRenderer, gFont, "Nastavenia steny", &colors["blackColor"], &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
-    texts["generationOptionsTitle"] = getTextureFromText(gRenderer, gFont, "Nastavenia generácie", &colors["blackColor"], &textRects["generationOptionsTitle"].w, &textRects["generationOptionsTitle"].h);
-    texts["description"] = getTextureFromText(gRenderer, gFont, "Popis steny", &colors["blackColor"], &textRects["description"].w, &textRects["description"].h);
-    texts["changePhoto"] = getTextureFromText(gRenderer, gFont, "Vymeniť fotku", &colors["blackColor"], &textRects["changePhoto"].w, &textRects["changePhoto"].h);
-    texts["numOfHolds"] = getTextureFromText(gRenderer, gFont, "Počet chytov", &colors["blackColor"], &textRects["numOfHolds"].w, &textRects["numOfHolds"].h);
+    texts["title"] = getTextureFromText(gRenderer, gFont, "Drevený boulder", &colors["black"], &textRects["title"].w, &textRects["title"].h);
+    texts["generalOptionsTitle"] = getTextureFromText(gRenderer, gFont, "Nastavenia steny", &colors["black"], &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
+    texts["generationOptionsTitle"] = getTextureFromText(gRenderer, gFont, "Nastavenia generácie", &colors["black"], &textRects["generationOptionsTitle"].w, &textRects["generationOptionsTitle"].h);
+    texts["description"] = getTextureFromText(gRenderer, gFont, "Popis steny", &colors["black"], &textRects["description"].w, &textRects["description"].h);
+    texts["changePhoto"] = getTextureFromText(gRenderer, gFont, "Vymeniť fotku", &colors["black"], &textRects["changePhoto"].w, &textRects["changePhoto"].h);
+    texts["numOfHolds"] = getTextureFromText(gRenderer, gFont, "Počet chytov", &colors["black"], &textRects["numOfHolds"].w, &textRects["numOfHolds"].h);
+    texts["topSection"] = getTextureFromText(gRenderer, gFont, "Vrchná sekcia", &colors["black"], &textRects["topSection"].w, &textRects["topSection"].h);
+    texts["bottomSection"] = getTextureFromText(gRenderer, gFont, "Spodná sekcia", &colors["black"], &textRects["bottomSection"].w, &textRects["bottomSection"].h);
+    texts["topHolds"] = getTextureFromText(gRenderer, gFont, "Topove chyty", &colors["black"], &textRects["topHolds"].w, &textRects["topHolds"].h);
+    texts["startHolds"] = getTextureFromText(gRenderer, gFont, "Štartovné chyty", &colors["black"], &textRects["startHolds"].w, &textRects["startHolds"].h);
+    texts["startFootHolds"] = getTextureFromText(gRenderer, gFont, "Štartovné stupy", &colors["black"], &textRects["startFootHolds"].w, &textRects["startFootHolds"].h);
+    texts["footHolds"] = getTextureFromText(gRenderer, gFont, "Stupy v ceste", &colors["black"], &textRects["footHolds"].w, &textRects["footHolds"].h);
+    texts["zoneGenerating"] = getTextureFromText(gRenderer, gFont, "Generovanie zón", &colors["black"], &textRects["zoneGenerating"].w, &textRects["zoneGenerating"].h);
+    texts["min"] = getTextureFromText(gRenderer, gFont, "Min", &colors["black"], &textRects["min"].w, &textRects["min"].h);
+    texts["max"] = getTextureFromText(gRenderer, gFont, "Max", &colors["black"], &textRects["max"].w, &textRects["max"].h);
+
+    for (int i = 0; i < 5; i++) {
+        std::string string = std::to_string(holdTypeCount[i].a) + " až " + std::to_string(holdTypeCount[i].b);
+        texts[generationValues[i]] = getTextureFromText(gRenderer, gFont, string, &colors["black"], &textRects[generationValues[i]].w, &textRects[generationValues[i]].h);
+    }
     for (int i = 0; i < 4; i++) {
         textRects[generalOptionCardTexts[i]].x = 100;
         textRects[generalOptionCardTexts[i]].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - textRects[generalOptionCardTexts[i]].h / 2;
     }
 
     int holdCount = 0;
-    texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primaryColor"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+    texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
     textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
     textRects["holdCount"].y = textRects["numOfHolds"].y;
 
@@ -369,7 +411,7 @@ int main(int argc, char *args[]) {
 
                         }
                         holdCount++;
-                        texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primaryColor"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                        texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
                         textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
 
                     }
@@ -382,7 +424,7 @@ int main(int argc, char *args[]) {
                              bool shouldRemove = std::sqrt(dx * dx + dy * dy) <= hold->radius;
                              if (shouldRemove) {
                                  holdCount--;
-                                 texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primaryColor"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                                 texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
                                  textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
                              }
                              return shouldRemove;
@@ -403,13 +445,13 @@ int main(int argc, char *args[]) {
         // -----------------------------------------------  rendering   ------------------------------------------
 
         // set background
-        SDL_SetRenderDrawColor(gRenderer, colors["whiteColor"]);
+        SDL_SetRenderDrawColor(gRenderer, colors["white"]);
         SDL_RenderClear(gRenderer);
 
         if (scene == MAIN) {
 
             // image background
-            SDL_SetRenderDrawColor(gRenderer, colors["secondaryColor"]);
+            SDL_SetRenderDrawColor(gRenderer, colors["secondary"]);
             bool corners[4] = {true, true, false, false};
             SDL_RenderFillRoundedRect(gRenderer, 0, WINDOW_HEIGHT - mainImageRect.h - 35, mainImageRect.w, mainImageRect.h + 35, 60, corners);
 
@@ -421,7 +463,7 @@ int main(int argc, char *args[]) {
             else drawHolds(gRenderer, holds);
 
             // buttons
-            SDL_SetRenderDrawColor(gRenderer, colors["secondaryColor"]);
+            SDL_SetRenderDrawColor(gRenderer, colors["secondary"]);
             drawGenerateButton(gRenderer, WINDOW_WIDTH, textures["logoImage"], &generateButtonRect);
             drawSelectHoldMenu(gRenderer, selectMenuX, selectMenuY, selectMenuW, selectMenuH, selectMenuHoldRadius, selectMenuHoldWidth, textures["crossImage"]);
 
@@ -445,12 +487,47 @@ int main(int argc, char *args[]) {
                         textRects[generalOptionCardTexts[i]].w,
                         textRects[generalOptionCardTexts[i]].h,
                 };
-                drawCardWithIcon(gRenderer, &generalOptionCardRects[i], 38, text, &colors["primaryColor"], generalOptionCardIcons[i]);
+                drawCardWithIcon(gRenderer, &generalOptionCardRects[i], 38, text, &colors["primary"], generalOptionCardIcons[i]);
 
                 // number of holds
                 if (i == 3) {
                     SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &textRects["holdCount"]);
                 }
+            }
+
+            //generation option cards
+            for (int i = 0; i < 1; i++) {
+                textureWithDimensions title = {
+                        texts[generationOptionCardTexts[i]],
+                        textRects[generationOptionCardTexts[i]].w,
+                        textRects[generationOptionCardTexts[i]].h,
+                };
+                textureWithDimensions min = {
+                        texts["min"],
+                        textRects["min"].w,
+                        textRects["min"].h
+                };
+                textureWithDimensions max = {
+                        texts["max"],
+                        textRects["max"].w,
+                        textRects["max"].h
+                };
+                textureWithDimensions value = {
+                        texts[generationValues[i]],
+                        textRects[generationValues[i]].w,
+                        textRects[generationValues[i]].h
+                };
+                textureWithDimensions minus = {
+                        texts["blackMinus"],
+                        textRects["blackMinus"].w,
+                        textRects["blackMinus"].h
+                };
+                textureWithDimensions plus = {
+                        texts["blackPlus"],
+                        textRects["blackPlus"].w,
+                        textRects["blackPlus"].h
+                };
+                drawCardWithValue(gRenderer, &generationOptionCardRects[i], 38, title, min, max, value, minus, plus, &colors["black"]);
             }
 
         }

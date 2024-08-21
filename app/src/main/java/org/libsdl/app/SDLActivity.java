@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.app.UiModeManager;
 import android.content.ClipboardManager;
 import android.content.ClipData;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,13 +23,11 @@ import android.hardware.Sensor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.Selection;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
@@ -55,7 +52,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,16 +59,10 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Locale;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
-
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+
 /**
     SDL Activity
 */
@@ -237,7 +227,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected static int mLastCursorID;
     protected static SDLGenericMotionListener_API12 mMotionListener;
     protected static HIDDeviceManager mHIDDeviceManager;
-
     // This is what SDL runs in. It invokes SDL_main(), eventually
     protected static Thread mSDLThread;
 
@@ -258,7 +247,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     private static final int YOUR_REQUEST_CODE = 52;
 
     // Copy a file from source to destination
-    private void copyFile(File sourceFile, File destFile) throws IOException {
+    protected void copyFile(File sourceFile, File destFile) throws IOException {
         try (InputStream in = new FileInputStream(sourceFile);
              OutputStream out = new FileOutputStream(destFile)) {
             byte[] buffer = new byte[1024];
@@ -270,70 +259,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     }
 
 
-    private static final int YOUR_PERMISSIONS_REQUEST_READ_STORAGE = 58;
-    private static final int YOUR_PERMISSIONS_REQUEST_READ_MEDIA_IMAGES = 59;
-    private static final int YOUR_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 60;
-    private static final int YOUR_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 61;
 
-    public void openImagePicker() {
-/*
-            if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, YOUR_PERMISSIONS_REQUEST_READ_MEDIA_IMAGES);
-            } else if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-               requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            } else if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, YOUR_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-          } else {
-            }
-*/
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, YOUR_REQUEST_CODE); // Define YOUR_REQUEST_CODE as a constant
-    }
 
-    public native void onImagePicked();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == YOUR_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            assert selectedImage != null;
 
-            // Get the file path from the URI
-            String imagePath = getPathFromUri(selectedImage);
-
-            // Now you can save the image to your desired location
-            File destinationDir = new File(getFilesDir(), "boulder");
-            if (!destinationDir.exists()) {
-                destinationDir.mkdirs(); // Create the directory if it doesn't exist
-            }
-            File destinationFile = new File(destinationDir, "background.jpg");
-            Log.i("imagepath", destinationFile.getAbsolutePath());
-            try {
-                copyFile(new File(imagePath), destinationFile); // Use FileUtils from Apache Commons IO
-                onImagePicked();
-                // Handle the saved image as needed
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Handle the error
-            }
-        }
-    }
 
     // Helper method to get the file path from a content URI
-    private String getPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String path = cursor.getString(columnIndex);
-            cursor.close();
-            return path;
-        }
-        return null;
-    }
 
     public static void requestPermission(String permission, int requestCode) {
         // Implementation to request permission
@@ -1873,15 +1804,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     /**
      * This method is called by SDL using JNI.
      */
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, open the image picker
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, YOUR_REQUEST_CODE);
-            }
-    }
 
     /**
      * This method is called by SDL using JNI.

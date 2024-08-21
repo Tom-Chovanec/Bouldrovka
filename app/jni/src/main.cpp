@@ -22,7 +22,7 @@ bool changeImage = true;
 void openImagePicker() {
     auto* env = static_cast<JNIEnv *>(SDL_AndroidGetJNIEnv());
     auto activity = static_cast<jobject>(SDL_AndroidGetActivity());
-    jclass clazz = env->FindClass("org/libsdl/app/SDLActivity");
+    jclass clazz = env->FindClass("com/bouldrovka/app/Bouldrovka");
     jmethodID methodId = env->GetMethodID(clazz, "openImagePicker", "()V");
     env->CallVoidMethod(activity, methodId);
     env->DeleteLocalRef(clazz);
@@ -39,7 +39,7 @@ SDL_Texture* loadTexture(const std::string &path, SDL_Renderer* renderer) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_libsdl_app_SDLActivity_onImagePicked(JNIEnv *env, jobject obj) {
+Java_com_bouldrovka_app_Bouldrovka_onImagePicked(JNIEnv *env, jobject obj) {
     changeImage = true;
 }
 
@@ -331,7 +331,7 @@ int main(int argc, char *args[]) {
 
     while (running) {
         if (changeImage) {
-            textures["mainImage"] = loadTexture("/data/user/0/org.libsdl.app/files/boulder/background.jpg", gRenderer);
+            textures["mainImage"] = loadTexture("/data/user/0/com.bouldrovka.app/files/boulder/background.jpg", gRenderer);
             changeImage = false;
         }
         placeHolds = true;

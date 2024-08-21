@@ -1,9 +1,11 @@
-![](https://github.com/Tom-Chovanec/Bouldrovka/blob/6cf6ca118d78ebacf3f4a59a84582d8eb35113af/app/src/main/assets/images/logo.png)
-# Bouldrovka
-### Aplikácia Bouldrovka pre Android
 
-
-**Bouldrovka** je aplikácia na automatické generovanie boulderingových ciest, známych aj ako *problémy*. Táto aplikácia pomáha lezeckým nadšencom, trénerom a prevádzkovateľom lezeckých stien vytvárať nové a zaujímavé boulderingové problémy rôznych obtiažností a štýlov stlačením jediného tlačidla.
+<div align="center">
+   <img src="https://github.com/Tom-Chovanec/Bouldrovka/blob/6cf6ca118d78ebacf3f4a59a84582d8eb35113af/app/src/main/assets/images/logo.png">
+<h1>Bouldrovka</h1>
+<h3>Aplikácia Bouldrovka pre Android</h3>
+</div>
+<br />
+<strong>Bouldrovka</strong> je aplikácia na automatické generovanie boulderingových ciest, známych aj ako *problémy*. Táto aplikácia pomáha lezeckým nadšencom, trénerom a prevádzkovateľom lezeckých stien vytvárať nové a zaujímavé boulderingové problémy rôznych obtiažností a štýlov stlačením jediného tlačidla.
 
 ## Obsah
 

@@ -169,9 +169,21 @@ void renderIconInCircle(SDL_Renderer* renderer, int x, int y, int radius, int wi
 
 void drawCardWithIcon(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions text, SDL_Color* iconColor, SDL_Texture* icon) {
     bool corners[4] = {true, true, true, true};
+
+    // scuffed drop shadow
+    SDL_SetRenderDrawColor(renderer, 183, 174, 169, 255);
+    SDL_Rect shadowRect = {
+            rect->x - 5,
+            rect->y + 5,
+            rect->w,
+            rect->h
+    };
+    SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, radius, corners);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRoundedRect(renderer, rect->x, rect->y, rect->w, rect->h, radius, corners);
     SDL_Rect textRect = {
-            rect->x + 50,
+            rect->x + 40,
             rect->y + rect->h / 2 - text.h / 2,
             text.w,
             text.h,
@@ -184,14 +196,89 @@ void drawCardWithIcon(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textur
     }
 }
 
-void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions title, textureWithDimensions firstValue, textureWithDimensions secondValue, textureWithDimensions value, textureWithDimensions minus, textureWithDimensions plus, SDL_Color* iconColor) {
+void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions title, textureWithDimensions firstValue, textureWithDimensions secondValue, textureWithDimensions value, SDL_Texture* minus, SDL_Texture* plus, SDL_Color* iconColor) {
     bool corners[4] = {true, true, true, true};
+
+    // scuffed drop shadow
+    SDL_SetRenderDrawColor(renderer, 183, 174, 169, 255);
+    SDL_Rect shadowRect = {
+            rect->x - 5,
+            rect->y + 5,
+            rect->w,
+            rect->h
+    };
+    SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, radius, corners);
+
+    //base
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRoundedRect(renderer, rect->x, rect->y, rect->w, rect->h, radius, corners);
+
+    //title
     SDL_Rect titleRect = {
-            rect->x + 50,
-            rect->y + 20 ,
+            rect->x + 40,
+            rect->y + 40 ,
             title.w,
             title.h,
     };
+    SDL_RenderCopy(renderer, title.texture, nullptr, &titleRect);
+
+    //bar
+    SDL_Rect bar = {
+            rect->x + 40,
+            rect->y + title.h + 2 * 40,
+            rect->w - 2 * 40,
+            2,
+    };
+    SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
+    SDL_RenderFillRect(renderer, &bar);
+
+    //first value
+    SDL_Rect firstValueRect = {
+            rect->x + 40,
+            rect->y + title.h + bar.h + 3 * 40,
+            firstValue.w,
+            firstValue.h,
+    };
+    SDL_RenderCopy(renderer, firstValue.texture, nullptr, &firstValueRect);
+
+    //second value
+    SDL_Rect secondValueRect = {
+            rect->x + 40,
+            rect->y + title.h + firstValue.h + bar.h + 4 * 40,
+            secondValue.w,
+            secondValue.h,
+    };
+    SDL_RenderCopy(renderer, secondValue.texture, nullptr, &secondValueRect);
+
+    //changing value
+    SDL_Rect valueRect = {
+            rect->x + rect->w - value.w - 80,
+            titleRect.y + title.h - value.h,
+            value.w,
+            value.h,
+
+    };
+    SDL_RenderCopy(renderer, value.texture, nullptr, &valueRect);
+
+    //icons
+    int iconR = 38;
+    SDL_Rect iconRects[4];
+    for (int x = 0; x < 2; x++) {
+        for (int y = 0; y < 2; y++) {
+            iconRects[x * 2 + y].x = rect->x + rect->w - iconR - 40 * (x + 1) - 80 * x;
+            if (y == 0) iconRects[x * 2 + y].y = firstValueRect.y + firstValue.h / 2;
+            else iconRects[x * 2 + y].y = secondValueRect.y + secondValue.h / 2;
+            iconRects[x * 2 + y].w = iconR * 2;
+            iconRects[x * 2 + y].h = iconR * 2;
+        }
+    }
+
+    SDL_Texture* icons[4] ={
+            minus, minus, plus, plus
+    };
+    SDL_SetRenderDrawColor(renderer, *iconColor);
+    for (int i = 0; i < 4; i++) {
+        renderIconInCircle(renderer, iconRects[i].x, iconRects[i].y, iconR, 10, 5, icons[i]);
+    }
 
 }

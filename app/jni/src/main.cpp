@@ -114,6 +114,17 @@ int main(int argc, char *args[]) {
         SDL_Quit();
         return 1;
     }
+
+    TTF_Font* gSmallFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 55);
+    if (gSmallFont == nullptr) {
+        printf("TTF_OpenFont Error: %s\n", SDL_GetError());
+        TTF_CloseFont(gFont);
+        SDL_DestroyRenderer(gRenderer);
+        SDL_DestroyWindow(gWindow);
+        TTF_Quit();
+        SDL_Quit();
+        return 1;
+    }
     SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND);
     SDL_GetWindowSize(gWindow, &WINDOW_WIDTH, &WINDOW_HEIGHT);
 
@@ -138,7 +149,6 @@ int main(int argc, char *args[]) {
     bool placeHolds = true;
 
     std::unordered_map<std::string, SDL_Color> colors;
-
     colors["primary"] = {255, 106, 20 ,255};
     colors["secondary"] = {255, 241, 233 ,255};
     colors["blueAccent"] = {255, 241, 233 ,255};
@@ -146,6 +156,7 @@ int main(int argc, char *args[]) {
     colors["redAccent"] = {255, 241, 233 ,255};
     colors["darkRedAccent"] = {255, 241, 233 ,255};
     colors["black"] = {0, 0, 0 ,255};
+    colors["gray"] = {81, 81, 81 ,255};
     colors["white"] = {255, 255, 255 ,255};
 
     std::unordered_map<std::string, SDL_Texture*> textures;
@@ -250,7 +261,7 @@ int main(int argc, char *args[]) {
     std::vector<std::unique_ptr<Hold>> generatedHolds;
 
     twoNum holdTypeCount[5] = {
-            //{1, 2},
+            {1, 2},
             {2, 6},
             {2, 6},
             {1, 2},
@@ -265,7 +276,7 @@ int main(int argc, char *args[]) {
     };
 
     std::string generationOptionCardTexts[6] = {
-            //"topHolds",
+            "topHolds",
             "topSection",
             "bottomSection",
             "startHolds",
@@ -274,12 +285,21 @@ int main(int argc, char *args[]) {
     };
 
     std::string generationValues[6] = {
-            //"topHoldsValue",
+            "topHoldsValue",
             "topSectionValue",
             "bottomSectionValue",
             "startHoldsValue",
             "startFootHoldsValue",
             "footHoldsValue",
+    };
+
+    SDL_Color* generationIconColors[6] = {
+            &colors["primary"],
+            &colors["orangeAccent"],
+            &colors["blueAccent"],
+            &colors["redAccent"],
+            &colors["darkRedAccent"],
+            &colors["darkRedAccent"],
     };
 
     std::unordered_map<std::string, SDL_Texture*> texts;
@@ -300,10 +320,13 @@ int main(int argc, char *args[]) {
     texts["min"] = getTextureFromText(gRenderer, gFont, "Min", &colors["black"], &textRects["min"].w, &textRects["min"].h);
     texts["max"] = getTextureFromText(gRenderer, gFont, "Max", &colors["black"], &textRects["max"].w, &textRects["max"].h);
 
+    //generation values texts
     for (int i = 0; i < 5; i++) {
         std::string string = std::to_string(holdTypeCount[i].a) + " až " + std::to_string(holdTypeCount[i].b);
-        texts[generationValues[i]] = getTextureFromText(gRenderer, gFont, string, &colors["black"], &textRects[generationValues[i]].w, &textRects[generationValues[i]].h);
+        texts[generationValues[i]] = getTextureFromText(gRenderer, gSmallFont, string, &colors["gray"], &textRects[generationValues[i]].w, &textRects[generationValues[i]].h);
     }
+
+    //general option title rects
     for (int i = 0; i < 4; i++) {
         textRects[generalOptionCardTexts[i]].x = 100;
         textRects[generalOptionCardTexts[i]].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - textRects[generalOptionCardTexts[i]].h / 2;
@@ -328,6 +351,7 @@ int main(int argc, char *args[]) {
 
     SDL_Event e;
     bool running = true;
+    bool pressed = false;
 
     while (running) {
         if (changeImage) {
@@ -342,104 +366,114 @@ int main(int argc, char *args[]) {
             }
 
             if (e.type == SDL_FINGERDOWN) {
-                SDL_TouchFingerEvent tf = e.tfinger;
+                pressed = true;
+            }
+            if (e.type == SDL_FINGERMOTION) {
+                pressed = false;
+            }
+            if (e.type == SDL_FINGERUP) {
+                if (pressed) {
 
-                int x = static_cast<int>(tf.x * WINDOW_WIDTH);
-                int y = static_cast<int>(tf.y * WINDOW_HEIGHT);
-                SDL_Point mousePos = {x, y};
+                    SDL_TouchFingerEvent tf = e.tfinger;
 
-                if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
-                    if (scene == MAIN) scene = OPTIONS;
-                    else if (scene == OPTIONS) scene = MAIN;
-                }
+                    int x = static_cast<int>(tf.x * WINDOW_WIDTH);
+                    int y = static_cast<int>(tf.y * WINDOW_HEIGHT);
+                    SDL_Point mousePos = {x, y};
 
-                if(SDL_PointInRect(&mousePos, &backButtonRect)) {
-                    if(scene == OPTIONS) scene = MAIN;
-                }
-
-                if (scene == MAIN) {
-                    if (SDL_PointInRect(&mousePos, &generateButtonRect)) {
-                        state = GENERATING;
-                        generatedHolds = getGeneratedHolds(holds, holdTypeCount);
+                    if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
+                        if (scene == MAIN) scene = OPTIONS;
+                        else if (scene == OPTIONS) scene = MAIN;
                     }
 
-                    if (SDL_PointInRect(&mousePos, &selectMenuRect) || not SDL_PointInRect(&mousePos, &mainImageRect)) {
-                        placeHolds = false;
+                    if(SDL_PointInRect(&mousePos, &backButtonRect)) {
+                        if(scene == OPTIONS) scene = MAIN;
                     }
 
-                    if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[0])) {
-                        state = PLACING;
-                        holdType = TOP;
-                    }
-                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[1])) {
-                        state = PLACING;
-                        holdType = UPPER;
-                    }
-                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[2])) {
-                        state = PLACING;
-                        holdType = LOWER;
-                    }
-                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[3])) {
-                        state = PLACING;
-                        holdType = START;
-                    }
-                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[4])) {
-                        state = PLACING;
-                        holdType = FOOT;
-                    }
-                    else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[5])) {
-                        state = DELETING;
-                    }
+                    if (scene == MAIN) {
+                        if (SDL_PointInRect(&mousePos, &generateButtonRect)) {
+                            state = GENERATING;
+                            generatedHolds = getGeneratedHolds(holds, holdTypeCount);
+                        }
 
-                    if (state == PLACING && placeHolds) {
-                        switch (holdType) {
-                            case TOP:
-                                holds.push_back(std::make_unique<Hold>(x, y, TOP));
-                                break;
-                            case UPPER:
-                                holds.push_back(std::make_unique<Hold>(x, y, UPPER));
-                                break;
-                            case LOWER:
-                                holds.push_back(std::make_unique<Hold>(x, y, LOWER));
-                                break;
-                            case START:
-                                holds.push_back(std::make_unique<Hold>(x, y, START));
-                                break;
-                            case FOOT:
-                                holds.push_back(std::make_unique<Hold>(x, y, FOOT));
-                                break;
+                        if (SDL_PointInRect(&mousePos, &selectMenuRect) || not SDL_PointInRect(&mousePos, &mainImageRect)) {
+                            placeHolds = false;
+                        }
+
+                        if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[0])) {
+                            state = PLACING;
+                            holdType = TOP;
+                        }
+                        else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[1])) {
+                            state = PLACING;
+                            holdType = UPPER;
+                        }
+                        else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[2])) {
+                            state = PLACING;
+                            holdType = LOWER;
+                        }
+                        else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[3])) {
+                            state = PLACING;
+                            holdType = START;
+                        }
+                        else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[4])) {
+                            state = PLACING;
+                            holdType = FOOT;
+                        }
+                        else if (SDL_PointInRect(&mousePos, &selectMenuHitBoxes[5])) {
+                            state = DELETING;
+                        }
+
+                        if (state == PLACING && placeHolds) {
+                            switch (holdType) {
+                                case TOP:
+                                    holds.push_back(std::make_unique<Hold>(x, y, TOP));
+                                    break;
+                                case UPPER:
+                                    holds.push_back(std::make_unique<Hold>(x, y, UPPER));
+                                    break;
+                                case LOWER:
+                                    holds.push_back(std::make_unique<Hold>(x, y, LOWER));
+                                    break;
+                                case START:
+                                    holds.push_back(std::make_unique<Hold>(x, y, START));
+                                    break;
+                                case FOOT:
+                                    holds.push_back(std::make_unique<Hold>(x, y, FOOT));
+                                    break;
+
+                            }
+                            holdCount++;
+                            texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                            textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
 
                         }
-                        holdCount++;
-                        texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
-                        textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+
+                        if (state == DELETING) {
+                            auto it = std::remove_if(holds.begin(), holds.end(),
+                                                     [&](const std::unique_ptr<Hold>& hold) {
+                                                         float dx = mousePos.x - hold->x;
+                                                         float dy = mousePos.y - hold->y;
+                                                         bool shouldRemove = std::sqrt(dx * dx + dy * dy) <= hold->radius;
+                                                         if (shouldRemove) {
+                                                             holdCount--;
+                                                             texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                                                             textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+                                                         }
+                                                         return shouldRemove;
+                                                     } );
+                            holds.erase(it, holds.end());
+                        }
 
                     }
 
-                    if (state == DELETING) {
-                        auto it = std::remove_if(holds.begin(), holds.end(),
-                         [&](const std::unique_ptr<Hold>& hold) {
-                             float dx = mousePos.x - hold->x;
-                             float dy = mousePos.y - hold->y;
-                             bool shouldRemove = std::sqrt(dx * dx + dy * dy) <= hold->radius;
-                             if (shouldRemove) {
-                                 holdCount--;
-                                 texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
-                                 textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
-                             }
-                             return shouldRemove;
-                         } );
-                        holds.erase(it, holds.end());
-                    }
-
-                }
-
-                if (scene == OPTIONS) {
-                    if (SDL_PointInRect(&mousePos, &generalOptionCardRects[2])) {
-                        openImagePicker();
+                    if (scene == OPTIONS) {
+                        if (SDL_PointInRect(&mousePos, &generalOptionCardRects[2])) {
+                            openImagePicker();
+                        }
                     }
                 }
             }
+
         }
 
         // -----------------------------------------------  rendering   ------------------------------------------
@@ -481,7 +515,6 @@ int main(int argc, char *args[]) {
             //general option cards
             SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr, &textRects["generalOptionsTitle"]);
             for (int i = 0; i < 4; i++) {
-                SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
                 textureWithDimensions text = {
                         texts[generalOptionCardTexts[i]],
                         textRects[generalOptionCardTexts[i]].w,
@@ -496,7 +529,7 @@ int main(int argc, char *args[]) {
             }
 
             //generation option cards
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 6; i++) {
                 textureWithDimensions title = {
                         texts[generationOptionCardTexts[i]],
                         textRects[generationOptionCardTexts[i]].w,
@@ -517,17 +550,7 @@ int main(int argc, char *args[]) {
                         textRects[generationValues[i]].w,
                         textRects[generationValues[i]].h
                 };
-                textureWithDimensions minus = {
-                        texts["blackMinus"],
-                        textRects["blackMinus"].w,
-                        textRects["blackMinus"].h
-                };
-                textureWithDimensions plus = {
-                        texts["blackPlus"],
-                        textRects["blackPlus"].w,
-                        textRects["blackPlus"].h
-                };
-                drawCardWithValue(gRenderer, &generationOptionCardRects[i], 38, title, min, max, value, minus, plus, &colors["black"]);
+                drawCardWithValue(gRenderer, &generationOptionCardRects[i], 38, title, min, max, value, textures["black_minus"], textures["black_plus"], generationIconColors[i]);
             }
 
         }
@@ -549,6 +572,7 @@ int main(int argc, char *args[]) {
     texts.clear();
 
     TTF_CloseFont(gFont);
+    TTF_CloseFont(gSmallFont);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     gRenderer = nullptr;

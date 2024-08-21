@@ -7,17 +7,9 @@
 
 ## Obsah
 
-- Inštalácia
 - Postup v aplikácii
 - Konfigurácia
 - Licencia
-
-## Inštalácia
-
-1. Stiahnite si súbor bouldrovka.apk
-2. Povolte inštaláciu z neznámych zdrojov
-3. Nainštalujte
-4. Využívajte a lezte do skonania!
 
 ## Postup v aplikácii
 
@@ -41,6 +33,3 @@
 
 > **TIP:** Môžete využiť náhodné generovanie zón - povinných chytov
 
-## Licencia
-
-Tento projekt je distribuovaný pod voľnou licenciou bez komerčného využitia.

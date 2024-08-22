@@ -5,12 +5,13 @@
 #include "../headers/utility.h"
 
 
-
+/*
 bool isWithinRadius(int x1, int y1, int x2, int y2, int radius) {
     int dx = x1 - x2;
     int dy = y1 - y2;
     return (dx * dx + dy * dy) <= (radius * radius);
 }
+*/
 
 bool isPointInRoundedRect(int x, int y, SDL_Rect rect, int radius) {
     if ((x >= rect.x + radius && x < rect.x + rect.w - radius) ||
@@ -41,3 +42,24 @@ SDL_Texture* getTextureFromText(SDL_Renderer* renderer, TTF_Font* font, const st
     TTF_SizeUTF8(font, text.c_str(), w, h);
     return textTexture;
 }
+
+
+SDL_Rect getScrolled(const SDL_Rect* rect, float scroll) {
+    SDL_Rect scrolled = *rect;
+    scrolled.y += (int)scroll;
+    return scrolled;
+}
+
+int getScrolled(const int x, float scroll) {
+    return x + (int)scroll;
+}
+
+SDL_Texture* changeColorOfTexture(SDL_Texture* texture, SDL_Color* color) {
+    // Modulate texture color
+    if (SDL_SetTextureColorMod(texture, color->r, color->g, color->b) != 0) {
+        SDL_Log("Failed to modulate texture color: %s", SDL_GetError());
+        return nullptr;
+    }
+    return texture;
+}
+

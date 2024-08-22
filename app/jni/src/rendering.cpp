@@ -274,11 +274,11 @@ void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textu
     }
 
     SDL_Texture* icons[4] ={
-            minus, minus, plus, plus
+           plus, plus, minus, minus,
     };
     SDL_SetRenderDrawColor(renderer, *iconColor);
     for (int i = 0; i < 4; i++) {
-        renderIconInCircle(renderer, iconRects[i].x, iconRects[i].y, iconR, 10, 5, icons[i]);
+        renderIconInCircle(renderer, iconRects[i].x, iconRects[i].y, iconR, 10, 5, changeColorOfTexture(icons[i], iconColor));
     }
 
 }

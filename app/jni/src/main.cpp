@@ -151,10 +151,10 @@ int main(int argc, char *args[]) {
     std::unordered_map<std::string, SDL_Color> colors;
     colors["primary"] = {255, 106, 20 ,255};
     colors["secondary"] = {255, 241, 233 ,255};
-    colors["blueAccent"] = {255, 241, 233 ,255};
-    colors["orangeAccent"] = {255, 241, 233 ,255};
-    colors["redAccent"] = {255, 241, 233 ,255};
-    colors["darkRedAccent"] = {255, 241, 233 ,255};
+    colors["blueAccent"] = {151, 153, 219 ,255};
+    colors["orangeAccent"] = {255, 170, 123 ,255};
+    colors["redAccent"] = {221, 43, 29 ,255};
+    colors["darkRedAccent"] = {158, 13, 13 ,255};
     colors["black"] = {0, 0, 0 ,255};
     colors["gray"] = {81, 81, 81 ,255};
     colors["white"] = {255, 255, 255 ,255};
@@ -171,8 +171,8 @@ int main(int argc, char *args[]) {
     textures["backgroundBlobsImage"] = loadTexture("images/background_blobs.png", gRenderer);
     textures["blackMinusImage"] = loadTexture("images/black_minus.png", gRenderer);
     textures["blackPlusImage"] = loadTexture("images/black_plus.png", gRenderer);
-    textures["whiteMinusImage"] = loadTexture("images/white.png", gRenderer);
-    textures["whitePlusImage"] = loadTexture("images/black_plus.png", gRenderer);
+    textures["whiteMinusImage"] = loadTexture("images/white_minus.png", gRenderer);
+    textures["whitePlusImage"] = loadTexture("images/white_plus.png", gRenderer);
 
     SDL_Texture* generalOptionCardIcons[4] = {
             textures["penImage"],
@@ -185,13 +185,20 @@ int main(int argc, char *args[]) {
     float ratio = 9.0f / 16.0f;
     SDL_Rect mainImageRect;
     mainImageRect.w = WINDOW_WIDTH;
-    mainImageRect.h = static_cast<int>(mainImageRect.w / ratio);
+    mainImageRect.h = static_cast<int>((float)mainImageRect.w / ratio);
     mainImageRect.x = 0;
     mainImageRect.y = WINDOW_HEIGHT - mainImageRect.h;
 
     SDL_SetRenderDrawColor(gRenderer, colors["secondary"]);
     textures["mainImageMask"] = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
 
+
+    SDL_Rect topBackground = {
+            0,
+            0,
+            WINDOW_WIDTH,
+            150,
+    };
 
     SDL_Rect generateButtonRect = {
             WINDOW_WIDTH - 145,
@@ -260,10 +267,11 @@ int main(int argc, char *args[]) {
     std::vector<std::unique_ptr<Hold>> holds;
     std::vector<std::unique_ptr<Hold>> generatedHolds;
 
-    twoNum holdTypeCount[5] = {
+    twoNum holdTypeCount[6] = {
             {1, 2},
             {2, 6},
             {2, 6},
+            {1, 2},
             {1, 2},
             {1, 2},
     };
@@ -352,6 +360,8 @@ int main(int argc, char *args[]) {
     SDL_Event e;
     bool running = true;
     bool pressed = false;
+    float touchY = 0.0f;
+    float scroll = 0.0f;
 
     while (running) {
         if (changeImage) {
@@ -367,26 +377,45 @@ int main(int argc, char *args[]) {
 
             if (e.type == SDL_FINGERDOWN) {
                 pressed = true;
+                SDL_TouchFingerEvent tf = e.tfinger;
+                touchY = tf.y * (float)WINDOW_HEIGHT;
             }
-            if (e.type == SDL_FINGERMOTION) {
+            else if (e.type == SDL_FINGERMOTION) {
                 pressed = false;
+                SDL_TouchFingerEvent tf = e.tfinger;
+                if (scene == OPTIONS) {
+                    float y = tf.y * (float)WINDOW_HEIGHT;
+                    float dY = y - touchY;
+                    scroll += dY;
+                    if (scroll > 0) scroll = 0;
+                    else if (scroll < -1.0f * (float)WINDOW_HEIGHT) scroll = -1.0f * (float)WINDOW_HEIGHT;
+                    touchY = y;
+                }
             }
-            if (e.type == SDL_FINGERUP) {
+            else if (e.type == SDL_FINGERUP) {
                 if (pressed) {
 
                     SDL_TouchFingerEvent tf = e.tfinger;
 
-                    int x = static_cast<int>(tf.x * WINDOW_WIDTH);
-                    int y = static_cast<int>(tf.y * WINDOW_HEIGHT);
+                    int x = static_cast<int>(tf.x * (float)WINDOW_WIDTH);
+                    int y = static_cast<int>(tf.y * (float)WINDOW_HEIGHT);
                     SDL_Point mousePos = {x, y};
 
                     if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
-                        if (scene == MAIN) scene = OPTIONS;
-                        else if (scene == OPTIONS) scene = MAIN;
+                        if (scene == MAIN) {
+                            scene = OPTIONS;
+                        }
+                        else if (scene == OPTIONS) {
+                            scene = MAIN;
+                            scroll = 0;
+                        }
                     }
 
                     if(SDL_PointInRect(&mousePos, &backButtonRect)) {
-                        if(scene == OPTIONS) scene = MAIN;
+                        if (scene == OPTIONS) {
+                            scene = MAIN;
+                            scroll = 0;
+                        }
                     }
 
                     if (scene == MAIN) {
@@ -451,9 +480,9 @@ int main(int argc, char *args[]) {
                         if (state == DELETING) {
                             auto it = std::remove_if(holds.begin(), holds.end(),
                                                      [&](const std::unique_ptr<Hold>& hold) {
-                                                         float dx = mousePos.x - hold->x;
-                                                         float dy = mousePos.y - hold->y;
-                                                         bool shouldRemove = std::sqrt(dx * dx + dy * dy) <= hold->radius;
+                                                         auto dx = static_cast<float>((int)mousePos.x - hold->x);
+                                                         auto dy = static_cast<float>((int)mousePos.y - hold->y);
+                                                         bool shouldRemove = std::sqrt(dx * dx + dy * dy) <= (float)hold->radius;
                                                          if (shouldRemove) {
                                                              holdCount--;
                                                              texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
@@ -467,8 +496,11 @@ int main(int argc, char *args[]) {
                     }
 
                     if (scene == OPTIONS) {
-                        if (SDL_PointInRect(&mousePos, &generalOptionCardRects[2])) {
-                            openImagePicker();
+                        if (not SDL_PointInRect(&mousePos, &topBackground)) {
+                            SDL_Rect scrolledRect = getScrolled(&generalOptionCardRects[2], scroll);
+                            if (SDL_PointInRect(&mousePos, &scrolledRect)) {
+                                openImagePicker();
+                            }
                         }
                     }
                 }
@@ -510,21 +542,24 @@ int main(int argc, char *args[]) {
 
             // background
             SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
-            SDL_RenderFillRoundedRect(gRenderer, 0, 170, mainImageRect.w, WINDOW_HEIGHT * 2, 50, corners);
+            SDL_RenderFillRoundedRect(gRenderer, 0, getScrolled(170, scroll), mainImageRect.w, WINDOW_HEIGHT * 2, 50, corners);
 
             //general option cards
-            SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr, &textRects["generalOptionsTitle"]);
+            SDL_Rect scrolledRect = getScrolled(&textRects["generalOptionsTitle"], scroll);
+            SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr, &scrolledRect);
             for (int i = 0; i < 4; i++) {
                 textureWithDimensions text = {
                         texts[generalOptionCardTexts[i]],
                         textRects[generalOptionCardTexts[i]].w,
                         textRects[generalOptionCardTexts[i]].h,
                 };
-                drawCardWithIcon(gRenderer, &generalOptionCardRects[i], 38, text, &colors["primary"], generalOptionCardIcons[i]);
+                scrolledRect = getScrolled(&generalOptionCardRects[i], scroll);
+                drawCardWithIcon(gRenderer, &scrolledRect, 38, text, &colors["primary"], generalOptionCardIcons[i]);
 
                 // number of holds
                 if (i == 3) {
-                    SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &textRects["holdCount"]);
+                    scrolledRect = getScrolled(&textRects["holdCount"], scroll);
+                    SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &scrolledRect);
                 }
             }
 
@@ -550,11 +585,14 @@ int main(int argc, char *args[]) {
                         textRects[generationValues[i]].w,
                         textRects[generationValues[i]].h
                 };
-                drawCardWithValue(gRenderer, &generationOptionCardRects[i], 38, title, min, max, value, textures["black_minus"], textures["black_plus"], generationIconColors[i]);
+                scrolledRect = getScrolled(&generationOptionCardRects[i], scroll);
+                drawCardWithValue(gRenderer, &scrolledRect, 38, title, min, max, value, textures["whiteMinusImage"], textures["whitePlusImage"], generationIconColors[i]);
             }
 
         }
 
+        SDL_SetRenderDrawColor(gRenderer, colors["white"]);
+        SDL_RenderFillRect(gRenderer, &topBackground);
         drawSettingsButton(gRenderer, textures["threeBarsImage"], &settingsButtonRect);
         drawBackButton(gRenderer, textures["leftArrowImage"], &backButtonRect);
         SDL_RenderPresent(gRenderer);

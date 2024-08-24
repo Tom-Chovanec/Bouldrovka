@@ -152,7 +152,7 @@ int main(int argc, char *args[]) {
     colors["primary"] = {255, 106, 20 ,255};
     colors["secondary"] = {255, 241, 233 ,255};
     colors["blueAccent"] = {151, 153, 219 ,255};
-    colors["orangeAccent"] = {255, 170, 123 ,255};
+    colors["orangeAccent"] = {255, 192, 174 ,255};
     colors["redAccent"] = {221, 43, 29 ,255};
     colors["darkRedAccent"] = {158, 13, 13 ,255};
     colors["black"] = {0, 0, 0 ,255};
@@ -189,8 +189,8 @@ int main(int argc, char *args[]) {
     mainImageRect.x = 0;
     mainImageRect.y = WINDOW_HEIGHT - mainImageRect.h;
 
-    SDL_SetRenderDrawColor(gRenderer, colors["secondary"]);
-    textures["mainImageMask"] = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 60);
+    SDL_SetRenderDrawColor(gRenderer, colors["white"]);
+    textures["mainImageMask"] = createRoundedRectMask(gRenderer, mainImageRect.w, mainImageRect.h, 100);
 
 
     SDL_Rect topBackground = {
@@ -353,6 +353,8 @@ int main(int argc, char *args[]) {
 
     textRects["generationOptionsTitle"].x =  WINDOW_WIDTH / 2 - textRects["generationOptionsTitle"].w / 2;
 
+    //6 cards, 4 buttons each
+    SDL_Rect* generationOptionHitboxes[6][4];
 
 
     // --------------------------------------------------------------- main loop ------------------------------------------------------------
@@ -361,45 +363,47 @@ int main(int argc, char *args[]) {
     bool running = true;
     bool pressed = false;
     float touchY = 0.0f;
+    float touchDy = 0.0f;
     float scroll = 0.0f;
+    Uint8 imageAlpha = 0;
+    SDL_Point pressMousePos;
+    textures["backgroundImage"] = nullptr;
 
     while (running) {
         if (changeImage) {
             textures["mainImage"] = loadTexture("/data/user/0/com.bouldrovka.app/files/boulder/background.jpg", gRenderer);
+            textures["backgroundImage"] = textures["mainImage"];
             changeImage = false;
         }
         placeHolds = true;
 
         while (SDL_PollEvent(&e) != 0) {
+            SDL_TouchFingerEvent tf = e.tfinger;
+            int x = tf.x * (float)WINDOW_WIDTH;
+            int y = tf.y * (float)WINDOW_HEIGHT;
+            SDL_Point mousePos = {x, y};
             if (e.type == SDL_QUIT) {
                 running = false;
             }
 
             if (e.type == SDL_FINGERDOWN) {
                 pressed = true;
-                SDL_TouchFingerEvent tf = e.tfinger;
-                touchY = tf.y * (float)WINDOW_HEIGHT;
+                touchY = y;
+                pressMousePos = {x, y};
             }
             else if (e.type == SDL_FINGERMOTION) {
-                pressed = false;
-                SDL_TouchFingerEvent tf = e.tfinger;
+                if (not isWithinRadius(&pressMousePos, &mousePos, 20 )) {
+                    pressed = false;
+                }
                 if (scene == OPTIONS) {
                     float y = tf.y * (float)WINDOW_HEIGHT;
                     float dY = y - touchY;
-                    scroll += dY;
-                    if (scroll > 0) scroll = 0;
-                    else if (scroll < -1.0f * (float)WINDOW_HEIGHT) scroll = -1.0f * (float)WINDOW_HEIGHT;
                     touchY = y;
+                    touchDy = dY;
                 }
             }
             else if (e.type == SDL_FINGERUP) {
                 if (pressed) {
-
-                    SDL_TouchFingerEvent tf = e.tfinger;
-
-                    int x = static_cast<int>(tf.x * (float)WINDOW_WIDTH);
-                    int y = static_cast<int>(tf.y * (float)WINDOW_HEIGHT);
-                    SDL_Point mousePos = {x, y};
 
                     if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
                         if (scene == MAIN) {
@@ -493,20 +497,47 @@ int main(int argc, char *args[]) {
                             holds.erase(it, holds.end());
                         }
 
+                        if (state == GENERATING) {
+                            if (SDL_PointInRect(&mousePos, &mainImageRect)) {
+                                if (imageAlpha == 0) imageAlpha = 75;
+                                else if (imageAlpha == 75) imageAlpha = 150;
+                                else if (imageAlpha == 150) imageAlpha = 0;
+                                textures["backgroundImage"] = getDarkenImage(gRenderer, textures["mainImage"], imageAlpha);
+                            }
+                        }
+
                     }
 
                     if (scene == OPTIONS) {
+
                         if (not SDL_PointInRect(&mousePos, &topBackground)) {
                             SDL_Rect scrolledRect = getScrolled(&generalOptionCardRects[2], scroll);
                             if (SDL_PointInRect(&mousePos, &scrolledRect)) {
                                 openImagePicker();
                             }
+
+                            // generation option + / -
+                            for (int i = 0; i < 6; i++) {
+                                for (int j = 0; j < 4; j++) {
+                                    if (i == 0) {
+                                        if (j == 0) {
+                                            SDL_Log("x: %i, y: %i", generationOptionHitboxes[i][j]->x, generationOptionHitboxes[i][j]->y);
+                                        }
+                                    }
+                                }
+                            }
+
                         }
+
                     }
                 }
             }
-
         }
+
+        if (touchDy > 1) scroll += touchDy--;
+        if (touchDy < -1) scroll += touchDy++;
+        if (scroll > 0) scroll = 0;
+        else if (scroll < -1.0f * (float)WINDOW_HEIGHT) scroll = -1.0f * (float)WINDOW_HEIGHT;
 
         // -----------------------------------------------  rendering   ------------------------------------------
 
@@ -516,14 +547,9 @@ int main(int argc, char *args[]) {
 
         if (scene == MAIN) {
 
-            // image background
-            SDL_SetRenderDrawColor(gRenderer, colors["secondary"]);
-            bool corners[4] = {true, true, false, false};
-            SDL_RenderFillRoundedRect(gRenderer, 0, WINDOW_HEIGHT - mainImageRect.h - 35, mainImageRect.w, mainImageRect.h + 35, 60, corners);
-
             //main image
-            drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["mainImage"], &mainImageRect, textures["mainImageMask"]);
-
+            if (textures["mainImage"] != nullptr) drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["backgroundImage"], &mainImageRect, textures["mainImageMask"]);
+            else drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["backgroundBlobsImage"], &mainImageRect, textures["mainImageMask"]);
             // holds
             if (state == GENERATING) drawHolds(gRenderer, generatedHolds);
             else drawHolds(gRenderer, holds);
@@ -586,7 +612,7 @@ int main(int argc, char *args[]) {
                         textRects[generationValues[i]].h
                 };
                 scrolledRect = getScrolled(&generationOptionCardRects[i], scroll);
-                drawCardWithValue(gRenderer, &scrolledRect, 38, title, min, max, value, textures["whiteMinusImage"], textures["whitePlusImage"], generationIconColors[i]);
+                drawCardWithValue(gRenderer, &scrolledRect, 38, title, min, max, value, textures["whiteMinusImage"], textures["whitePlusImage"], generationIconColors[i], generationOptionHitboxes[i]);
             }
 
         }

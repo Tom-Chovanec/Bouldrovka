@@ -106,6 +106,10 @@ void SDL_RenderFillRoundedRect(SDL_Renderer* renderer, int x, int y, int w, int 
     SDL_RenderFillRects(renderer, rects, 5);
 }
 
+void SDL_RenderFillRoundedRect(SDL_Renderer* renderer, SDL_Rect* rect, int radius, const bool corners[4]) {
+    SDL_RenderFillRoundedRect(renderer, rect->x, rect->y, rect->w, rect->h, radius, corners);
+}
+
 void SDL_RenderInverseRoundedRect(SDL_Renderer *renderer, int x, int y, int w, int h, int radius) {
     int minX = x - radius;
     int maxX = x + w + radius;
@@ -196,7 +200,7 @@ void drawCardWithIcon(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textur
     }
 }
 
-void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions title, textureWithDimensions firstValue, textureWithDimensions secondValue, textureWithDimensions value, SDL_Texture* minus, SDL_Texture* plus, SDL_Color* iconColor) {
+void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions title, textureWithDimensions firstValue, textureWithDimensions secondValue, textureWithDimensions value, SDL_Texture* minus, SDL_Texture* plus, SDL_Color* iconColor, SDL_Rect* hitboxes[4]) {
     bool corners[4] = {true, true, true, true};
 
     // scuffed drop shadow
@@ -272,6 +276,9 @@ void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textu
             iconRects[x * 2 + y].h = iconR * 2;
         }
     }
+    for (int i = 0; i < 4; i++) {
+        hitboxes[i] = &iconRects[i];
+    }
 
     SDL_Texture* icons[4] ={
            plus, plus, minus, minus,
@@ -281,4 +288,20 @@ void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textu
         renderIconInCircle(renderer, iconRects[i].x, iconRects[i].y, iconR, 10, 5, changeColorOfTexture(icons[i], iconColor));
     }
 
+}
+
+SDL_Texture* getDarkenImage(SDL_Renderer* renderer, SDL_Texture* texture, Uint8 alpha) {
+    int width, height;
+    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+
+    SDL_Texture* darkenedTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    SDL_SetTextureBlendMode(darkenedTexture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer, darkenedTexture);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, alpha);
+    SDL_Rect rect = {0, 0, width, height};
+    SDL_RenderFillRect(renderer, &rect);
+    SDL_SetRenderTarget(renderer, NULL);
+    return darkenedTexture;
 }

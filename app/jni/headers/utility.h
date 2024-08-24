@@ -10,7 +10,8 @@
 #include "SDL_ttf.h"
 #include "iostream"
 
-//bool isWithinRadius(int x1, int y1, int x2, int y2, int radius);
+bool isWithinRadius(SDL_Point* first, SDL_Point* second, int radius);
+bool isWithinRadius(int x1, int y1, int x2, int y2, int radius);
 bool isPointInRoundedRect(int x, int y, SDL_Rect rect, int radius);
 
 struct textureWithDimensions {

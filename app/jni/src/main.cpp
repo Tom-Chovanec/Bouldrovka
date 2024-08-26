@@ -354,7 +354,7 @@ int main(int argc, char *args[]) {
     textRects["generationOptionsTitle"].x =  WINDOW_WIDTH / 2 - textRects["generationOptionsTitle"].w / 2;
 
     //6 cards, 4 buttons each
-    SDL_Rect* generationOptionHitboxes[6][4];
+    SDL_Rect generationOptionHitboxes[6][4];
 
 
     // --------------------------------------------------------------- main loop ------------------------------------------------------------
@@ -372,16 +372,15 @@ int main(int argc, char *args[]) {
     while (running) {
         if (changeImage) {
             textures["mainImage"] = loadTexture("/data/user/0/com.bouldrovka.app/files/boulder/background.jpg", gRenderer);
-            textures["backgroundImage"] = textures["mainImage"];
             changeImage = false;
         }
         placeHolds = true;
 
         while (SDL_PollEvent(&e) != 0) {
             SDL_TouchFingerEvent tf = e.tfinger;
-            int x = tf.x * (float)WINDOW_WIDTH;
-            int y = tf.y * (float)WINDOW_HEIGHT;
-            SDL_Point mousePos = {x, y};
+            float x = tf.x * (float)WINDOW_WIDTH;
+            float y = tf.y * (float)WINDOW_HEIGHT;
+            SDL_Point mousePos = {(int)x, (int)y};
             if (e.type == SDL_QUIT) {
                 running = false;
             }
@@ -389,17 +388,17 @@ int main(int argc, char *args[]) {
             if (e.type == SDL_FINGERDOWN) {
                 pressed = true;
                 touchY = y;
-                pressMousePos = {x, y};
+                pressMousePos = {(int)x, (int)y};
             }
             else if (e.type == SDL_FINGERMOTION) {
                 if (not isWithinRadius(&pressMousePos, &mousePos, 20 )) {
                     pressed = false;
                 }
                 if (scene == OPTIONS) {
-                    float y = tf.y * (float)WINDOW_HEIGHT;
                     float dY = y - touchY;
                     touchY = y;
                     touchDy = dY;
+                    scroll += dY;
                 }
             }
             else if (e.type == SDL_FINGERUP) {
@@ -502,6 +501,8 @@ int main(int argc, char *args[]) {
                                 if (imageAlpha == 0) imageAlpha = 75;
                                 else if (imageAlpha == 75) imageAlpha = 150;
                                 else if (imageAlpha == 150) imageAlpha = 0;
+
+                                SDL_DestroyTexture(textures["backgroundImage"]);
                                 textures["backgroundImage"] = getDarkenImage(gRenderer, textures["mainImage"], imageAlpha);
                             }
                         }
@@ -519,10 +520,34 @@ int main(int argc, char *args[]) {
                             // generation option + / -
                             for (int i = 0; i < 6; i++) {
                                 for (int j = 0; j < 4; j++) {
-                                    if (i == 0) {
+                                    if (SDL_PointInRect(&mousePos, &generationOptionHitboxes[i][j])) {
+                                        //increase min
                                         if (j == 0) {
-                                            SDL_Log("x: %i, y: %i", generationOptionHitboxes[i][j]->x, generationOptionHitboxes[i][j]->y);
+                                            holdTypeCount[i].a ++;
+                                            if (holdTypeCount[i].a > holdTypeCount[i].b) {
+                                                holdTypeCount[i].b = holdTypeCount[i].a;
+                                            }
                                         }
+                                        if (j == 1) holdTypeCount[i].b ++;
+                                        if (j == 2) holdTypeCount[i].a --;
+                                        if (j == 3) {
+                                            holdTypeCount[i].b --;
+                                            if (holdTypeCount[i].a > holdTypeCount[i].b) {
+                                                holdTypeCount[i].a = holdTypeCount[i].b;
+                                            }
+                                        }
+                                        if (holdTypeCount[i].a < 0) holdTypeCount[i].a = 0;
+                                        if (holdTypeCount[i].b < 0) holdTypeCount[i].b = 0;
+                                        std::string string =
+                                                std::to_string(holdTypeCount[i].a) + " až " +
+                                                std::to_string(holdTypeCount[i].b);
+                                        SDL_DestroyTexture(texts[generationValues[i]]);
+                                        texts[generationValues[i]] = getTextureFromText(gRenderer,
+                                                                                        gSmallFont,
+                                                                                        string,
+                                                                                        &colors["gray"],
+                                                                                        &textRects[generationValues[i]].w,
+                                                                                        &textRects[generationValues[i]].h);
                                     }
                                 }
                             }
@@ -534,10 +559,10 @@ int main(int argc, char *args[]) {
             }
         }
 
-        if (touchDy > 1) scroll += touchDy--;
-        if (touchDy < -1) scroll += touchDy++;
-        if (scroll > 0) scroll = 0;
-        else if (scroll < -1.0f * (float)WINDOW_HEIGHT) scroll = -1.0f * (float)WINDOW_HEIGHT;
+       // if (touchDy > 1) scroll += touchDy--;
+       // if (touchDy < -1) scroll += touchDy++;
+       // if (scroll > 0) scroll = 0;
+        if (scroll < -1.0f * (float)WINDOW_HEIGHT) scroll = -1.0f * (float)WINDOW_HEIGHT;
 
         // -----------------------------------------------  rendering   ------------------------------------------
 
@@ -548,7 +573,8 @@ int main(int argc, char *args[]) {
         if (scene == MAIN) {
 
             //main image
-            if (textures["mainImage"] != nullptr) drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["backgroundImage"], &mainImageRect, textures["mainImageMask"]);
+            if (textures["backgroundImage"] != nullptr) drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["backgroundImage"], &mainImageRect, textures["mainImageMask"]);
+            else if (textures["mainImage"] != nullptr) drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["mainImage"], &mainImageRect, textures["mainImageMask"]);
             else drawMainImage(gRenderer, WINDOW_HEIGHT, WINDOW_WIDTH, textures["backgroundBlobsImage"], &mainImageRect, textures["mainImageMask"]);
             // holds
             if (state == GENERATING) drawHolds(gRenderer, generatedHolds);

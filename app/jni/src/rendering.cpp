@@ -200,7 +200,7 @@ void drawCardWithIcon(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textur
     }
 }
 
-void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions title, textureWithDimensions firstValue, textureWithDimensions secondValue, textureWithDimensions value, SDL_Texture* minus, SDL_Texture* plus, SDL_Color* iconColor, SDL_Rect* hitboxes[4]) {
+void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textureWithDimensions title, textureWithDimensions firstValue, textureWithDimensions secondValue, textureWithDimensions value, SDL_Texture* minus, SDL_Texture* plus, SDL_Color* iconColor, SDL_Rect hitboxes[4]) {
     bool corners[4] = {true, true, true, true};
 
     // scuffed drop shadow
@@ -277,7 +277,7 @@ void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textu
         }
     }
     for (int i = 0; i < 4; i++) {
-        hitboxes[i] = &iconRects[i];
+        hitboxes[i] = iconRects[i];
     }
 
     SDL_Texture* icons[4] ={
@@ -290,7 +290,7 @@ void drawCardWithValue(SDL_Renderer* renderer, SDL_Rect* rect, int radius, textu
 
 }
 
-SDL_Texture* getDarkenImage(SDL_Renderer* renderer, SDL_Texture* texture, Uint8 alpha) {
+SDL_Texture* getDarkenImage(SDL_Renderer* renderer,  SDL_Texture* texture, Uint8 alpha) {
     int width, height;
     SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 
@@ -298,10 +298,10 @@ SDL_Texture* getDarkenImage(SDL_Renderer* renderer, SDL_Texture* texture, Uint8 
     SDL_SetTextureBlendMode(darkenedTexture, SDL_BLENDMODE_BLEND);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(renderer, darkenedTexture);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, alpha);
     SDL_Rect rect = {0, 0, width, height};
     SDL_RenderFillRect(renderer, &rect);
-    SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderTarget(renderer, nullptr);
     return darkenedTexture;
 }

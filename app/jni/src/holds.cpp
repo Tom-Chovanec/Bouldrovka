@@ -95,9 +95,24 @@ std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::uniq
         std::shuffle(indices.begin(), indices.end(), g); // Shuffle the indices
 
         // Ensure the amount of holds to generate is within the min and max bounds
+        int maxAvailableHolds = static_cast<int>(x[i].size());
+        int minHolds = amount[i].a;
+        int maxHolds = amount[i].b;
+
+        // Clamp the maximum number of holds to the size of the available holds
+        if (maxHolds > maxAvailableHolds) {
+            maxHolds = maxAvailableHolds;
+        }
+
+        // If minimum requested holds are more than available, cap them
+        if (minHolds > maxAvailableHolds) {
+            minHolds = maxAvailableHolds;
+        }
+
+        // If there are available holds, generate a random count
         int count = 0;
         if (!x[i].empty()) {
-            std::uniform_int_distribution<> dist(amount[i].a, std::min(static_cast<int>(x[i].size()), amount[i].b));
+            std::uniform_int_distribution<> dist(minHolds, maxHolds);
             count = dist(g);
         }
 
@@ -109,3 +124,4 @@ std::vector<std::unique_ptr<Hold>> getGeneratedHolds(const std::vector<std::uniq
 
     return result;
 }
+

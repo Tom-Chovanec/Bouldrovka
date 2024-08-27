@@ -9,6 +9,8 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "iostream"
+#include "string"
+#include "vector"
 
 bool isWithinRadius(SDL_Point* first, SDL_Point* second, int radius);
 bool isWithinRadius(int x1, int y1, int x2, int y2, int radius);
@@ -27,4 +29,5 @@ int getScrolled(const int x, float scroll);
 
 SDL_Texture* changeColorOfTexture(SDL_Texture* texture, SDL_Color* color);
 
+std::vector<std::string> splitString(const std::string& str, char delimiter);
 #endif //BOULDER_UTILITY_H

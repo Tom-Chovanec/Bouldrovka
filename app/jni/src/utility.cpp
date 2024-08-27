@@ -68,3 +68,18 @@ SDL_Texture* changeColorOfTexture(SDL_Texture* texture, SDL_Color* color) {
     return texture;
 }
 
+std::vector<std::string> splitString(const std::string& str, char delimiter) {
+    std::vector<std::string> result;
+    std::string::size_type start = 0;
+    std::string::size_type end;
+
+    while ((end = str.find(delimiter, start)) != std::string::npos) {
+        result.push_back(str.substr(start, end - start));
+        start = end + 1;
+    }
+    // Add the last part of the string
+    result.push_back(str.substr(start));
+
+    return result;
+}
+

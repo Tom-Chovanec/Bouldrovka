@@ -16,6 +16,7 @@
 #include "../headers/ui.h"
 #include "../headers/rendering.h"
 #include "../headers/utility.h"
+#include "../headers/files.h"
 
 bool changeImage = true;
 
@@ -174,11 +175,14 @@ int main(int argc, char *args[]) {
     textures["whiteMinusImage"] = loadTexture("images/white_minus.png", gRenderer);
     textures["whitePlusImage"] = loadTexture("images/white_plus.png", gRenderer);
 
-    SDL_Texture* generalOptionCardIcons[4] = {
+    SDL_Texture* generalOptionCardIcons[7] = {
             textures["penImage"],
             textures["penImage"],
             textures["topRightArrowImage"],
-            nullptr
+            nullptr,
+            nullptr,
+            nullptr,
+            nullptr,
     };
 
 
@@ -221,9 +225,9 @@ int main(int argc, char *args[]) {
             60
     };
 
-    SDL_Rect generalOptionCardRects[4];
+    SDL_Rect generalOptionCardRects[7];
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
         generalOptionCardRects[i].x = 50;
         generalOptionCardRects[i].h = 200;
         generalOptionCardRects[i].w = WINDOW_WIDTH - 2 * generalOptionCardRects[i].x;
@@ -245,7 +249,7 @@ int main(int argc, char *args[]) {
         generationOptionCardRects[i].x = 50;
         generationOptionCardRects[i].h = 450;
         generationOptionCardRects[i].w = WINDOW_WIDTH - 2 * generationOptionCardRects[i].x;
-        generationOptionCardRects[i].y = generalOptionCardRects[3].y + generalOptionCardRects[3].h + 170 + (generationOptionCardRects[i].h + generationOptionCardRects[i].x) * i;
+        generationOptionCardRects[i].y = generalOptionCardRects[6].y + generalOptionCardRects[6].h + 170 + (generationOptionCardRects[i].h + generationOptionCardRects[i].x) * i;
     }
 
     int selectMenuX = WINDOW_WIDTH - 120;
@@ -276,11 +280,14 @@ int main(int argc, char *args[]) {
             {1, 2},
     };
 
-    std::string generalOptionCardTexts[4] = {
+    std::string generalOptionCardTexts[7] = {
            "title",
            "description",
            "changePhoto",
            "numOfHolds",
+           "save",
+           "load",
+           "clear",
     };
 
     std::string generationOptionCardTexts[6] = {
@@ -327,6 +334,9 @@ int main(int argc, char *args[]) {
     texts["zoneGenerating"] = getTextureFromText(gRenderer, gFont, "Generovanie zón", &colors["black"], &textRects["zoneGenerating"].w, &textRects["zoneGenerating"].h);
     texts["min"] = getTextureFromText(gRenderer, gFont, "Min", &colors["black"], &textRects["min"].w, &textRects["min"].h);
     texts["max"] = getTextureFromText(gRenderer, gFont, "Max", &colors["black"], &textRects["max"].w, &textRects["max"].h);
+    texts["save"] = getTextureFromText(gRenderer, gFont, "Save", &colors["black"], &textRects["save"].w, &textRects["save"].h);
+    texts["load"] = getTextureFromText(gRenderer, gFont, "Load", &colors["black"], &textRects["load"].w, &textRects["load"].h);
+    texts["clear"] = getTextureFromText(gRenderer, gFont, "Clear", &colors["black"], &textRects["clear"].w, &textRects["clear"].h);
 
     //generation values texts
     for (int i = 0; i < 5; i++) {
@@ -335,7 +345,7 @@ int main(int argc, char *args[]) {
     }
 
     //general option title rects
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
         textRects[generalOptionCardTexts[i]].x = 100;
         textRects[generalOptionCardTexts[i]].y = generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 - textRects[generalOptionCardTexts[i]].h / 2;
     }
@@ -516,6 +526,24 @@ int main(int argc, char *args[]) {
                             if (SDL_PointInRect(&mousePos, &scrolledRect)) {
                                 openImagePicker();
                             }
+                            scrolledRect = getScrolled(&generalOptionCardRects[4], scroll);
+                            if (SDL_PointInRect(&mousePos, &scrolledRect)) {
+                                saveHoldsToFile(holds, "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
+                            }
+                            scrolledRect = getScrolled(&generalOptionCardRects[5], scroll);
+                            if (SDL_PointInRect(&mousePos, &scrolledRect)) {
+                                holds = readHoldsFromFile("/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
+                                holdCount = (int)holds.size();
+                                texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                                textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+                            }
+                            scrolledRect = getScrolled(&generalOptionCardRects[6], scroll);
+                            if (SDL_PointInRect(&mousePos, &scrolledRect)) {
+                                holds.clear();
+                                holdCount = 0;
+                                texts["holdCount"] = getTextureFromText(gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                                textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+                            }
 
                             // generation option + / -
                             for (int i = 0; i < 6; i++) {
@@ -599,7 +627,7 @@ int main(int argc, char *args[]) {
             //general option cards
             SDL_Rect scrolledRect = getScrolled(&textRects["generalOptionsTitle"], scroll);
             SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr, &scrolledRect);
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 7; i++) {
                 textureWithDimensions text = {
                         texts[generalOptionCardTexts[i]],
                         textRects[generalOptionCardTexts[i]].w,

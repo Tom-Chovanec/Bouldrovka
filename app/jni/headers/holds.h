@@ -6,7 +6,6 @@
 #define BOULDER_HOLDS_H
 
 #pragma once
-#include "../SDL2_image/Xcode/tvOS/SDL2.framework/Headers/SDL.h"
 #include "rendering.h"
 #include "SDL.h"
 #include "vector"

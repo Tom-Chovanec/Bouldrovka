@@ -334,9 +334,9 @@ int main(int argc, char *args[]) {
     texts["zoneGenerating"] = getTextureFromText(gRenderer, gFont, "Generovanie zón", &colors["black"], &textRects["zoneGenerating"].w, &textRects["zoneGenerating"].h);
     texts["min"] = getTextureFromText(gRenderer, gFont, "Min", &colors["black"], &textRects["min"].w, &textRects["min"].h);
     texts["max"] = getTextureFromText(gRenderer, gFont, "Max", &colors["black"], &textRects["max"].w, &textRects["max"].h);
-    texts["save"] = getTextureFromText(gRenderer, gFont, "Save", &colors["black"], &textRects["save"].w, &textRects["save"].h);
-    texts["load"] = getTextureFromText(gRenderer, gFont, "Load", &colors["black"], &textRects["load"].w, &textRects["load"].h);
-    texts["clear"] = getTextureFromText(gRenderer, gFont, "Clear", &colors["black"], &textRects["clear"].w, &textRects["clear"].h);
+    texts["save"] = getTextureFromText(gRenderer, gFont, "Uložiť chyty", &colors["black"], &textRects["save"].w, &textRects["save"].h);
+    texts["load"] = getTextureFromText(gRenderer, gFont, "Načítať chyty", &colors["black"], &textRects["load"].w, &textRects["load"].h);
+    texts["clear"] = getTextureFromText(gRenderer, gFont, "Odstrániť všetky chyty", &colors["black"], &textRects["clear"].w, &textRects["clear"].h);
 
     //generation values texts
     for (int i = 0; i < 5; i++) {
@@ -590,7 +590,8 @@ int main(int argc, char *args[]) {
        // if (touchDy > 1) scroll += touchDy--;
        // if (touchDy < -1) scroll += touchDy++;
        // if (scroll > 0) scroll = 0;
-        if (scroll < -1.0f * (float)WINDOW_HEIGHT) scroll = -1.0f * (float)WINDOW_HEIGHT;
+        if (scroll < -1.5f * (float)WINDOW_HEIGHT) scroll = -1.5f * (float)WINDOW_HEIGHT;
+        if (scroll > 0) scroll = 0;
 
         // -----------------------------------------------  rendering   ------------------------------------------
 

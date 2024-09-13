@@ -385,6 +385,8 @@ int main(int argc, char *args[]) {
   // 6 cards, 4 buttons each
   SDL_Rect generationOptionHitboxes[6][4];
 
+
+
   // --------------------------------------------------------------- main loop
   // ------------------------------------------------------------
 

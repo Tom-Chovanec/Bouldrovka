@@ -7,7 +7,10 @@
 #include "../headers/holds.h"
 
 UIElement::UIElement(const std::string& id, int x, int y, int w, int h) 
-    : rect({x, y, w, h}) {}
+: rect({x, y, w, h}) {
+    this->black = {0, 0, 0, 255};
+    this->gray = {200, 200, 200, 255};
+}
 
 bool UIElement::isClicked(int mouseX, int mouseY) {
     return (mouseX >= rect.x && mouseX <= rect.x + rect.w &&
@@ -20,7 +23,6 @@ IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font
 }
 
 IconCard::~IconCard() {
-    SDL_DestroyTexture(icon);
     SDL_DestroyTexture(text);
 }
 
@@ -47,9 +49,115 @@ void IconCard::Render(SDL_Renderer* renderer) {
     };
     SDL_RenderCopy(renderer, text, nullptr, &textRect);
 
-    if (icon != nullptr) {
+    if (icon != nullptr) { 
         SDL_SetRenderDrawColor(renderer, iconColor);
         renderIconInCircle(renderer, rect.x + rect.w - 100, rect.y + rect.h / 2, borderRadius, 10, 5, icon);
+    }
+}
+
+BigValueCard::BigValueCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* mainFont, TTF_Font* valueFont, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color iconColor, SDL_Texture* plusIcon, SDL_Texture* minusIcon, const std::string& title, const std::string& value) 
+: UIElement(id, x, y, w, h), borderRadius(borderRadius), color(color), iconColor(iconColor), minusIcon(minusIcon), plusIcon(plusIcon) {
+    this->title = getTextureFromText(renderer, mainFont, title, &black, &titleW, &titleH);
+    this->value = getTextureFromText(renderer, valueFont, value, &gray, &valueW, &valueH);
+    this->min = getTextureFromText(renderer, mainFont, "Min", &black, &minW, &minH);
+    this->max = getTextureFromText(renderer, mainFont, "Max", &black, &maxW, &maxH);
+}
+
+BigValueCard::~BigValueCard() {
+    SDL_DestroyTexture(title);
+    SDL_DestroyTexture(value);
+    SDL_DestroyTexture(min);
+    SDL_DestroyTexture(max);
+}
+
+void BigValueCard::Render(SDL_Renderer* renderer) {
+    bool corners[4] = {true, true, true, true};
+
+    // scuffed drop shadow
+    SDL_SetRenderDrawColor(renderer, 183, 174, 169, 255);
+    SDL_Rect shadowRect = {
+            rect.x - 5,
+            rect.y + 5,
+            rect.w,
+            rect.h
+    };
+    SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, borderRadius, corners);
+
+    //base
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRoundedRect(renderer, rect.x, rect.y, rect.w, rect.h, borderRadius, corners);
+
+    //title
+    SDL_Rect titleRect = {
+            rect.x + 40,
+            rect.y + 40 ,
+            titleW,
+            titleH,
+    };
+    SDL_RenderCopy(renderer, title, nullptr, &titleRect);
+
+    //bar
+    SDL_Rect bar = {
+            rect.x + 40,
+            rect.y + titleH + 2 * 40,
+            rect.w - 2 * 40,
+            2,
+    };
+    SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
+    SDL_RenderFillRect(renderer, &bar);
+
+    //first value
+    SDL_Rect firstValueRect = {
+            rect.x + 40,
+            rect.y + titleH + bar.h + 3 * 40,
+            minW,
+            minH,
+    };
+    SDL_RenderCopy(renderer, min, nullptr, &firstValueRect);
+
+    //second value
+    SDL_Rect secondValueRect = {
+            rect.x + 40,
+            rect.y + titleH + minH + bar.h + 4 * 40,
+            maxW,
+            maxH,
+    };
+    SDL_RenderCopy(renderer, max, nullptr, &secondValueRect);
+
+    //changing value
+    SDL_Rect valueRect = {
+            rect.x + rect.w - valueH - 80,
+            titleRect.y + titleH - valueH,
+            valueW,
+            valueH,
+
+    };
+
+    SDL_RenderCopy(renderer, value, nullptr, &valueRect);
+
+    //icons
+    int iconR = 38;
+    SDL_Rect iconRects[4];
+    for (int x = 0; x < 2; x++) {
+        for (int y = 0; y < 2; y++) {
+            iconRects[x * 2 + y].x = rect.x + rect.w - iconR - 40 * (x + 1) - 80 * x;
+            if (y == 0) iconRects[x * 2 + y].y = firstValueRect.y + minH / 2;
+            else iconRects[x * 2 + y].y = secondValueRect.y + maxH / 2;
+            iconRects[x * 2 + y].w = iconR * 2;
+            iconRects[x * 2 + y].h = iconR * 2;
+        }
+    }
+
+   // for (int i = 0; i < 4; i++) {
+   //     hitboxes[i] = iconRects[i];
+   // }
+
+    SDL_Texture* icons[4] ={
+          plusIcon , plusIcon, minusIcon, minusIcon,
+    };
+    SDL_SetRenderDrawColor(renderer, iconColor);
+    for (int i = 0; i < 4; i++) {
+        renderIconInCircle(renderer, iconRects[i].x, iconRects[i].y, iconR, 10, 5, changeColorOfTexture(icons[i], &iconColor));
     }
 }
 
@@ -90,4 +198,38 @@ void drawSelectHoldMenu(SDL_Renderer* renderer, int x, int y, int w, int h, int 
            36
     };
     SDL_RenderCopy(renderer, deleteImage, nullptr, &rect);
+}
+
+UIHandler::UIHandler() {}
+
+UIHandler::~UIHandler() {
+    for (auto& element : elements) {
+        delete element;
+    }
+}
+
+void UIHandler::addElement(UIElement* element) {
+    elements.push_back(element);
+}
+
+void UIHandler::render(SDL_Renderer* renderer) {
+    for (auto& element : elements) {
+        element->render(renderer);
+    }
+}
+
+void UIHandler::removeElement(const std::string& id) {
+        elements.erase(std::remove_if(elements.begin(), elements.end(), 
+                    [&id](UIElement* element) {
+                        return element->getId() == id;
+                    }), elements.end());
+}
+
+std::string UIHandler::handleClick(int mouseX, int mouseY) {
+    for (auto& element : elements) {
+        if (element-> isClicked(mouseX, mouseY)) {
+            return element->getId();
+        }
+    }
+    return "";
 }

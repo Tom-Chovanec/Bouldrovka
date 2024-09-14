@@ -25,6 +25,18 @@ std::string UIElement::getId() {
 
 void UIElement::render(SDL_Renderer* renderer) {}
 
+void UIElement::applyScroll() {
+    this->rect.y += this->scroll;
+}
+
+void UIElement::revertScroll() {
+    this->rect.y -= this->scroll;
+}
+
+void UIElement::setScroll(int scroll) {
+    this->scroll = scroll;
+}
+
 IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor) 
     : UIElement(id, x, y, w, h), color(color), icon(icon), iconColor(iconColor), borderRadius(borderRadius) {
     this->text = getTextureFromText(renderer, font, text, &black, &textW, &textH);
@@ -226,12 +238,16 @@ void UIHandler::addElement(UIElement* element) {
 void UIHandler::render(SDL_Renderer* renderer, const std::vector<std::string>& ids) {
     if (ids.empty()) {
         for (auto& element : elements) {
+            element->applyScroll();
             element->render(renderer);
+            element->revertScroll();
         }
     } else {
         for (auto& element : elements) {
             if (std::find(ids.begin(), ids.end(), element->getId()) != ids.end()) {
+                element->applyScroll();
                 element->render(renderer);
+                element->revertScroll();
             }
         }
     }
@@ -244,11 +260,35 @@ void UIHandler::removeElement(const std::string& id) {
                     }), elements.end());
 }
 
-std::string UIHandler::handleClick(int mouseX, int mouseY) {
-    for (auto& element : elements) {
-        if (element-> isClicked(mouseX, mouseY)) {
-            return element->getId();
+std::string UIHandler::handleClick(int mouseX, int mouseY, const std::vector<std::string>& ids) {
+    if (ids.empty()) {
+        for (auto& element : elements) {
+            if (element-> isClicked(mouseX, mouseY)) {
+                return element->getId();
+            }
+        }
+    } else {
+        for (auto& element : elements) {
+            if (std::find(ids.begin(), ids.end(), element->getId()) != ids.end()) {
+                if (element->isClicked(mouseX, mouseY)) {
+                    return element->getId();
+                }
+            }
         }
     }
     return "";
+}
+
+void UIHandler::scroll(int scroll, const std::vector<std::string>& ids) {
+    if (ids.empty()) {
+        for (auto& element : elements) {
+            element->setScroll(scroll);
+        }
+    } else {
+        for (auto& element : elements) {
+            if (std::find(ids.begin(), ids.end(), element->getId()) != ids.end()) {
+                element->setScroll(scroll);
+            }
+        }
+    }
 }

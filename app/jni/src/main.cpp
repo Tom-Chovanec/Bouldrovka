@@ -706,6 +706,7 @@ int main(int argc, char *args[]) {
                                 mainImageRect.w, WINDOW_HEIGHT * 2, 50,
                                 corners);
 
+      uiHandler.scroll(scroll, generalOptionUIElements);
       uiHandler.render(gRenderer, generalOptionUIElements);
 
      // // general option cards

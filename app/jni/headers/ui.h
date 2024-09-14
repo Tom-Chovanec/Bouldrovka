@@ -13,6 +13,7 @@ protected:
     SDL_Rect rect;
     SDL_Color black;
     SDL_Color gray;
+    int scroll;
 
 public:
     UIElement(const std::string& id, int x, int y, int w, int h); 
@@ -21,6 +22,9 @@ public:
     virtual void render(SDL_Renderer* renderer);
     bool isClicked(int mouseX, int mouseY);
     std::string getId();
+    void applyScroll();
+    void revertScroll();
+    void setScroll(int scroll);
 };
 
 class IconCard : public UIElement {
@@ -81,8 +85,9 @@ public:
     
     void addElement(UIElement* element);
     void render(SDL_Renderer* renderer, const std::vector<std::string>& ids = {});
-    std::string handleClick(int mouseX, int mouseY);
+    std::string handleClick(int mouseX, int mouseY, const std::vector<std::string>& ids = {});
     void removeElement(const std::string& id);
+    void scroll(int scroll, const std::vector<std::string>& ids = {});
 };
 
 #endif //BOULDER_UI_H

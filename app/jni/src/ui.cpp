@@ -15,8 +15,10 @@ UIElement::UIElement(const std::string& id, int x, int y, int w, int h)
 UIElement::~UIElement()  { }
 
 bool UIElement::isClicked(int mouseX, int mouseY) {
-    return (mouseX >= rect.x && mouseX <= rect.x + rect.w &&
-            mouseY >= rect.y && mouseY <= rect.y + rect.h);
+    applyScroll();
+    bool a = (mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h);
+    revertScroll();
+    return a;
 }
 
 std::string UIElement::getId() {
@@ -37,8 +39,8 @@ void UIElement::setScroll(int scroll) {
     this->scroll = scroll;
 }
 
-IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor) 
-    : UIElement(id, x, y, w, h), color(color), icon(icon), iconColor(iconColor), borderRadius(borderRadius) {
+IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCircle) 
+    : UIElement(id, x, y, w, h), color(color), icon(icon), iconColor(iconColor), borderRadius(borderRadius), drawInCircle(drawInCircle) {
     this->text = getTextureFromText(renderer, font, text, &black, &textW, &textH);
 }
 
@@ -60,13 +62,18 @@ void IconCard::render(SDL_Renderer* renderer) {
         };
         SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, borderRadius, corners);
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, color);
         SDL_RenderFillRoundedRect(renderer, rect.x, rect.y, rect.w, rect.h, borderRadius, corners);
     }
 
     if (icon != nullptr) { 
         SDL_SetRenderDrawColor(renderer, iconColor);
-        renderIconInCircle(renderer, rect.x + rect.w - 100, rect.y + rect.h / 2, 40, 10, 5, icon);
+        if (drawInCircle) {
+            renderIconInCircle(renderer, rect.x + rect.w - 100, rect.y + rect.h / 2, 40, 10, 5, changeColorOfTexture(icon, &iconColor));
+        } else {
+            SDL_Rect iconRect = {rect.x + rect.w - 100 - 35, rect.y + rect.h / 2 - 35, 70, 70};
+            SDL_RenderCopy(renderer, changeColorOfTexture(icon, &iconColor), nullptr, &iconRect);
+        }
     }
 
     SDL_Rect textRect = {

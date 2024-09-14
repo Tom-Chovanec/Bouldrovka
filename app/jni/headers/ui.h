@@ -35,9 +35,10 @@ private:
     SDL_Texture* icon;
     SDL_Color iconColor;
     int borderRadius;
+    bool drawInCircle;
 
 public:
-    IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor);
+    IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCirlce = true);
     ~IconCard();
     void render(SDL_Renderer* renderer) override;
 };

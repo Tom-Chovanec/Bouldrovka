@@ -13,6 +13,7 @@
 #include "unordered_map"
 #include "vector"
 #include <android/log.h>
+#include <fcntl.h>
 #include <jni.h>
 
 bool changeImage = true;
@@ -154,6 +155,7 @@ int main(int argc, char *args[]) {
   colors["darkRedAccent"] = {158, 13, 13, 255};
   colors["black"] = {0, 0, 0, 255};
   colors["gray"] = {81, 81, 81, 255};
+  colors["lightGray"] = {249, 249, 249, 255};
   colors["white"] = {255, 255, 255, 255};
   colors["null"] = {0, 0, 0, 0};
 
@@ -162,11 +164,14 @@ int main(int argc, char *args[]) {
   textures["mainImage"] = nullptr;
   textures["logoImage"] = loadTexture("images/logo.png", gRenderer);
   textures["threeBarsImage"] = loadTexture("images/3_bars.png", gRenderer);
+  textures["whiteThreeBarsImage"] = loadTexture("images/white_3_bars.png", gRenderer);
   textures["leftArrowImage"] = loadTexture("images/left_arrow.png", gRenderer);
   textures["crossImage "] = loadTexture("images/cross.png", gRenderer);
-  textures["topRightArrowImage"] =
-      loadTexture("images/top_right_arrow.png", gRenderer);
+  textures["whiteCrossImage"] = loadTexture("images/white_cross.png", gRenderer);
+  textures["topRightArrowImage"] = loadTexture("images/top_right_arrow.png", gRenderer);
+  textures["whiteTopRightArrowImage"] = loadTexture("images/white_top_right_arrow.png", gRenderer);
   textures["penImage"] = loadTexture("images/pen.png", gRenderer);
+  textures["whitePenImage"] = loadTexture("images/white_pen.png", gRenderer);
   textures["backgroundBlobsImage"] =
       loadTexture("images/background_blobs.png", gRenderer);
   textures["blackMinusImage"] =
@@ -175,6 +180,7 @@ int main(int argc, char *args[]) {
   textures["whiteMinusImage"] =
       loadTexture("images/white_minus.png", gRenderer);
   textures["whitePlusImage"] = loadTexture("images/white_plus.png", gRenderer);
+  textures["whiteSaveImage"] = loadTexture("images/white_save.png", gRenderer);
 
   SDL_Texture *generalOptionCardIcons[7] = {
       textures["penImage"],
@@ -389,8 +395,15 @@ int main(int argc, char *args[]) {
 
   UIHandler uiHandler;
 
-  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gFont, 50, 175, WINDOW_WIDTH - 100, 200, 50, colors["null"], "Drevený boulder", textures["penImage"], colors["primary"]);
-  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 320, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vymeniť fotku", textures["topRightArrowImage"], colors["primary"]);
+  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gFont, 50, 175, WINDOW_WIDTH - 100, 100, 50, colors["null"], "Drevený boulder", textures["whitePenImage"], colors["primary"]);
+  IconCard* boulderDescription = new IconCard("boulderDescription", gRenderer, gSmallFont, 50, 300, WINDOW_WIDTH - 100, 200, 50, colors["lightGray"], "popis", textures["whitePenImage"], colors["primary"]);
+  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 650, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vymeniť fotku", textures["whiteTopRightArrowImage"], colors["primary"], false);
+  IconCard* generationOptions = new IconCard("generationOptions", gRenderer, gFont, 50, 875, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Nastaviene generovania", nullptr, colors["primary"], false);
+  IconCard* numberOfHolds = new IconCard("numberOfHolds", gRenderer, gFont, 50, 1100, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Počet chytov", nullptr, colors["primary"]);
+  IconCard* clearHolds = new IconCard("clearHolds", gRenderer, gFont, 50, 1325, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vyčistiť chyty", textures["whiteCrossImage"], colors["primary"], false);
+  //change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
+  IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
   
   std::vector<std::string> generalOptionUIElements;
 
@@ -399,11 +412,18 @@ int main(int argc, char *args[]) {
   generalOptionUIElements.push_back("changePhoto");
   generalOptionUIElements.push_back("generationOptions");
   generalOptionUIElements.push_back("numberOfHolds");
-  generalOptionUIElements.push_back("listOfProblems");
+  generalOptionUIElements.push_back("clearHolds");
+  generalOptionUIElements.push_back("loadProblem");
   generalOptionUIElements.push_back("saveProblem");
 
   uiHandler.addElement(boulderTitle);
+  uiHandler.addElement(boulderDescription);
   uiHandler.addElement(changePhoto);
+  uiHandler.addElement(generationOptions);
+  uiHandler.addElement(numberOfHolds);
+  uiHandler.addElement(clearHolds);
+  uiHandler.addElement(loadProblem);
+  uiHandler.addElement(saveProblem);
   // --------------------------------------------------------------- main loop
   // ------------------------------------------------------------
 
@@ -569,80 +589,62 @@ int main(int argc, char *args[]) {
           if (scene == OPTIONS) {
 
             if (not SDL_PointInRect(&mousePos, &topBackground)) {
-              SDL_Rect scrolledRect =
-                  getScrolled(&generalOptionCardRects[2], scroll);
-              if (SDL_PointInRect(&mousePos, &scrolledRect)) {
-                openImagePicker();
-              }
-              scrolledRect = getScrolled(&generalOptionCardRects[4], scroll);
-              if (SDL_PointInRect(&mousePos, &scrolledRect)) {
-                saveHoldsToFile(
-                    holds,
-                    "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
-              }
-              scrolledRect = getScrolled(&generalOptionCardRects[5], scroll);
-              if (SDL_PointInRect(&mousePos, &scrolledRect)) {
-                holds = readHoldsFromFile(
-                    "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
+              std::string element = uiHandler.handleClick(mousePos.x, mousePos.y, generalOptionUIElements);
+              if (element == "changePhoto") {openImagePicker();}
+              else if (element == "saveProblem") {saveHoldsToFile( holds, "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");}
+              else if (element == "loadProblem") {
+                holds = readHoldsFromFile( "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
                 holdCount = (int)holds.size();
-                texts["holdCount"] = getTextureFromText(
-                    gRenderer, gFont, std::to_string(holdCount),
-                    &colors["primary"], &textRects["holdCount"].w,
-                    &textRects["holdCount"].h);
-                textRects["holdCount"].x = generalOptionCardRects[3].x +
-                                           generalOptionCardRects[3].w - 100 -
-                                           textRects["holdCount"].w / 2;
+                texts["holdCount"] = getTextureFromText( gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
               }
-              scrolledRect = getScrolled(&generalOptionCardRects[6], scroll);
-              if (SDL_PointInRect(&mousePos, &scrolledRect)) {
+              else if (element == "clearHolds") {
                 holds.clear();
                 holdCount = 0;
                 texts["holdCount"] = getTextureFromText(
                     gRenderer, gFont, std::to_string(holdCount),
-                    &colors["primary"], &textRects["holdCount"].w,
-                    &textRects["holdCount"].h);
-                textRects["holdCount"].x = generalOptionCardRects[3].x +
-                                           generalOptionCardRects[3].w - 100 -
-                                           textRects["holdCount"].w / 2;
+                    &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
+                textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
               }
+              SDL_Rect scrolledRect = getScrolled(&generalOptionCardRects[2], scroll);
 
               // generation option + / -
-              for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 4; j++) {
-                  if (SDL_PointInRect(&mousePos,
-                                      &generationOptionHitboxes[i][j])) {
-                    // increase min
-                    if (j == 0) {
-                      holdTypeCount[i].a++;
-                      if (holdTypeCount[i].a > holdTypeCount[i].b) {
-                        holdTypeCount[i].b = holdTypeCount[i].a;
-                      }
-                    }
-                    if (j == 1)
-                      holdTypeCount[i].b++;
-                    if (j == 2)
-                      holdTypeCount[i].a--;
-                    if (j == 3) {
-                      holdTypeCount[i].b--;
-                      if (holdTypeCount[i].a > holdTypeCount[i].b) {
-                        holdTypeCount[i].a = holdTypeCount[i].b;
-                      }
-                    }
-                    if (holdTypeCount[i].a < 0)
-                      holdTypeCount[i].a = 0;
-                    if (holdTypeCount[i].b < 0)
-                      holdTypeCount[i].b = 0;
-                    std::string string = std::to_string(holdTypeCount[i].a) +
-                                         " až " +
-                                         std::to_string(holdTypeCount[i].b);
-                    SDL_DestroyTexture(texts[generationValues[i]]);
-                    texts[generationValues[i]] = getTextureFromText(
-                        gRenderer, gSmallFont, string, &colors["gray"],
-                        &textRects[generationValues[i]].w,
-                        &textRects[generationValues[i]].h);
-                  }
-                }
-              }
+             // for (int i = 0; i < 6; i++) {
+             //   for (int j = 0; j < 4; j++) {
+             //     if (SDL_PointInRect(&mousePos,
+             //                         &generationOptionHitboxes[i][j])) {
+             //       // increase min
+             //       if (j == 0) {
+             //         holdTypeCount[i].a++;
+             //         if (holdTypeCount[i].a > holdTypeCount[i].b) {
+             //           holdTypeCount[i].b = holdTypeCount[i].a;
+             //         }
+             //       }
+             //       if (j == 1)
+             //         holdTypeCount[i].b++;
+             //       if (j == 2)
+             //         holdTypeCount[i].a--;
+             //       if (j == 3) {
+             //         holdTypeCount[i].b--;
+             //         if (holdTypeCount[i].a > holdTypeCount[i].b) {
+             //           holdTypeCount[i].a = holdTypeCount[i].b;
+             //         }
+             //       }
+             //       if (holdTypeCount[i].a < 0)
+             //         holdTypeCount[i].a = 0;
+             //       if (holdTypeCount[i].b < 0)
+             //         holdTypeCount[i].b = 0;
+             //       std::string string = std::to_string(holdTypeCount[i].a) +
+             //                            " až " +
+             //                            std::to_string(holdTypeCount[i].b);
+             //       SDL_DestroyTexture(texts[generationValues[i]]);
+             //       texts[generationValues[i]] = getTextureFromText(
+             //           gRenderer, gSmallFont, string, &colors["gray"],
+             //           &textRects[generationValues[i]].w,
+             //           &textRects[generationValues[i]].h);
+             //     }
+             //   }
+             // }
             }
           }
         }
@@ -657,6 +659,7 @@ int main(int argc, char *args[]) {
     if (scroll > 0)
       scroll = 0;
 
+    uiHandler.scroll(scroll, generalOptionUIElements);
     // -----------------------------------------------  rendering
     // ------------------------------------------
 
@@ -702,11 +705,10 @@ int main(int argc, char *args[]) {
 
       // background
       SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
-      SDL_RenderFillRoundedRect(gRenderer, 0, getScrolled(170, scroll),
-                                mainImageRect.w, WINDOW_HEIGHT * 2, 50,
+      SDL_RenderFillRoundedRect(gRenderer, 0, getScrolled(575, scroll),
+                                mainImageRect.w, WINDOW_HEIGHT * 2, 100,
                                 corners);
 
-      uiHandler.scroll(scroll, generalOptionUIElements);
       uiHandler.render(gRenderer, generalOptionUIElements);
 
      // // general option cards
@@ -727,7 +729,6 @@ int main(int argc, char *args[]) {
      //   // number of holds
      //   if (i == 3) {
      //     scrolledRect = getScrolled(&textRects["holdCount"], scroll);
-     //     SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &scrolledRect);
      //   }
      // }
 

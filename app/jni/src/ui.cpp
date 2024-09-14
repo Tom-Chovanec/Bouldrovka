@@ -7,40 +7,56 @@
 #include "../headers/holds.h"
 
 UIElement::UIElement(const std::string& id, int x, int y, int w, int h) 
-: rect({x, y, w, h}) {
+: id(id), rect({x, y, w, h}) {
     this->black = {0, 0, 0, 255};
     this->gray = {200, 200, 200, 255};
 }
+
+UIElement::~UIElement()  { }
 
 bool UIElement::isClicked(int mouseX, int mouseY) {
     return (mouseX >= rect.x && mouseX <= rect.x + rect.w &&
             mouseY >= rect.y && mouseY <= rect.y + rect.h);
 }
 
+std::string UIElement::getId() {
+    return this->id;
+}
+
+void UIElement::render(SDL_Renderer* renderer) {}
+
 IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor) 
     : UIElement(id, x, y, w, h), color(color), icon(icon), iconColor(iconColor), borderRadius(borderRadius) {
-    this->text = getTextureFromText(renderer, font, text, &color, &textW, &textH);
+    this->text = getTextureFromText(renderer, font, text, &black, &textW, &textH);
 }
 
 IconCard::~IconCard() {
     SDL_DestroyTexture(text);
 }
 
-void IconCard::Render(SDL_Renderer* renderer) {
+void IconCard::render(SDL_Renderer* renderer) {
     bool corners[4] = {true, true, true, true};
 
-    // scuffed drop shadow
-    SDL_SetRenderDrawColor(renderer, 183, 174, 169, 255);
-    SDL_Rect shadowRect = {
-            rect.x - 5,
-            rect.y + 5,
-            rect.w,
-            rect.h
-    };
-    SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, borderRadius, corners);
+    if (color.a != 0) {
+        // scuffed drop shadow
+        SDL_SetRenderDrawColor(renderer, 183, 174, 169, 255);
+        SDL_Rect shadowRect = {
+                rect.x - 5,
+                rect.y + 5,
+                rect.w,
+                rect.h
+        };
+        SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, borderRadius, corners);
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRoundedRect(renderer, rect.x, rect.y, rect.w, rect.h, borderRadius, corners);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderFillRoundedRect(renderer, rect.x, rect.y, rect.w, rect.h, borderRadius, corners);
+    }
+
+    if (icon != nullptr) { 
+        SDL_SetRenderDrawColor(renderer, iconColor);
+        renderIconInCircle(renderer, rect.x + rect.w - 100, rect.y + rect.h / 2, 40, 10, 5, icon);
+    }
+
     SDL_Rect textRect = {
             rect.x + 40,
             rect.y + rect.h / 2 - textH / 2,
@@ -48,11 +64,6 @@ void IconCard::Render(SDL_Renderer* renderer) {
             textH,
     };
     SDL_RenderCopy(renderer, text, nullptr, &textRect);
-
-    if (icon != nullptr) { 
-        SDL_SetRenderDrawColor(renderer, iconColor);
-        renderIconInCircle(renderer, rect.x + rect.w - 100, rect.y + rect.h / 2, borderRadius, 10, 5, icon);
-    }
 }
 
 BigValueCard::BigValueCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* mainFont, TTF_Font* valueFont, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color iconColor, SDL_Texture* plusIcon, SDL_Texture* minusIcon, const std::string& title, const std::string& value) 
@@ -70,7 +81,7 @@ BigValueCard::~BigValueCard() {
     SDL_DestroyTexture(max);
 }
 
-void BigValueCard::Render(SDL_Renderer* renderer) {
+void BigValueCard::render(SDL_Renderer* renderer) {
     bool corners[4] = {true, true, true, true};
 
     // scuffed drop shadow
@@ -212,9 +223,17 @@ void UIHandler::addElement(UIElement* element) {
     elements.push_back(element);
 }
 
-void UIHandler::render(SDL_Renderer* renderer) {
-    for (auto& element : elements) {
-        element->render(renderer);
+void UIHandler::render(SDL_Renderer* renderer, const std::vector<std::string>& ids) {
+    if (ids.empty()) {
+        for (auto& element : elements) {
+            element->render(renderer);
+        }
+    } else {
+        for (auto& element : elements) {
+            if (std::find(ids.begin(), ids.end(), element->getId()) != ids.end()) {
+                element->render(renderer);
+            }
+        }
     }
 }
 

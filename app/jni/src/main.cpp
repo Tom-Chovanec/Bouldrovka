@@ -155,6 +155,7 @@ int main(int argc, char *args[]) {
   colors["black"] = {0, 0, 0, 255};
   colors["gray"] = {81, 81, 81, 255};
   colors["white"] = {255, 255, 255, 255};
+  colors["null"] = {0, 0, 0, 0};
 
   std::unordered_map<std::string, SDL_Texture *> textures;
 
@@ -386,7 +387,23 @@ int main(int argc, char *args[]) {
   SDL_Rect generationOptionHitboxes[6][4];
 
 
+  UIHandler uiHandler;
 
+  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gFont, 50, 175, WINDOW_WIDTH - 100, 200, 50, colors["null"], "Drevený boulder", textures["penImage"], colors["primary"]);
+  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 320, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vymeniť fotku", textures["topRightArrowImage"], colors["primary"]);
+  
+  std::vector<std::string> generalOptionUIElements;
+
+  generalOptionUIElements.push_back("boulderTitle");
+  generalOptionUIElements.push_back("boulderDescription");
+  generalOptionUIElements.push_back("changePhoto");
+  generalOptionUIElements.push_back("generationOptions");
+  generalOptionUIElements.push_back("numberOfHolds");
+  generalOptionUIElements.push_back("listOfProblems");
+  generalOptionUIElements.push_back("saveProblem");
+
+  uiHandler.addElement(boulderTitle);
+  uiHandler.addElement(changePhoto);
   // --------------------------------------------------------------- main loop
   // ------------------------------------------------------------
 
@@ -689,48 +706,50 @@ int main(int argc, char *args[]) {
                                 mainImageRect.w, WINDOW_HEIGHT * 2, 50,
                                 corners);
 
-      // general option cards
-      SDL_Rect scrolledRect =
-          getScrolled(&textRects["generalOptionsTitle"], scroll);
-      SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr,
-                     &scrolledRect);
-      for (int i = 0; i < 7; i++) {
-        textureWithDimensions text = {
-            texts[generalOptionCardTexts[i]],
-            textRects[generalOptionCardTexts[i]].w,
-            textRects[generalOptionCardTexts[i]].h,
-        };
-        scrolledRect = getScrolled(&generalOptionCardRects[i], scroll);
-        drawCardWithIcon(gRenderer, &scrolledRect, 38, text, &colors["primary"],
-                         generalOptionCardIcons[i]);
+      uiHandler.render(gRenderer, generalOptionUIElements);
 
-        // number of holds
-        if (i == 3) {
-          scrolledRect = getScrolled(&textRects["holdCount"], scroll);
-          SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &scrolledRect);
-        }
-      }
+     // // general option cards
+     // SDL_Rect scrolledRect =
+     //     getScrolled(&textRects["generalOptionsTitle"], scroll);
+     // SDL_RenderCopy(gRenderer, texts["generalOptionsTitle"], nullptr,
+     //                &scrolledRect);
+     // for (int i = 0; i < 7; i++) {
+     //   textureWithDimensions text = {
+     //       texts[generalOptionCardTexts[i]],
+     //       textRects[generalOptionCardTexts[i]].w,
+     //       textRects[generalOptionCardTexts[i]].h,
+     //   };
+     //   scrolledRect = getScrolled(&generalOptionCardRects[i], scroll);
+     //   drawCardWithIcon(gRenderer, &scrolledRect, 38, text, &colors["primary"],
+     //                    generalOptionCardIcons[i]);
 
-      // generation option cards
-      for (int i = 0; i < 6; i++) {
-        textureWithDimensions title = {
-            texts[generationOptionCardTexts[i]],
-            textRects[generationOptionCardTexts[i]].w,
-            textRects[generationOptionCardTexts[i]].h,
-        };
-        textureWithDimensions min = {texts["min"], textRects["min"].w,
-                                     textRects["min"].h};
-        textureWithDimensions max = {texts["max"], textRects["max"].w,
-                                     textRects["max"].h};
-        textureWithDimensions value = {texts[generationValues[i]],
-                                       textRects[generationValues[i]].w,
-                                       textRects[generationValues[i]].h};
-        scrolledRect = getScrolled(&generationOptionCardRects[i], scroll);
-        drawCardWithValue(gRenderer, &scrolledRect, 38, title, min, max, value,
-                          textures["whiteMinusImage"],
-                          textures["whitePlusImage"], generationIconColors[i],
-                          generationOptionHitboxes[i]);
-      }
+     //   // number of holds
+     //   if (i == 3) {
+     //     scrolledRect = getScrolled(&textRects["holdCount"], scroll);
+     //     SDL_RenderCopy(gRenderer, texts["holdCount"], nullptr, &scrolledRect);
+     //   }
+     // }
+
+     // // generation option cards
+     // for (int i = 0; i < 6; i++) {
+     //   textureWithDimensions title = {
+     //       texts[generationOptionCardTexts[i]],
+     //       textRects[generationOptionCardTexts[i]].w,
+     //       textRects[generationOptionCardTexts[i]].h,
+     //   };
+     //   textureWithDimensions min = {texts["min"], textRects["min"].w,
+     //                                textRects["min"].h};
+     //   textureWithDimensions max = {texts["max"], textRects["max"].w,
+     //                                textRects["max"].h};
+     //   textureWithDimensions value = {texts[generationValues[i]],
+     //                                  textRects[generationValues[i]].w,
+     //                                  textRects[generationValues[i]].h};
+     //   scrolledRect = getScrolled(&generationOptionCardRects[i], scroll);
+     //   drawCardWithValue(gRenderer, &scrolledRect, 38, title, min, max, value,
+     //                     textures["whiteMinusImage"],
+     //                     textures["whitePlusImage"], generationIconColors[i],
+     //                     generationOptionHitboxes[i]);
+     // }
     }
 
     SDL_SetRenderDrawColor(gRenderer, colors["white"]);

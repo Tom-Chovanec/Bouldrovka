@@ -23,7 +23,7 @@ public:
     std::string getId();
 };
 
-class IconCard : UIElement {
+class IconCard : public UIElement {
 private:
     SDL_Color color;
     SDL_Texture* text;
@@ -38,7 +38,7 @@ public:
     void render(SDL_Renderer* renderer) override;
 };
 
-class BigValueCard : UIElement {
+class BigValueCard : public UIElement {
 private:
     SDL_Color color;
     SDL_Color iconColor;
@@ -80,7 +80,7 @@ public:
     ~UIHandler();
     
     void addElement(UIElement* element);
-    void render(SDL_Renderer* renderer);
+    void render(SDL_Renderer* renderer, const std::vector<std::string>& ids = {});
     std::string handleClick(int mouseX, int mouseY);
     void removeElement(const std::string& id);
 };

@@ -103,7 +103,7 @@ int main(int argc, char *args[]) {
     return -1;
   }
 
-  TTF_Font *gFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 78);
+  TTF_Font *gFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 56);
   if (gFont == nullptr) {
     printf("TTF_OpenFont Error: %s\n", SDL_GetError());
     SDL_DestroyRenderer(gRenderer);
@@ -113,10 +113,21 @@ int main(int argc, char *args[]) {
     return 1;
   }
 
-  TTF_Font *gSmallFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 55);
+  TTF_Font *gSmallFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 34);
   if (gSmallFont == nullptr) {
     printf("TTF_OpenFont Error: %s\n", SDL_GetError());
     TTF_CloseFont(gFont);
+    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyWindow(gWindow);
+    TTF_Quit();
+    SDL_Quit();
+    return 1;
+  }
+  TTF_Font *gBigFont = TTF_OpenFont("fonts/JosefinSans-Regular.ttf", 78);
+  if (gBigFont == nullptr) {
+    printf("TTF_OpenFont Error: %s\n", SDL_GetError());
+    TTF_CloseFont(gFont);
+    TTF_CloseFont(gSmallFont);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     TTF_Quit();
@@ -298,9 +309,7 @@ int main(int argc, char *args[]) {
 
   std::unordered_map<std::string, SDL_Texture *> texts;
   std::unordered_map<std::string, SDL_Rect> textRects;
-  texts["title"] =
-      getTextureFromText(gRenderer, gFont, "Drevený boulder", &colors["black"],
-                         &textRects["title"].w, &textRects["title"].h);
+  texts["title"] = getTextureFromText(gRenderer, gBigFont, "Drevený boulder", &colors["black"], &textRects["title"].w, &textRects["title"].h);
   texts["generalOptionsTitle"] = getTextureFromText(
       gRenderer, gFont, "Nastavenia steny", &colors["black"],
       &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
@@ -395,12 +404,14 @@ int main(int argc, char *args[]) {
 
   UIHandler uiHandler;
 
-  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gFont, 50, 175, WINDOW_WIDTH - 100, 100, 50, colors["null"], "Drevený boulder", textures["whitePenImage"], colors["primary"]);
+  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gBigFont, 50, 175, WINDOW_WIDTH - 100, 100, 50, colors["null"], "Drevený boulder", textures["whitePenImage"], colors["primary"]);
   IconCard* boulderDescription = new IconCard("boulderDescription", gRenderer, gSmallFont, 50, 300, WINDOW_WIDTH - 100, 200, 50, colors["lightGray"], "popis", textures["whitePenImage"], colors["primary"]);
-  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 650, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vymeniť fotku", textures["whiteTopRightArrowImage"], colors["primary"], false);
-  IconCard* generationOptions = new IconCard("generationOptions", gRenderer, gFont, 50, 875, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Nastaviene generovania", nullptr, colors["primary"], false);
+  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 650, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vymeniť fotku", textures["whiteTopRightArrowImage"], colors["primary"]);
+  IconCard* generationOptions = new IconCard("generationOptions", gRenderer, gFont, 50, 875, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Nastaviene generovania", nullptr, colors["primary"]);
   IconCard* numberOfHolds = new IconCard("numberOfHolds", gRenderer, gFont, 50, 1100, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Počet chytov", nullptr, colors["primary"]);
-  IconCard* clearHolds = new IconCard("clearHolds", gRenderer, gFont, 50, 1325, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vyčistiť chyty", textures["whiteCrossImage"], colors["primary"], false);
+  Text* numberOfHoldsText = new Text("numberOfHoldsText", gRenderer, gFont, WINDOW_WIDTH - 150, 1200, std::to_string(holdCount), colors["primary"]);
+  IconCard* clearHolds = new IconCard("clearHolds", gRenderer, gFont, 50, 1325, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vyčistiť chyty", textures["whiteCrossImage"], colors["primary"]);
+  Text* myProblemsText = new Text("myProblemsText", gRenderer, gFont, WINDOW_WIDTH / 2, 1680, "Moje bouldrové cesty", colors["black"]);
   //change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
   IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
@@ -412,7 +423,9 @@ int main(int argc, char *args[]) {
   generalOptionUIElements.push_back("changePhoto");
   generalOptionUIElements.push_back("generationOptions");
   generalOptionUIElements.push_back("numberOfHolds");
+  generalOptionUIElements.push_back("numberOfHoldsText");
   generalOptionUIElements.push_back("clearHolds");
+  generalOptionUIElements.push_back("myProblemsText");
   generalOptionUIElements.push_back("loadProblem");
   generalOptionUIElements.push_back("saveProblem");
 
@@ -421,7 +434,9 @@ int main(int argc, char *args[]) {
   uiHandler.addElement(changePhoto);
   uiHandler.addElement(generationOptions);
   uiHandler.addElement(numberOfHolds);
+  uiHandler.addElement(numberOfHoldsText);
   uiHandler.addElement(clearHolds);
+  uiHandler.addElement(myProblemsText);
   uiHandler.addElement(loadProblem);
   uiHandler.addElement(saveProblem);
   // --------------------------------------------------------------- main loop
@@ -536,14 +551,7 @@ int main(int argc, char *args[]) {
                 holds.push_back(std::make_unique<Hold>(x, y, FOOT));
                 break;
               }
-              holdCount++;
-              texts["holdCount"] = getTextureFromText(
-                  gRenderer, gFont, std::to_string(holdCount),
-                  &colors["primary"], &textRects["holdCount"].w,
-                  &textRects["holdCount"].h);
-              textRects["holdCount"].x = generalOptionCardRects[3].x +
-                                         generalOptionCardRects[3].w - 100 -
-                                         textRects["holdCount"].w / 2;
+              numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(++holdCount));
             }
 
             if (state == DELETING) {
@@ -555,15 +563,7 @@ int main(int argc, char *args[]) {
                     bool shouldRemove =
                         std::sqrt(dx * dx + dy * dy) <= (float)hold->radius;
                     if (shouldRemove) {
-                      holdCount--;
-                      texts["holdCount"] = getTextureFromText(
-                          gRenderer, gFont, std::to_string(holdCount),
-                          &colors["primary"], &textRects["holdCount"].w,
-                          &textRects["holdCount"].h);
-                      textRects["holdCount"].x = generalOptionCardRects[3].x +
-                                                 generalOptionCardRects[3].w -
-                                                 100 -
-                                                 textRects["holdCount"].w / 2;
+                      numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(--holdCount));
                     }
                     return shouldRemove;
                   });
@@ -593,18 +593,14 @@ int main(int argc, char *args[]) {
               if (element == "changePhoto") {openImagePicker();}
               else if (element == "saveProblem") {saveHoldsToFile( holds, "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");}
               else if (element == "loadProblem") {
-                holds = readHoldsFromFile( "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
-                holdCount = (int)holds.size();
-                texts["holdCount"] = getTextureFromText( gRenderer, gFont, std::to_string(holdCount), &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
-                textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+                  holds = readHoldsFromFile( "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
+                  holdCount = (int)holds.size();
+                  numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(holdCount));
               }
               else if (element == "clearHolds") {
-                holds.clear();
-                holdCount = 0;
-                texts["holdCount"] = getTextureFromText(
-                    gRenderer, gFont, std::to_string(holdCount),
-                    &colors["primary"], &textRects["holdCount"].w, &textRects["holdCount"].h);
-                textRects["holdCount"].x = generalOptionCardRects[3].x + generalOptionCardRects[3].w - 100 - textRects["holdCount"].w / 2;
+                  holds.clear();
+                  holdCount = 0;
+                  numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(holdCount));
               }
               SDL_Rect scrolledRect = getScrolled(&generalOptionCardRects[2], scroll);
 

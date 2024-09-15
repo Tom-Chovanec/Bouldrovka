@@ -191,6 +191,36 @@ void BigValueCard::render(SDL_Renderer* renderer) {
     }
 }
 
+Text::Text(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, const std::string& text, SDL_Color color) 
+    : UIElement(id, x, y, 0, 0) {
+    int w, h;
+    this->texture = getTextureFromText(renderer, font, text, &color, &w, &h);
+    this->rect.w = w;
+    this->rect.h = h;
+}
+
+Text::~Text() {
+    SDL_DestroyTexture(texture);
+}
+
+void Text::changeText(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, const std::string& text) {
+    SDL_DestroyTexture(texture);
+    int w, h;
+    this->texture = getTextureFromText(renderer, font, text, &color, &w, &h);
+    this->rect.w = w;
+    this->rect.h = h;
+}
+
+void Text::render(SDL_Renderer* renderer) {
+    SDL_Rect renderRect = {
+        this->rect.x - this->rect.w / 2,
+        this->rect.y - this->rect.h / 2,
+        this->rect.w,
+        this->rect.h,
+    };
+    SDL_RenderCopy(renderer, this->texture, nullptr, &renderRect);
+}
+
 void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
     SDL_RenderCopy(renderer, buttonImage, nullptr, buttonRect);
 }

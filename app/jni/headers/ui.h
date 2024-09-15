@@ -63,9 +63,20 @@ public:
     BigValueCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* mainFont, TTF_Font* valueFont, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color iconColor, SDL_Texture* plusIcon, SDL_Texture* minusIcon, const std::string& title, const std::string& value);
     ~BigValueCard();
 
-    void render (SDL_Renderer* renderer) override;
+    void render(SDL_Renderer* renderer) override;
 };
 
+class Text : public UIElement {
+private:
+    SDL_Texture* texture;
+
+public:
+    Text(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, const std::string& text, SDL_Color color);
+    ~Text();
+    
+    void changeText(SDL_Renderer* renderer, TTF_Font* font, SDL_Color color, const std::string& text);
+    void render(SDL_Renderer* renderer) override;
+};
 
 
 void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);

@@ -174,8 +174,9 @@ int main(int argc, char *args[]) {
 
   textures["mainImage"] = nullptr;
   textures["logoImage"] = loadTexture("images/logo.png", gRenderer);
-  textures["threeBarsImage"] = loadTexture("images/3_bars.png", gRenderer);
-  textures["whiteThreeBarsImage"] = loadTexture("images/white_3_bars.png", gRenderer);
+    textures["whiteLogoImage"] = loadTexture("images/white_logo.png", gRenderer);
+    textures["threeBarsImage"] = loadTexture("images/3_bars.png", gRenderer);
+    textures["whiteThreeBarsImage"] = loadTexture("images/white_3_bars.png", gRenderer);
   textures["leftArrowImage"] = loadTexture("images/left_arrow.png", gRenderer);
   textures["crossImage "] = loadTexture("images/cross.png", gRenderer);
   textures["whiteCrossImage"] = loadTexture("images/white_cross.png", gRenderer);
@@ -415,6 +416,7 @@ int main(int argc, char *args[]) {
   //change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
   IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
+  Image* logo = new Image("logo", gRenderer, WINDOW_WIDTH / 2 - 64, 2225, 128, 128, textures["whiteLogoImage"], colors["primary"]);
   
   std::vector<std::string> generalOptionUIElements;
 
@@ -428,6 +430,7 @@ int main(int argc, char *args[]) {
   generalOptionUIElements.push_back("myProblemsText");
   generalOptionUIElements.push_back("loadProblem");
   generalOptionUIElements.push_back("saveProblem");
+  generalOptionUIElements.push_back("logo");
 
   uiHandler.addElement(boulderTitle);
   uiHandler.addElement(boulderDescription);
@@ -439,6 +442,7 @@ int main(int argc, char *args[]) {
   uiHandler.addElement(myProblemsText);
   uiHandler.addElement(loadProblem);
   uiHandler.addElement(saveProblem);
+  uiHandler.addElement(logo);
   // --------------------------------------------------------------- main loop
   // ------------------------------------------------------------
 
@@ -650,10 +654,8 @@ int main(int argc, char *args[]) {
     // if (touchDy > 1) scroll += touchDy--;
     // if (touchDy < -1) scroll += touchDy++;
     // if (scroll > 0) scroll = 0;
-    if (scroll < -1.5f * (float)WINDOW_HEIGHT)
-      scroll = -1.5f * (float)WINDOW_HEIGHT;
-    if (scroll > 0)
-      scroll = 0;
+    if (scroll < WINDOW_HEIGHT - 2403) scroll = WINDOW_HEIGHT - 2403;
+    if (scroll > 0) scroll = 0;
 
     uiHandler.scroll(scroll, generalOptionUIElements);
     // -----------------------------------------------  rendering

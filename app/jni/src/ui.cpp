@@ -5,6 +5,7 @@
 #include "../headers/ui.h"
 #include "../headers/rendering.h"
 #include "../headers/holds.h"
+#include <string>
 
 UIElement::UIElement(const std::string& id, int x, int y, int w, int h) 
 : id(id), rect({x, y, w, h}) {
@@ -219,6 +220,15 @@ void Text::render(SDL_Renderer* renderer) {
         this->rect.h,
     };
     SDL_RenderCopy(renderer, this->texture, nullptr, &renderRect);
+}
+
+Image::Image(const std::string& id, SDL_Renderer* renderer, int x, int y, int w, int h, SDL_Texture* texture, SDL_Color color)
+    : UIElement(id, x, y, w, h), color(color), texture(texture) { }
+
+Image::~Image() {}
+
+void Image::render(SDL_Renderer* renderer) {
+    SDL_RenderCopy(renderer, changeColorOfTexture(this->texture, &this->color), nullptr, &this->rect);
 }
 
 void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {

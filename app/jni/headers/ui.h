@@ -78,6 +78,16 @@ public:
     void render(SDL_Renderer* renderer) override;
 };
 
+class Image : public UIElement {
+private:
+    SDL_Texture* texture;
+    SDL_Color color;
+
+public:
+    Image(const std::string& id, SDL_Renderer* renderer, int x, int y, int w, int h, SDL_Texture* texture, SDL_Color color);
+    ~Image();
+    void render(SDL_Renderer* renderer) override;
+};
 
 void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);
 void drawSettingsButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);

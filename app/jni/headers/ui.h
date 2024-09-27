@@ -20,6 +20,7 @@ public:
     virtual ~UIElement();
 
     virtual void render(SDL_Renderer* renderer);
+    virtual void hover(int mouseY, int mouseX);
     bool isClicked(int mouseX, int mouseY);
     std::string getId();
     void applyScroll();
@@ -30,17 +31,20 @@ public:
 class IconCard : public UIElement {
 private:
     SDL_Color color;
+    SDL_Color hoverColor;
     SDL_Texture* text;
     int textW, textH;
     SDL_Texture* icon;
     SDL_Color iconColor;
     int borderRadius;
     bool drawInCircle;
+    bool isHovered = false;
 
 public:
-    IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCirlce = true);
+    IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color hoverColor, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCirlce = true);
     ~IconCard();
     void render(SDL_Renderer* renderer) override;
+    void hover(int mouseX, int mouseY) override;
 };
 
 class BigValueCard : public UIElement {
@@ -110,6 +114,7 @@ public:
     std::string handleClick(int mouseX, int mouseY, const std::vector<std::string>& ids = {});
     void removeElement(const std::string& id);
     void scroll(int scroll, const std::vector<std::string>& ids = {});
+    void hover(int mouseX, int mouseY, const std::vector<std::string>& ids = {});
 };
 
 #endif //BOULDER_UI_H

@@ -143,6 +143,8 @@ int main(int argc, char *args[]) {
     SELECT,
     MAIN,
     OPTIONS,
+    GENERATION_OPTIONS,
+    PROBLEMS,
   } scene;
 
   scene = MAIN;
@@ -174,25 +176,23 @@ int main(int argc, char *args[]) {
 
   textures["mainImage"] = nullptr;
   textures["logoImage"] = loadTexture("images/logo.png", gRenderer);
-    textures["whiteLogoImage"] = loadTexture("images/white_logo.png", gRenderer);
-    textures["threeBarsImage"] = loadTexture("images/3_bars.png", gRenderer);
-    textures["whiteThreeBarsImage"] = loadTexture("images/white_3_bars.png", gRenderer);
+  textures["whiteLogoImage"] = loadTexture("images/white_logo.png", gRenderer);
+  textures["threeBarsImage"] = loadTexture("images/3_bars.png", gRenderer);
+  textures["whiteThreeBarsImage"] = loadTexture("images/white_3_bars.png", gRenderer);
   textures["leftArrowImage"] = loadTexture("images/left_arrow.png", gRenderer);
-  textures["crossImage "] = loadTexture("images/cross.png", gRenderer);
   textures["whiteCrossImage"] = loadTexture("images/white_cross.png", gRenderer);
+  textures["crossImage"] = loadTexture("images/cross.png", gRenderer);
   textures["topRightArrowImage"] = loadTexture("images/top_right_arrow.png", gRenderer);
   textures["whiteTopRightArrowImage"] = loadTexture("images/white_top_right_arrow.png", gRenderer);
   textures["penImage"] = loadTexture("images/pen.png", gRenderer);
   textures["whitePenImage"] = loadTexture("images/white_pen.png", gRenderer);
-  textures["backgroundBlobsImage"] =
-      loadTexture("images/background_blobs.png", gRenderer);
-  textures["blackMinusImage"] =
-      loadTexture("images/black_minus.png", gRenderer);
+  textures["backgroundBlobsImage"] = loadTexture("images/background_blobs.png", gRenderer);
+  textures["blackMinusImage"] = loadTexture("images/black_minus.png", gRenderer);
   textures["blackPlusImage"] = loadTexture("images/black_plus.png", gRenderer);
-  textures["whiteMinusImage"] =
-      loadTexture("images/white_minus.png", gRenderer);
+  textures["whiteMinusImage"] = loadTexture("images/white_minus.png", gRenderer);
   textures["whitePlusImage"] = loadTexture("images/white_plus.png", gRenderer);
   textures["whiteSaveImage"] = loadTexture("images/white_save.png", gRenderer);
+  textures["whiteCogwheel"] = loadTexture("images/white_cogwheel.png", gRenderer);
 
   SDL_Texture *generalOptionCardIcons[7] = {
       textures["penImage"],
@@ -311,12 +311,8 @@ int main(int argc, char *args[]) {
   std::unordered_map<std::string, SDL_Texture *> texts;
   std::unordered_map<std::string, SDL_Rect> textRects;
   texts["title"] = getTextureFromText(gRenderer, gBigFont, "Drevený boulder", &colors["black"], &textRects["title"].w, &textRects["title"].h);
-  texts["generalOptionsTitle"] = getTextureFromText(
-      gRenderer, gFont, "Nastavenia steny", &colors["black"],
-      &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
-  texts["generationOptionsTitle"] = getTextureFromText(
-      gRenderer, gFont, "Nastavenia generácie", &colors["black"],
-      &textRects["generationOptionsTitle"].w,
+  texts["generalOptionsTitle"] = getTextureFromText( gRenderer, gFont, "Nastavenia steny", &colors["black"], &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
+  texts["generationOptionsTitle"] = getTextureFromText( gRenderer, gFont, "Nastavenia generácie", &colors["black"], &textRects["generationOptionsTitle"].w,
       &textRects["generationOptionsTitle"].h);
   texts["description"] = getTextureFromText(
       gRenderer, gFont, "Popis steny", &colors["black"],
@@ -405,17 +401,17 @@ int main(int argc, char *args[]) {
 
   UIHandler uiHandler;
 
-  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gBigFont, 50, 175, WINDOW_WIDTH - 100, 100, 50, colors["null"], "Drevený boulder", textures["whitePenImage"], colors["primary"]);
-  IconCard* boulderDescription = new IconCard("boulderDescription", gRenderer, gSmallFont, 50, 300, WINDOW_WIDTH - 100, 200, 50, colors["lightGray"], "popis", textures["whitePenImage"], colors["primary"]);
-  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 650, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vymeniť fotku", textures["whiteTopRightArrowImage"], colors["primary"]);
-  IconCard* generationOptions = new IconCard("generationOptions", gRenderer, gFont, 50, 875, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Nastaviene generovania", nullptr, colors["primary"]);
-  IconCard* numberOfHolds = new IconCard("numberOfHolds", gRenderer, gFont, 50, 1100, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Počet chytov", nullptr, colors["primary"]);
+  IconCard* boulderTitle = new IconCard("boulderTitle", gRenderer, gBigFont, 50, 175, WINDOW_WIDTH - 100, 100, 50, colors["null"], colors["null"], "Drevený boulder", textures["whitePenImage"], colors["primary"]);
+  IconCard* boulderDescription = new IconCard("boulderDescription", gRenderer, gSmallFont, 50, 300, WINDOW_WIDTH - 100, 200, 50, colors["lightGray"], colors["lightGray"], "popis", textures["whitePenImage"], colors["primary"]);
+  IconCard* changePhoto = new IconCard("changePhoto", gRenderer, gFont, 50, 650, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Vymeniť fotku", textures["whiteTopRightArrowImage"], colors["primary"]);
+  IconCard* generationOptions = new IconCard("generationOptions", gRenderer, gFont, 50, 875, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Nastaviene generovania", textures["whiteCogwheel"], colors["primary"]);
+  IconCard* numberOfHolds = new IconCard("numberOfHolds", gRenderer, gFont, 50, 1100, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Počet chytov", nullptr, colors["primary"]);
   Text* numberOfHoldsText = new Text("numberOfHoldsText", gRenderer, gFont, WINDOW_WIDTH - 150, 1200, std::to_string(holdCount), colors["primary"]);
-  IconCard* clearHolds = new IconCard("clearHolds", gRenderer, gFont, 50, 1325, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Vyčistiť chyty", textures["whiteCrossImage"], colors["primary"]);
+  IconCard* clearHolds = new IconCard("clearHolds", gRenderer, gFont, 50, 1325, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Vyčistiť chyty", textures["whiteCrossImage"], colors["primary"]);
   Text* myProblemsText = new Text("myProblemsText", gRenderer, gFont, WINDOW_WIDTH / 2, 1680, "Moje bouldrové cesty", colors["black"]);
   //change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
-  IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
+  IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
+  IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
   Image* logo = new Image("logo", gRenderer, WINDOW_WIDTH / 2 - 64, 2225, 128, 128, textures["whiteLogoImage"], colors["primary"]);
   
   std::vector<std::string> generalOptionUIElements;
@@ -470,6 +466,7 @@ int main(int argc, char *args[]) {
       float x = tf.x * (float)WINDOW_WIDTH;
       float y = tf.y * (float)WINDOW_HEIGHT;
       SDL_Point mousePos = {(int)x, (int)y};
+      uiHandler.hover(mousePos.x, mousePos.y);
       if (e.type == SDL_QUIT) {
         running = false;
       }
@@ -478,7 +475,9 @@ int main(int argc, char *args[]) {
         pressed = true;
         touchY = y;
         pressMousePos = {(int)x, (int)y};
+
       } else if (e.type == SDL_FINGERMOTION) {
+        uiHandler.hover(-1, -1); //reset hover
         if (not isWithinRadius(&pressMousePos, &mousePos, 20)) {
           pressed = false;
         }
@@ -488,7 +487,9 @@ int main(int argc, char *args[]) {
           touchDy = dY;
           scroll += dY;
         }
+
       } else if (e.type == SDL_FINGERUP) {
+        uiHandler.hover(-1, -1); //reset hover
         if (pressed) {
 
           if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
@@ -606,7 +607,7 @@ int main(int argc, char *args[]) {
                   holdCount = 0;
                   numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(holdCount));
               }
-              SDL_Rect scrolledRect = getScrolled(&generalOptionCardRects[2], scroll);
+
 
               // generation option + / -
              // for (int i = 0; i < 6; i++) {

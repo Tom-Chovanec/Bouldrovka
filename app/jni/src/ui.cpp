@@ -5,6 +5,7 @@
 #include "../headers/ui.h"
 #include "../headers/rendering.h"
 #include "../headers/holds.h"
+#include <iterator>
 #include <string>
 
 UIElement::UIElement(const std::string& id, int x, int y, int w, int h) 
@@ -17,7 +18,7 @@ UIElement::~UIElement()  { }
 
 bool UIElement::isClicked(int mouseX, int mouseY) {
     applyScroll();
-    bool a = (mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h);
+    bool a = (mouseX >= this->rect.x && mouseX <= this->rect.x + this->rect.w && mouseY >= this->rect.y && mouseY <= this->rect.y + this->rect.h);
     revertScroll();
     return a;
 }
@@ -27,6 +28,7 @@ std::string UIElement::getId() {
 }
 
 void UIElement::render(SDL_Renderer* renderer) {}
+void UIElement::hover(int mouseX, int mouseY) {}
 
 void UIElement::applyScroll() {
     this->rect.y += this->scroll;
@@ -40,8 +42,8 @@ void UIElement::setScroll(int scroll) {
     this->scroll = scroll;
 }
 
-IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCircle) 
-    : UIElement(id, x, y, w, h), color(color), icon(icon), iconColor(iconColor), borderRadius(borderRadius), drawInCircle(drawInCircle) {
+IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color hoverColor, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCircle) 
+    : UIElement(id, x, y, w, h), color(color), hoverColor(hoverColor), icon(icon), iconColor(iconColor), borderRadius(borderRadius), drawInCircle(drawInCircle) {
     this->text = getTextureFromText(renderer, font, text, &black, &textW, &textH);
 }
 
@@ -63,7 +65,9 @@ void IconCard::render(SDL_Renderer* renderer) {
         };
         SDL_RenderFillRoundedRect(renderer, shadowRect.x, shadowRect.y, shadowRect.w, shadowRect.h, borderRadius, corners);
 
-        SDL_SetRenderDrawColor(renderer, color);
+        //card background
+        if (this->isHovered) SDL_SetRenderDrawColor(renderer, this->hoverColor);
+        else SDL_SetRenderDrawColor(renderer, this->color);
         SDL_RenderFillRoundedRect(renderer, rect.x, rect.y, rect.w, rect.h, borderRadius, corners);
     }
 
@@ -84,6 +88,12 @@ void IconCard::render(SDL_Renderer* renderer) {
             textH,
     };
     SDL_RenderCopy(renderer, text, nullptr, &textRect);
+}
+
+void IconCard::hover(int mouseX, int mouseY) {
+    if (this->isClicked(mouseX, mouseY)) { isHovered = true; } 
+    else { isHovered = false; }
+    SDL_Log("%i", isHovered);
 }
 
 BigValueCard::BigValueCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* mainFont, TTF_Font* valueFont, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color iconColor, SDL_Texture* plusIcon, SDL_Texture* minusIcon, const std::string& title, const std::string& value) 
@@ -335,6 +345,20 @@ void UIHandler::scroll(int scroll, const std::vector<std::string>& ids) {
         for (auto& element : elements) {
             if (std::find(ids.begin(), ids.end(), element->getId()) != ids.end()) {
                 element->setScroll(scroll);
+            }
+        }
+    }
+}
+
+void UIHandler::hover(int mouseX, int mouseY, const std::vector<std::string>& ids) {
+    if (ids.empty()) {
+        for (auto& element : elements) {
+            element->hover(mouseX, mouseY);
+        }
+    } else {
+        for (auto& element : elements) {
+            if (std::find(ids.begin(), ids.end(), element->getId()) != ids.end()) {
+                element->hover(mouseX, mouseY);
             }
         }
     }

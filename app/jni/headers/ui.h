@@ -93,8 +93,7 @@ public:
     void render(SDL_Renderer* renderer) override;
 };
 
-void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);
-void drawSettingsButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);
+void drawButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);
 void drawGenerateButton(SDL_Renderer* renderer, int windowW, SDL_Texture* buttonImage, SDL_Rect* imageRect) ;
 
 void drawMainImage(SDL_Renderer* renderer, int windowH, int windowW, SDL_Texture* mainImage, SDL_Rect* mainImageRect, SDL_Texture* mainImageMask);

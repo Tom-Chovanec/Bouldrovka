@@ -241,11 +241,7 @@ void Image::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, changeColorOfTexture(this->texture, &this->color), nullptr, &this->rect);
 }
 
-void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
-    SDL_RenderCopy(renderer, buttonImage, nullptr, buttonRect);
-}
-
-void drawSettingsButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
+void drawButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
     SDL_RenderCopy(renderer, buttonImage, nullptr, buttonRect);
 }
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(GAME)
+project(Bouldrovka)
 
 # armeabi-v7a requires cpufeatures library
 # include(AndroidNdkModules)
@@ -17,4 +17,5 @@ add_subdirectory(SDL2_ttf)
 
 # Your game and its CMakeLists.txt are in a subfolder named "src"
 add_subdirectory(src)
+
 

@@ -12,9 +12,12 @@
 #include "string"
 #include "unordered_map"
 #include "vector"
+#include <GLES/glext.h>
 #include <android/log.h>
+#include <cstring>
 #include <fcntl.h>
 #include <jni.h>
+#include <unistd.h> 
 
 bool changeImage = true;
 
@@ -28,11 +31,9 @@ void openImagePicker() {
 }
 
 SDL_Texture *loadTexture(const std::string &path, SDL_Renderer *renderer) {
-  // Load image at specified path
   SDL_Texture *newTexture = IMG_LoadTexture(renderer, path.c_str());
   if (newTexture == nullptr) {
-    SDL_Log("Unable to load image %s ! SDL_image Error: %s ", path.c_str(),
-            IMG_GetError());
+    SDL_Log("Unable to load image %s ! SDL_image Error: %s ", path.c_str(), IMG_GetError());
   }
   return newTexture;
 }
@@ -248,6 +249,8 @@ int main(int argc, char *args[]) {
 
   int holdCount = 0;
 
+  char text[256] = {'\0'};
+
   UIHandler uiHandler;
 
 
@@ -259,12 +262,27 @@ int main(int argc, char *args[]) {
   Text* numberOfHoldsText = new Text("numberOfHoldsText", gRenderer, gFont, WINDOW_WIDTH - 150, 1200, std::to_string(holdCount), colors["primary"]);
   IconCard* clearHolds = new IconCard("clearHolds", gRenderer, gFont, 50, 1325, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Vyčistiť chyty", textures["whiteCrossImage"], colors["primary"]);
   Text* myProblemsText = new Text("myProblemsText", gRenderer, gFont, WINDOW_WIDTH / 2, 1680, "Moje bouldrové cesty", colors["black"]);
-  //change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
-  IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
+  IconCard* problemsListButton = new IconCard("problemsListButton", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Zoznam bouldrov", textures["whiteThreeBarsImage"], colors["primary"], false);
+  IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Uložiť boulder", textures["whiteSaveImage"], colors["primary"], false);
   Image* logo = new Image("logo", gRenderer, WINDOW_WIDTH / 2 - 64, 2225, 128, 128, textures["whiteLogoImage"], colors["primary"]);
   Image* introLogo = new Image("introLogo", gRenderer, WINDOW_WIDTH / 2 - 128, 300, 256, 256, textures["whiteLogoImage"], colors["primary"]);
   Button* introButton = new Button("introButton", gRenderer, gBigFont, 150, WINDOW_HEIGHT - 700, WINDOW_WIDTH - 300, 300, "Ideme na to!", colors["primary"], colors["white"], 150);
+  Text* problemsListTitle = new Text("problemsListTitle", gRenderer, gBigFont, WINDOW_WIDTH / 2, 300, "Zoznam Bouldrov", colors["black"]);
+
+  uiHandler.addElement(boulderTitle);
+  uiHandler.addElement(boulderDescription);
+  uiHandler.addElement(changePhoto);
+  uiHandler.addElement(generationOptions);
+  uiHandler.addElement(numberOfHolds);
+  uiHandler.addElement(numberOfHoldsText);
+  uiHandler.addElement(clearHolds);
+  uiHandler.addElement(myProblemsText);
+  uiHandler.addElement(problemsListButton);
+  uiHandler.addElement(saveProblem);
+  uiHandler.addElement(logo);
+  uiHandler.addElement(introLogo);
+  uiHandler.addElement(introButton);
+  uiHandler.addElement(problemsListTitle);
 
   std::vector<std::string> introUIElements = {
     "introButton",
@@ -280,25 +298,14 @@ int main(int argc, char *args[]) {
     "numberOfHoldsText",
     "clearHolds",
     "myProblemsText",
-    "loadProblem",
+    "problemsListButton",
     "saveProblem",
     "logo",
   };
 
-
-  uiHandler.addElement(boulderTitle);
-  uiHandler.addElement(boulderDescription);
-  uiHandler.addElement(changePhoto);
-  uiHandler.addElement(generationOptions);
-  uiHandler.addElement(numberOfHolds);
-  uiHandler.addElement(numberOfHoldsText);
-  uiHandler.addElement(clearHolds);
-  uiHandler.addElement(myProblemsText);
-  uiHandler.addElement(loadProblem);
-  uiHandler.addElement(saveProblem);
-  uiHandler.addElement(logo);
-  uiHandler.addElement(introLogo);
-  uiHandler.addElement(introButton);
+  std::vector<std::string> problemsListUIElements = {
+    "problemsListTitle"
+  };
 
   // --------------------------------------------------------------- main loop ------------------------------------------------------------
 
@@ -314,9 +321,11 @@ int main(int argc, char *args[]) {
 
   while (running) {
     if (changeImage) {
-      textures["mainImage"] = loadTexture(
-          "/data/user/0/com.bouldrovka.app/files/boulder/background.jpg",
-          gRenderer);
+      std::string path = "/data/user/0/com.bouldrovka.app/files/boulder/background.jpg";
+      textures["mainImage"] = loadTexture(path.c_str(), gRenderer);
+      SDL_DestroyTexture(textures["backgroundImage"]);
+      imageAlpha = 0;
+      textures["backgroundImage"] = getDarkenImage( gRenderer, textures["mainImage"], imageAlpha);
       changeImage = false;
     }
     placeHolds = true;
@@ -329,6 +338,20 @@ int main(int argc, char *args[]) {
       uiHandler.hover(mousePos.x, mousePos.y);
       if (e.type == SDL_QUIT) {
         running = false;
+      }
+
+      if (e.type == SDL_TEXTINPUT) {
+        strcat(text, e.text.text);
+        boulderTitle->changeText(gRenderer, text);
+      }
+
+      if (e.type == SDL_KEYDOWN) {
+        if (e.key.keysym.sym == SDLK_BACKSPACE && strlen(text) > 0) {
+          text[strlen(text) - 1] = '\0';
+          boulderTitle->changeText(gRenderer, text);
+        } else if (e.key.keysym.sym == SDLK_RETURN) {
+          SDL_StopTextInput();
+        }
       }
 
       if (e.type == SDL_FINGERDOWN) {
@@ -352,25 +375,25 @@ int main(int argc, char *args[]) {
         uiHandler.hover(-1, -1); //reset hover
         if (pressed) {
 
-          if (scene == MAIN || scene == OPTIONS) {
+          if (scene == MAIN || scene == OPTIONS || scene == PROBLEMS) {
             if (SDL_PointInRect(&mousePos, &settingsButtonRect)) {
               if (scene == MAIN) {
                 scene = OPTIONS;
+                scroll = 0;
               } else if (scene == OPTIONS) {
                 scene = MAIN;
-                scroll = 0;
               }
             }
 
             if (SDL_PointInRect(&mousePos, &backButtonRect)) {
               if (scene == OPTIONS) {
                 scene = MAIN;
-                scroll = 0;
               } else if (scene == MAIN) {
                 scene = INTRO;
+              } else if (scene == PROBLEMS) {
+                scene = OPTIONS;
                 scroll = 0;
               }
-
             }
           }
 
@@ -379,6 +402,9 @@ int main(int argc, char *args[]) {
             if (element == "introButton") {
               scene = MAIN;
             }
+          }
+
+          if (scene == PROBLEMS) {
 
           }
 
@@ -466,20 +492,20 @@ int main(int argc, char *args[]) {
           }
 
           if (scene == OPTIONS) {
-
             if (not SDL_PointInRect(&mousePos, &topBackground)) {
               std::string element = uiHandler.handleClick(mousePos.x, mousePos.y, generalOptionUIElements);
               if (element == "changePhoto") {openImagePicker();}
-              else if (element == "saveProblem") {saveHoldsToFile( holds, "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");}
-              else if (element == "loadProblem") {
-                  holds = readHoldsFromFile( "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
-                  holdCount = (int)holds.size();
-                  numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(holdCount));
-              }
-              else if (element == "clearHolds") {
-                  holds.clear();
-                  holdCount = 0;
-                  numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(holdCount));
+              else if (element == "saveProblem") {
+                saveHoldsToFile( holds, "/data/user/0/com.bouldrovka.app/files/boulder/holds.txt");
+              } else if (element == "problemsListButton") {
+                scene = PROBLEMS;
+              } else if (element == "clearHolds") {
+                holds.clear();
+                holdCount = 0;
+                numberOfHoldsText->changeText(gRenderer, gFont, colors["primary"], std::to_string(holdCount));
+              } else if (element == "boulderTitle") {
+                SDL_StartTextInput();
+                text[0] = {'\0'};
               }
             }
           }
@@ -532,19 +558,28 @@ int main(int argc, char *args[]) {
     }
 
     if (scene == OPTIONS) {
-      bool corners[4] = {true, true, false, false};
-
       // background
       SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
       SDL_RenderFillRoundedRect(gRenderer, 0, getScrolled(575, scroll),
                                 mainImageRect.w, WINDOW_HEIGHT * 2, 100,
-                                corners);
+                                (bool[4]){true, true, false, false});
 
       uiHandler.render(gRenderer, generalOptionUIElements);
     }
 
+    if (scene == PROBLEMS) {
+      // background
+      SDL_SetRenderDrawColor(gRenderer, 255, 241, 233, 255);
+      SDL_RenderFillRoundedRect(gRenderer, 0, getScrolled(150, scroll),
+                                mainImageRect.w, WINDOW_HEIGHT * 2, 100,
+                                (bool[4]){true, true, false, false});
 
-    if (scene == MAIN || scene == OPTIONS) {
+      uiHandler.render(gRenderer, problemsListUIElements);
+
+    }
+
+
+    if (scene == MAIN || scene == OPTIONS || scene == PROBLEMS) {
       SDL_SetRenderDrawColor(gRenderer, colors["white"]);
       SDL_RenderFillRect(gRenderer, &topBackground);
       drawButton(gRenderer, textures["threeBarsImage"], &settingsButtonRect);

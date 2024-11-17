@@ -51,12 +51,16 @@ void UIElement::setScroll(int scroll) {
 }
 
 IconCard::IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color hoverColor, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCircle) 
-    : UIElement(id, x, y, w, h), color(color), hoverColor(hoverColor), icon(icon), iconColor(iconColor), borderRadius(borderRadius), drawInCircle(drawInCircle) {
+    : UIElement(id, x, y, w, h), color(color), hoverColor(hoverColor), icon(icon), iconColor(iconColor), borderRadius(borderRadius), drawInCircle(drawInCircle), font(font) {
     this->text = getTextureFromText(renderer, font, text, &black, &textW, &textH);
 }
 
 IconCard::~IconCard() {
     SDL_DestroyTexture(text);
+}
+
+void IconCard::changeText(SDL_Renderer* renderer, const std::string& text) {
+    this->text = getTextureFromText(renderer, this->font, text, &black, &textW, &textH);
 }
 
 void IconCard::render(SDL_Renderer* renderer) {

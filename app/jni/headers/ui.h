@@ -41,12 +41,14 @@ private:
     int borderRadius;
     bool drawInCircle;
     bool isHovered = false;
+    TTF_Font* font;
 
 public:
     IconCard(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, int borderRadius, SDL_Color color, SDL_Color hoverColor, const std::string text, SDL_Texture* icon, SDL_Color iconColor, bool drawInCirlce = true);
     ~IconCard();
     void render(SDL_Renderer* renderer) override;
     void hover(int mouseX, int mouseY) override;
+    void changeText(SDL_Renderer* renderer, const std::string& text);
 };
 
 class BigValueCard : public UIElement {

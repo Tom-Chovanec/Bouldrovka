@@ -27,6 +27,14 @@ std::string UIElement::getId() {
     return this->id;
 }
 
+int UIElement::getX() {
+    return this->rect.x;
+}
+
+int UIElement::getY() {
+    return this->rect.y;
+}
+
 void UIElement::render(SDL_Renderer* renderer) {}
 void UIElement::hover(int mouseX, int mouseY) {}
 
@@ -233,12 +241,32 @@ void Text::render(SDL_Renderer* renderer) {
 }
 
 Image::Image(const std::string& id, SDL_Renderer* renderer, int x, int y, int w, int h, SDL_Texture* texture, SDL_Color color)
-    : UIElement(id, x, y, w, h), color(color), texture(texture) { }
+    : UIElement(id, x, y, w, h), color(color), texture(texture) {
+}
 
 Image::~Image() {}
 
 void Image::render(SDL_Renderer* renderer) {
-    SDL_RenderCopy(renderer, changeColorOfTexture(this->texture, &this->color), nullptr, &this->rect);
+    SDL_RenderCopy(renderer, changeColorOfTexture(this->texture, &this->color), NULL, &this->rect);
+}
+
+
+Button::Button(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, const std::string& text, SDL_Color color, SDL_Color textColor, int radius) :UIElement(id, x, y, w, h), color(color), radius(radius) {
+    this->textTexture = getTextureFromText(renderer, font, text, &textColor, &this->textW, &this->textH);
+    this->textRect = {
+        this->rect.x + this->rect.w / 2 - this->textW / 2,
+        this->rect.y + this->rect.h / 2 - this->textH / 2,
+        this->textW,
+        this->textH,
+    };
+}
+
+Button::~Button() {}
+
+void Button::render(SDL_Renderer* renderer) {
+    SDL_SetRenderDrawColor(renderer, this->color);
+    SDL_RenderFillRoundedRect(renderer, this->rect.x, this->rect.y, this->rect.w, this->rect.h, this->radius, this->corners);
+    SDL_RenderCopy(renderer, this->textTexture, NULL, &this->textRect);
 }
 
 void drawButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect) {
@@ -316,7 +344,7 @@ void UIHandler::removeElement(const std::string& id) {
 std::string UIHandler::handleClick(int mouseX, int mouseY, const std::vector<std::string>& ids) {
     if (ids.empty()) {
         for (auto& element : elements) {
-            if (element-> isClicked(mouseX, mouseY)) {
+            if (element->isClicked(mouseX, mouseY)) {
                 return element->getId();
             }
         }

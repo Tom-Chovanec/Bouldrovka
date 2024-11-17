@@ -60,7 +60,6 @@ int getScrolled(const int x, float scroll) {
 }
 
 SDL_Texture* changeColorOfTexture(SDL_Texture* texture, SDL_Color* color) {
-    // Modulate texture color
     if (SDL_SetTextureColorMod(texture, color->r, color->g, color->b) != 0) {
         SDL_Log("Failed to modulate texture color: %s", SDL_GetError());
         return nullptr;

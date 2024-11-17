@@ -194,16 +194,6 @@ int main(int argc, char *args[]) {
   textures["whiteSaveImage"] = loadTexture("images/white_save.png", gRenderer);
   textures["whiteCogwheel"] = loadTexture("images/white_cogwheel.png", gRenderer);
 
-  SDL_Texture *generalOptionCardIcons[7] = {
-      textures["penImage"],
-      textures["penImage"],
-      textures["topRightArrowImage"],
-      nullptr,
-      nullptr,
-      nullptr,
-      nullptr,
-  };
-
   float ratio = 9.0f / 16.0f;
   SDL_Rect mainImageRect;
   mainImageRect.w = WINDOW_WIDTH;
@@ -228,42 +218,6 @@ int main(int argc, char *args[]) {
 
   SDL_Rect backButtonRect = {60, 150 / 2 - 30, 60, 60};
 
-  SDL_Rect generalOptionCardRects[7];
-
-  for (int i = 0; i < 7; i++) {
-    generalOptionCardRects[i].x = 50;
-    generalOptionCardRects[i].h = 200;
-    generalOptionCardRects[i].w =
-        WINDOW_WIDTH - 2 * generalOptionCardRects[i].x;
-    generalOptionCardRects[i].y =
-        170 + 155 +
-        (generalOptionCardRects[i].h + generalOptionCardRects[i].x) * i;
-  }
-
-  SDL_Rect generalOptionCardIconRect[3];
-
-  for (int i = 0; i < 3; i++) {
-    generalOptionCardIconRect[i].w = 76;
-    generalOptionCardIconRect[i].h = 76;
-    generalOptionCardIconRect[i].x =
-        WINDOW_WIDTH - 150 - generalOptionCardIconRect[i].w / 2;
-    generalOptionCardIconRect[i].y = generalOptionCardRects[i].y +
-                                     generalOptionCardRects[i].h / 2 -
-                                     generalOptionCardIconRect[i].h / 2;
-  }
-
-  SDL_Rect generationOptionCardRects[6];
-
-  for (int i = 0; i < 6; i++) {
-    generationOptionCardRects[i].x = 50;
-    generationOptionCardRects[i].h = 450;
-    generationOptionCardRects[i].w =
-        WINDOW_WIDTH - 2 * generationOptionCardRects[i].x;
-    generationOptionCardRects[i].y =
-        generalOptionCardRects[6].y + generalOptionCardRects[6].h + 170 +
-        (generationOptionCardRects[i].h + generationOptionCardRects[i].x) * i;
-  }
-
   int selectMenuX = WINDOW_WIDTH - 120;
   int selectMenuY = 500;
   int selectMenuW = 120;
@@ -283,121 +237,16 @@ int main(int argc, char *args[]) {
 
   std::vector<std::unique_ptr<Hold>> holds;
   std::vector<std::unique_ptr<Hold>> generatedHolds;
-
   twoNum holdTypeCount[6] = {
-      {1, 2}, {2, 6}, {2, 6}, {1, 2}, {1, 2}, {1, 2},
+    {1, 2},
+    {2, 6},
+    {2, 6},
+    {1, 2},
+    {1, 2},
+    {1, 2},
   };
-
-  std::string generalOptionCardTexts[7] = {
-      "title", "description", "changePhoto", "numOfHolds",
-      "save",  "load",        "clear",
-  };
-
-  std::string generationOptionCardTexts[6] = {
-      "topHolds",   "topSection",     "bottomSection",
-      "startHolds", "startFootHolds", "footHolds",
-  };
-
-  std::string generationValues[6] = {
-      "topHoldsValue",   "topSectionValue",     "bottomSectionValue",
-      "startHoldsValue", "startFootHoldsValue", "footHoldsValue",
-  };
-
-  SDL_Color *generationIconColors[6] = {
-      &colors["primary"],   &colors["orangeAccent"],  &colors["blueAccent"],
-      &colors["redAccent"], &colors["darkRedAccent"], &colors["darkRedAccent"],
-  };
-
-  std::unordered_map<std::string, SDL_Texture *> texts;
-  std::unordered_map<std::string, SDL_Rect> textRects;
-  texts["title"] = getTextureFromText(gRenderer, gBigFont, "Drevený boulder", &colors["black"], &textRects["title"].w, &textRects["title"].h);
-  texts["generalOptionsTitle"] = getTextureFromText( gRenderer, gFont, "Nastavenia steny", &colors["black"], &textRects["generalOptionsTitle"].w, &textRects["generalOptionsTitle"].h);
-  texts["generationOptionsTitle"] = getTextureFromText( gRenderer, gFont, "Nastavenia generácie", &colors["black"], &textRects["generationOptionsTitle"].w,
-      &textRects["generationOptionsTitle"].h);
-  texts["description"] = getTextureFromText(
-      gRenderer, gFont, "Popis steny", &colors["black"],
-      &textRects["description"].w, &textRects["description"].h);
-  texts["changePhoto"] = getTextureFromText(
-      gRenderer, gFont, "Vymeniť fotku", &colors["black"],
-      &textRects["changePhoto"].w, &textRects["changePhoto"].h);
-  texts["numOfHolds"] = getTextureFromText(
-      gRenderer, gFont, "Počet chytov", &colors["black"],
-      &textRects["numOfHolds"].w, &textRects["numOfHolds"].h);
-  texts["topSection"] = getTextureFromText(
-      gRenderer, gFont, "Vrchná sekcia", &colors["black"],
-      &textRects["topSection"].w, &textRects["topSection"].h);
-  texts["bottomSection"] = getTextureFromText(
-      gRenderer, gFont, "Spodná sekcia", &colors["black"],
-      &textRects["bottomSection"].w, &textRects["bottomSection"].h);
-  texts["topHolds"] =
-      getTextureFromText(gRenderer, gFont, "Topove chyty", &colors["black"],
-                         &textRects["topHolds"].w, &textRects["topHolds"].h);
-  texts["startHolds"] = getTextureFromText(
-      gRenderer, gFont, "Štartovné chyty", &colors["black"],
-      &textRects["startHolds"].w, &textRects["startHolds"].h);
-  texts["startFootHolds"] = getTextureFromText(
-      gRenderer, gFont, "Štartovné stupy", &colors["black"],
-      &textRects["startFootHolds"].w, &textRects["startFootHolds"].h);
-  texts["footHolds"] =
-      getTextureFromText(gRenderer, gFont, "Stupy v ceste", &colors["black"],
-                         &textRects["footHolds"].w, &textRects["footHolds"].h);
-  texts["zoneGenerating"] = getTextureFromText(
-      gRenderer, gFont, "Generovanie zón", &colors["black"],
-      &textRects["zoneGenerating"].w, &textRects["zoneGenerating"].h);
-  texts["min"] = getTextureFromText(gRenderer, gFont, "Min", &colors["black"],
-                                    &textRects["min"].w, &textRects["min"].h);
-  texts["max"] = getTextureFromText(gRenderer, gFont, "Max", &colors["black"],
-                                    &textRects["max"].w, &textRects["max"].h);
-  texts["save"] =
-      getTextureFromText(gRenderer, gFont, "Uložiť chyty", &colors["black"],
-                         &textRects["save"].w, &textRects["save"].h);
-  texts["load"] =
-      getTextureFromText(gRenderer, gFont, "Načítať chyty", &colors["black"],
-                         &textRects["load"].w, &textRects["load"].h);
-  texts["clear"] = getTextureFromText(
-      gRenderer, gFont, "Odstrániť všetky chyty", &colors["black"],
-      &textRects["clear"].w, &textRects["clear"].h);
-
-  // generation values texts
-  for (int i = 0; i < 5; i++) {
-    std::string string = std::to_string(holdTypeCount[i].a) + " až " +
-                         std::to_string(holdTypeCount[i].b);
-    texts[generationValues[i]] = getTextureFromText(
-        gRenderer, gSmallFont, string, &colors["gray"],
-        &textRects[generationValues[i]].w, &textRects[generationValues[i]].h);
-  }
-
-  // general option title rects
-  for (int i = 0; i < 7; i++) {
-    textRects[generalOptionCardTexts[i]].x = 100;
-    textRects[generalOptionCardTexts[i]].y =
-        generalOptionCardRects[i].y + generalOptionCardRects[i].h / 2 -
-        textRects[generalOptionCardTexts[i]].h / 2;
-  }
 
   int holdCount = 0;
-  texts["holdCount"] = getTextureFromText(
-      gRenderer, gFont, std::to_string(holdCount), &colors["primary"],
-      &textRects["holdCount"].w, &textRects["holdCount"].h);
-  textRects["holdCount"].x = generalOptionCardRects[3].x +
-                             generalOptionCardRects[3].w - 100 -
-                             textRects["holdCount"].w / 2;
-  textRects["holdCount"].y = textRects["numOfHolds"].y;
-
-  textRects["title"].x = 100;
-  textRects["title"].y = 200;
-
-  textRects["generalOptionsTitle"].x =
-      WINDOW_WIDTH / 2 - textRects["generalOptionsTitle"].w / 2;
-  textRects["generalOptionsTitle"].y =
-      generalOptionCardRects[0].y - textRects["generalOptionsTitle"].h - 30;
-
-  textRects["generationOptionsTitle"].x =
-      WINDOW_WIDTH / 2 - textRects["generationOptionsTitle"].w / 2;
-
-  // 6 cards, 4 buttons each
-  SDL_Rect generationOptionHitboxes[6][4];
-
 
   UIHandler uiHandler;
 
@@ -413,19 +262,15 @@ int main(int argc, char *args[]) {
   //change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   IconCard* loadProblem = new IconCard("loadProblem", gRenderer, gFont, 50, 1750, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Načítať cestu", textures["whiteThreeBarsImage"], colors["primary"], false);
   IconCard* saveProblem = new IconCard("saveProblem", gRenderer, gFont, 50, 1975, WINDOW_WIDTH - 100, 200, 50, colors["white"], colors["lightGray"], "Uložiť cestu", textures["whiteSaveImage"], colors["primary"], false);
-  Image* frontPageLogo = new Image("frontPageLogo", gRenderer, WINDOW_WIDTH / 2 - 125, 300, 250, 250, textures["whiteLogoImage"], colors["primary"]);
   Image* logo = new Image("logo", gRenderer, WINDOW_WIDTH / 2 - 64, 2225, 128, 128, textures["whiteLogoImage"], colors["primary"]);
-
+  Image* introLogo = new Image("introLogo", gRenderer, WINDOW_WIDTH / 2 - 128, 300, 256, 256, textures["whiteLogoImage"], colors["primary"]);
+  Button* introButton = new Button("introButton", gRenderer, gBigFont, 150, WINDOW_HEIGHT - 700, WINDOW_WIDTH - 300, 300, "Ideme na to!", colors["primary"], colors["white"], 150);
 
   std::vector<std::string> introUIElements = {
-    "frontPageLogo",
-    //"beginButton",
+    "introButton",
+    "introLogo"
   };
 
-  uiHandler.addElement(frontPageLogo);
-  //uiHandler.addElement(beginButton);
-
-  
   std::vector<std::string> generalOptionUIElements = {
     "boulderTitle",
     "boulderDescription",
@@ -437,7 +282,7 @@ int main(int argc, char *args[]) {
     "myProblemsText",
     "loadProblem",
     "saveProblem",
-    "logo"
+    "logo",
   };
 
 
@@ -452,6 +297,9 @@ int main(int argc, char *args[]) {
   uiHandler.addElement(loadProblem);
   uiHandler.addElement(saveProblem);
   uiHandler.addElement(logo);
+  uiHandler.addElement(introLogo);
+  uiHandler.addElement(introButton);
+
   // --------------------------------------------------------------- main loop ------------------------------------------------------------
 
   SDL_Event e;
@@ -520,12 +368,17 @@ int main(int argc, char *args[]) {
                 scroll = 0;
               } else if (scene == MAIN) {
                 scene = INTRO;
+                scroll = 0;
               }
 
             }
           }
 
           if (scene == INTRO) {
+            std::string element = uiHandler.handleClick(mousePos.x, mousePos.y, introUIElements);
+            if (element == "introButton") {
+              scene = MAIN;
+            }
 
           }
 
@@ -647,15 +500,6 @@ int main(int argc, char *args[]) {
     if (scene == INTRO) {
       SDL_RenderCopy(gRenderer, textures["backgroundBlobsImage"], nullptr, nullptr);
 
-      bool corners[4] = {1, 1, 1 ,1};
-      SDL_Rect x = {
-        150,
-        WINDOW_HEIGHT - 700,
-        WINDOW_WIDTH - 300,
-        300,
-      };
-      SDL_SetRenderDrawColor(gRenderer, colors["primary"]);
-      SDL_RenderFillRoundedRect(gRenderer, &x, 150, corners);
       uiHandler.render(gRenderer, introUIElements);
     }
 
@@ -685,7 +529,6 @@ int main(int argc, char *args[]) {
                          textures["crossImage"]);
 
       // title
-      SDL_RenderCopy(gRenderer, texts["title"], nullptr, &textRects["title"]);
     }
 
     if (scene == OPTIONS) {
@@ -716,11 +559,6 @@ int main(int argc, char *args[]) {
     SDL_DestroyTexture(pair.second);
   }
   textures.clear();
-
-  for (auto &pair : texts) {
-    SDL_DestroyTexture(pair.second);
-  }
-  texts.clear();
 
   TTF_CloseFont(gFont);
   TTF_CloseFont(gSmallFont);

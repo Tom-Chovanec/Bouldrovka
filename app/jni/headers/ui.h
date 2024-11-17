@@ -13,7 +13,7 @@ protected:
     SDL_Rect rect;
     SDL_Color black;
     SDL_Color gray;
-    int scroll;
+    int scroll = 0;
 
 public:
     UIElement(const std::string& id, int x, int y, int w, int h); 
@@ -25,6 +25,8 @@ public:
     std::string getId();
     void applyScroll();
     void revertScroll();
+    int getX();
+    int getY();
     void setScroll(int scroll);
 };
 
@@ -93,6 +95,22 @@ public:
     void render(SDL_Renderer* renderer) override;
 };
 
+class Button : public UIElement {
+private:
+    SDL_Texture* textTexture;
+    SDL_Rect textRect;
+    int textW, textH;
+    SDL_Color color;
+    int radius;
+    bool corners[4] = {true, true, true, true};
+
+public:
+    Button(const std::string& id, SDL_Renderer* renderer, TTF_Font* font, int x, int y, int w, int h, const std::string& text, SDL_Color color, SDL_Color textColor, int radius);
+    ~Button();
+    void render(SDL_Renderer* renderer) override;
+};
+
+void drawBackButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);
 void drawButton(SDL_Renderer* renderer, SDL_Texture* buttonImage, SDL_Rect* buttonRect);
 void drawGenerateButton(SDL_Renderer* renderer, int windowW, SDL_Texture* buttonImage, SDL_Rect* imageRect) ;
 

@@ -1,4 +1,0 @@
-#Sun Dec 29 14:01:17 CET 2024
-base.0=/home/tom/projects/cpp/bouldrovka/app/build/intermediates/dex/debug/mergeDexDebug/classes.dex
-renamed.0=classes.dex
-path.0=classes.dex

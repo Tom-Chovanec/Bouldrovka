@@ -1,5 +1,0 @@
-Android NDK: WARNING:/home/tom/projects/cpp/bouldrovka/app/jni/SDL_image/Android.mk:SDL3_image_static: LOCAL_LDFLAGS is always ignored for static libraries    
-make: Nothing to be done for 'SDL3'.
-make: Nothing to be done for 'SDL3_image'.
-[arm64-v8a] Compile++      : main <= icon.cpp
-[arm64-v8a] SharedLibrary  : libmain.so

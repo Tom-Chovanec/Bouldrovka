@@ -1,2 +1,0 @@
-/home/tom/projects/cpp/bouldrovka/app/jni/Android.mk
-/home/tom/projects/cpp/bouldrovka/app/jni/Application.mk

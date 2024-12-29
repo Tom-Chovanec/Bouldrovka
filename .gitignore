@@ -17,6 +17,8 @@ CMakeFiles/
 CMakeCache.txt
 *.cmake
 
+*.ttf
+
 *.apk
 *.ap_ *.dex
 *.class

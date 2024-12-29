@@ -2,7 +2,20 @@
 #include "include/renderer.hpp"
 #include <SDL3/SDL_render.h>
 
-SimpleButton::SimpleButton(const SDL_FRect& rect, float radius, const SDL_Color& color) : m_Rect(rect), m_Radius(radius), m_Color(color) {
+SimpleButton::SimpleButton(
+    const SDL_FRect& rect,
+    float radius,
+    const char* fontName,
+    const std::string& text,
+    const SDL_Color& color,
+    const SDL_Color& textColor
+) : 
+    m_Rect(rect),
+    m_Radius(radius),
+    m_FontName(fontName),
+    m_Text(text),
+    m_Color(color),
+    m_TextColor(textColor) {
 }
 
 void SimpleButton::render(const Context& context, Renderer& renderer) {
@@ -47,6 +60,15 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
         m_RenderRect.h - m_Radius * 2
     };
     renderer.renderRect(&filler, m_Color);
+
+    renderer.renderText(
+        m_FontName,
+        m_Text,
+        m_RenderRect.x + m_RenderRect.w / 2,
+        m_RenderRect.y + m_RenderRect.h / 2,
+        Renderer::MID,
+        m_TextColor
+    );
 
 }
 

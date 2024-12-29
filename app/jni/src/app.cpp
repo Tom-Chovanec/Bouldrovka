@@ -1,4 +1,7 @@
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_error.h>
+#include <SDL3/SDL_log.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include "include/app.hpp"
 #include "include/icon.hpp"
@@ -11,12 +14,17 @@ App::App() : m_Renderer(m_Context, m_ResourceManager) {
 App::~App() {
     SDL_DestroyRenderer(m_Context.renderer);
     SDL_DestroyWindow(m_Context.window);
+    TTF_Quit();
     SDL_Quit();
 }
 
 bool App::init() {
     if (!SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
+        return false;
+    }
+    if (!TTF_Init()) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_Init failed (%s)", SDL_GetError());
         return false;
     }
 
@@ -32,9 +40,10 @@ bool App::init() {
         return false;
     }
 
-
     m_ResourceManager.loadTexture(m_Context, "icons.png", "icons");
     m_ResourceManager.loadTexture(m_Context, "background.png", "background");
+
+    m_ResourceManager.loadFont(m_Context, "fonts/JosefinSans-Regular.ttf", "basic", 0.04);
 
     SDL_FRect dst = {0, 0, 1, 1};
     SDL_FRect sprite = {0, 0, 1230, 2700};
@@ -49,8 +58,9 @@ bool App::init() {
 
     m_Scenes[INTRO].addObject<Icon>(dst, name, sprite, color);
 
-    dst = {0.5, 0.8, 0.6, 0.09};
-    m_Scenes[INTRO].addObject<SimpleButton>(dst, 0.1, color);
+    dst = {0.5, 0.75, 0.6, 0.09};
+
+    m_Scenes[INTRO].addObject<SimpleButton>(dst, 0.1, "basic", "Ideme na to!", color);
 
 
  

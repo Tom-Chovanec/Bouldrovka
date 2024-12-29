@@ -1,5 +1,6 @@
 #include "include/app.hpp"
 #include "include/icon.hpp"
+#include "include/image.hpp"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_iostream.h>
 #include <SDL3/SDL_log.h>
@@ -36,12 +37,19 @@ bool App::init() {
     m_ResourceManager.loadTexture(m_Context, "icons.png", "icons");
     m_ResourceManager.loadTexture(m_Context, "background.png", "background");
 
-    SDL_FRect dst = {0.5, 0.5, 0.1, 0.1};
-    SDL_FRect sprite = {143, 419, 128, 128};
-    const char* name =  "icons";
+    SDL_FRect dst = {0, 0, 1, 1};
+    SDL_FRect sprite = {0, 0, 1230, 2700};
+    const char* name =  "background";
+
+    m_Scenes[INTRO].addObject<Image>(dst, name, sprite);
+
+    dst = {0.5, 0.5, 0.1, 0.1};
+    sprite = {143, 419, 128, 128};
+    name =  "icons";
     SDL_Color color = {255, 106, 20, 255};
 
     m_Scenes[INTRO].addObject<Icon>(dst, name, sprite, color);
+
 
  
 

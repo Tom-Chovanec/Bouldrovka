@@ -3,10 +3,10 @@
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_render.h>
 
-bool ResourceManager::loadTexture(const Context& context, std::__fs::filesystem::path path, const char* name) {
-    m_Textures[name] = IMG_LoadTexture(context.renderer, path.c_str());
+bool ResourceManager::loadTexture(const Context& context, const char* path, const char* name) {
+    m_Textures[name] = IMG_LoadTexture(context.renderer, path);
     if (m_Textures[name] == nullptr) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load texture %s, error: %s", path.c_str(), SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load texture %s, error: %s", path, SDL_GetError());
         return false;
     }
     return true;

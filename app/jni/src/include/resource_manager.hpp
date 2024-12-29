@@ -2,7 +2,6 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <filesystem>
 #include <map>
 
 #include "common.hpp"
@@ -14,7 +13,7 @@ private:
 public:
     ~ResourceManager();
 
-    bool loadTexture(const Context& context, std::__fs::filesystem::path path, const char* name);
+    bool loadTexture(const Context& context, const char* path, const char* name);
 
     void makeColoredTexture(const char* srcTextureName, const char* dstTextureName, SDL_Color& color);
 

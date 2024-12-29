@@ -1,5 +1,4 @@
 #include "include/renderer.hpp"
-#include <SDL3/SDL_render.h>
 
 Renderer::Renderer(const Context& context, ResourceManager& resourceManager) : 
     m_Context(context),
@@ -14,4 +13,9 @@ void Renderer::renderSprite(
 ) {
     SDL_SetTextureColorMod(m_ResourceManager.getTexture(textureName), color.r, color.g, color.b);
     SDL_RenderTexture(m_Context.renderer, m_ResourceManager.getTexture(textureName), spriteRect, dstRect);
+}
+
+void Renderer::renderRect( const SDL_FRect* rect, const SDL_Color& color) {
+    SDL_SetRenderDrawColor(m_Context.renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(m_Context.renderer, rect);
 }

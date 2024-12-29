@@ -19,4 +19,6 @@ public:
         const SDL_FRect* dstRect,
         const SDL_Color& color
     );
+
+    void renderRect( const SDL_FRect* rect, const SDL_Color& color);
 };

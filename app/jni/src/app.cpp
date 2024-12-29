@@ -1,10 +1,9 @@
+#include <SDL3/SDL.h>
+
 #include "include/app.hpp"
 #include "include/icon.hpp"
 #include "include/image.hpp"
-#include <SDL3/SDL_events.h>
-#include <SDL3/SDL_iostream.h>
-#include <SDL3/SDL_log.h>
-#include <SDL3/SDL_rect.h>
+#include "include/simple_button.hpp"
 
 App::App() : m_Renderer(m_Context, m_ResourceManager) {
 }
@@ -43,12 +42,15 @@ bool App::init() {
 
     m_Scenes[INTRO].addObject<Image>(dst, name, sprite);
 
-    dst = {0.5, 0.5, 0.1, 0.1};
-    sprite = {143, 419, 128, 128};
+    dst = {0.5, 0.2, 0.2, 0.2};
+    sprite = {0, 674, 350, 350};
     name =  "icons";
     SDL_Color color = {255, 106, 20, 255};
 
     m_Scenes[INTRO].addObject<Icon>(dst, name, sprite, color);
+
+    dst = {0.5, 0.8, 0.6, 0.09};
+    m_Scenes[INTRO].addObject<SimpleButton>(dst, 0.1, color);
 
 
  

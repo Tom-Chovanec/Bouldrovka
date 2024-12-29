@@ -64,8 +64,10 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
     renderer.renderText(
         m_FontName,
         m_Text,
-        m_RenderRect.x + m_RenderRect.w / 2,
-        m_RenderRect.y + m_RenderRect.h / 2,
+        {
+            m_RenderRect.x + m_RenderRect.w / 2,
+            m_RenderRect.y + m_RenderRect.h / 2
+        },
         Renderer::MID,
         m_TextColor
     );

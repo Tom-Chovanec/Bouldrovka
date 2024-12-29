@@ -5,10 +5,18 @@
 
 struct Float2 {
     float x, y;
+
+    Float2 operator*(float scalar) const {
+        return {x * scalar, y * scalar};
+    }
 };
 
 struct Int2 {
     int x, y;
+
+    Int2 operator*(int scalar) const {
+        return {x * scalar, y * scalar};
+    }
 };
 
 struct Context {

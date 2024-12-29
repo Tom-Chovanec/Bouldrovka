@@ -12,10 +12,6 @@ private:
     const Context& m_Context;
     ResourceManager& m_ResourceManager;
 
-    struct Int2 {
-        int x, y;
-    };
-
     std::map<std::pair<const std::string&, const char*>, SDL_Texture*> m_TextTextures;
     std::map<std::pair<const std::string&, const char*>, Int2> m_TextSizes;
 
@@ -39,8 +35,7 @@ public:
     void renderText(
         const char* fontName,
         const std::string& text,
-        int x,
-        int y,
+        Float2 pos,
         TEXT_POSITION textPosition,
         const SDL_Color& color,
         int wrapWidth = 0

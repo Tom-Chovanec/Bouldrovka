@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include <functional>
 
 #include "object.hpp"
 #include "common.hpp"

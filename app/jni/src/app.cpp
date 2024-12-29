@@ -7,6 +7,7 @@
 #include "include/icon.hpp"
 #include "include/image.hpp"
 #include "include/simple_button.hpp"
+#include "include/text.hpp"
 
 App::App() : m_Renderer(m_Context, m_ResourceManager) {
 }
@@ -44,6 +45,8 @@ bool App::init() {
     m_ResourceManager.loadTexture(m_Context, "background.png", "background");
 
     m_ResourceManager.loadFont(m_Context, "fonts/JosefinSans-Regular.ttf", "basic", 0.04);
+    m_ResourceManager.loadFont(m_Context, "fonts/JosefinSans-Regular.ttf", "bigger", 0.05);
+    m_ResourceManager.loadFont(m_Context, "fonts/JosefinSans-Regular.ttf", "big", 0.06);
 
     SDL_FRect dst = {0, 0, 1, 1};
     SDL_FRect sprite = {0, 0, 1230, 2700};
@@ -61,6 +64,15 @@ bool App::init() {
     dst = {0.5, 0.75, 0.6, 0.09};
 
     m_Scenes[INTRO].addObject<SimpleButton>(dst, 0.1, "basic", "Ideme na to!", color);
+    
+    Float2 pos = {
+        0.5,
+        0.55
+    };
+    m_Scenes[INTRO].addObject<Text>(pos, "bigger", "Vitaj v");
+
+    pos.y = 0.6;
+    m_Scenes[INTRO].addObject<Text>(pos, "big", "Bouldrovke");
 
 
  

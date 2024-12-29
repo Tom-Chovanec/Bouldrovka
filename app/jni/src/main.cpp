@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
 
     app.init();
 
-
     while (app.isRunning()) {
         app.update();
     }

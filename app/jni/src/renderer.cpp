@@ -26,8 +26,7 @@ void Renderer::renderRect( const SDL_FRect* rect, const SDL_Color& color) {
 void Renderer::renderText(
     const char* fontName,
     const std::string& text,
-    int x,
-    int y,
+    Float2 pos,
     TEXT_POSITION textPosition,
     const SDL_Color& color,
     int wrapWidth
@@ -43,8 +42,8 @@ void Renderer::renderText(
 
     switch (textPosition) {
         case (TL):
-            dst.x = x;
-            dst.y = y;
+            dst.x = pos.x;
+            dst.y = pos.y;
             dst.w = m_TextSizes[{text, fontName}].x;
             dst.h = m_TextSizes[{text, fontName}].y;
             break;
@@ -52,8 +51,8 @@ void Renderer::renderText(
         case (MID):
             float w = m_TextSizes[{text, fontName}].x;
             float h = m_TextSizes[{text, fontName}].y;
-            dst.x = x - w / 2;
-            dst.y = y - h / 2;
+            dst.x = pos.x - w / 2;
+            dst.y = pos.y - h / 2;
             dst.w = w;
             dst.h = h;
             break;

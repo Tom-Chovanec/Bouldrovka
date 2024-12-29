@@ -6,7 +6,7 @@ LOCAL_MODULE := main
 
 # Add your application source files here...
 LOCAL_SRC_FILES := \
-	app.cpp icon.cpp main.cpp renderer.cpp resource_manager.cpp scene.cpp object.cpp image.cpp simple_button.cpp
+	app.cpp icon.cpp main.cpp renderer.cpp resource_manager.cpp scene.cpp object.cpp image.cpp simple_button.cpp text.cpp
 
 SDL_PATH := ../SDL  # SDL
 

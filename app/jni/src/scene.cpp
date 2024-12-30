@@ -18,3 +18,9 @@ void Scene::update(const Context& context) {
         object->update(context);
     }
 }
+
+void Scene::handleClick(const Context& context) {
+    for (const auto& object : m_Objects) {
+        object->handleClick(context);
+    }
+}

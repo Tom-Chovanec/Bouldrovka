@@ -16,6 +16,7 @@ private:
     float m_Radius;
     const char* m_FontName;
     std::string m_Text;
+    std::function<void(void)> m_Callback;
 
 public:
     SimpleButton(
@@ -24,10 +25,13 @@ public:
         const char* fontName,
         const std::string& text,
         const SDL_Color& color = {255, 255, 255, 0},
-        const SDL_Color& textColor = {255, 255, 255, 255}
+        const SDL_Color& textColor = {255, 255, 255, 255},
+        const std::function<void(void)>& m_Callback = NULL
     );
 
     void update(const Context& context) override;
 
     void render(const Context& context, Renderer& renderer) override;
+
+    void handleClick(const Context& context) override;
 };

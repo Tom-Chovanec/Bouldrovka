@@ -6,6 +6,9 @@ void Object::render(const Context& context, Renderer& renderer) {
 }
 
 void Object::update(const Context& context) {
+}
+
+void Object::handleClick(const Context& context) {
 
 }
 

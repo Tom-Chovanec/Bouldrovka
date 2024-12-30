@@ -24,5 +24,7 @@ public:
 
     void update(const Context& context);
 
+    void handleClick(const Context& context);
+
 };
 

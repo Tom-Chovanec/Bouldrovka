@@ -20,9 +20,14 @@ private:
     enum SCENE {
         NONE = 0,
         INTRO,
-    } m_ScenesIdx;
+        BOULDER_SELECT
+    } m_CurrentScene = INTRO;
 
     std::unordered_map<SCENE, Scene> m_Scenes;
+
+    void changeScene(SCENE scene);
+
+    void setupScenes();
 
 public:
     App();

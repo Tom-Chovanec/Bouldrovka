@@ -9,8 +9,8 @@ SimpleButton::SimpleButton(
     float radius,
     const char* fontName,
     const std::string& text,
-    const SDL_Color& color,
-    const SDL_Color& textColor,
+    COLORS color,
+    COLORS textColor,
     const std::function<void(void)>& callback
 ) : 
     m_Rect(rect),
@@ -32,22 +32,22 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
         m_Radius
     };
     SDL_FRect sprite = {763, 763, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, m_Color);
+    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
 
     //top right
     cornerPos.x = m_RenderRect.x + m_RenderRect.w - m_Radius;
     sprite = {497, 763, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, m_Color);
+    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
 
     //bottom right
     cornerPos.y = m_RenderRect.y + m_RenderRect.h - m_Radius;
     sprite = {497, 497, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, m_Color);
+    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
 
     //bottom left
     cornerPos.x = m_RenderRect.x;
     sprite = {763, 497, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, m_Color);
+    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
 
     SDL_FRect filler = {
         m_RenderRect.x + m_Radius,
@@ -55,7 +55,7 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
         m_RenderRect.w - m_Radius * 2,
         m_RenderRect.h
     };
-    renderer.renderRect(&filler, m_Color);
+    renderer.renderRect(&filler, getColor(m_Color, gTheme));
 
     filler = {
         m_RenderRect.x,
@@ -63,7 +63,7 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
         m_RenderRect.w,
         m_RenderRect.h - m_Radius * 2
     };
-    renderer.renderRect(&filler, m_Color);
+    renderer.renderRect(&filler, getColor(m_Color, gTheme));
 
     renderer.renderText(
         m_FontName,
@@ -73,7 +73,7 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
             m_RenderRect.y + m_RenderRect.h / 2
         },
         Renderer::MID,
-        m_TextColor
+        getColor(m_TextColor, gTheme)
     );
 
 }

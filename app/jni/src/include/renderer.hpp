@@ -27,7 +27,9 @@ public:
 
     void renderRect(const SDL_FRect* rect, const SDL_Color& color);
 
-    enum TEXT_POSITION {
+    void clearScreen(const SDL_Color& color);
+
+    enum TEXT_ALIGNMENT {
         TL,
         MID
     };
@@ -36,7 +38,7 @@ public:
         const char* fontName,
         const std::string& text,
         Float2 pos,
-        TEXT_POSITION textPosition,
+        TEXT_ALIGNMENT textPosition,
         const SDL_Color& color,
         int wrapWidth = 0
     );

@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 
+#include "colors.hpp"
 #include "object.hpp"
 #include "common.hpp"
 #include "renderer.hpp"
@@ -12,10 +13,10 @@ private:
     const char* m_TextureName;
     SDL_FRect m_SpriteRect;
     SDL_FRect m_RenderRect;
-    SDL_Color m_Color;
+    COLORS m_Color;
 
 public:
-    Icon(const SDL_FRect& rect, const char* textureName, const SDL_FRect& spriteRect, const SDL_Color& color = {255, 255, 255, 0});
+    Icon(const SDL_FRect& rect, const char* textureName, const SDL_FRect& spriteRect, COLORS color);
 
     void update(const Context& context) override;
 

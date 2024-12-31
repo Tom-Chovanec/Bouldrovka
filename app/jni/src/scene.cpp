@@ -6,8 +6,12 @@ Scene::~Scene() {
     m_Objects.clear();
 }
 
+void Scene::setBackgroundColor(COLORS color) {
+    m_BackgroundColor = color;
+}
 
 void Scene::render(const Context& context, Renderer& renderer) {
+    renderer.clearScreen(getColor(m_BackgroundColor, gTheme));
     for (auto& object : m_Objects) {
         object->render(context, renderer);
     }

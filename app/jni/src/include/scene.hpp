@@ -4,12 +4,14 @@
 #include <memory>
 #include <vector>
 
+#include "colors.hpp"
 #include "common.hpp"
 #include "object.hpp"
 
 class Scene {
 private:
     std::vector<std::unique_ptr<Object>> m_Objects;
+    COLORS m_BackgroundColor;
 
 public:
     ~Scene();
@@ -19,6 +21,8 @@ public:
         static_assert(std::is_base_of<Object, T>::value, "T must derive from Object");
         m_Objects.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     }
+
+    void setBackgroundColor(COLORS color);
 
     void render(const Context& context, Renderer& renderer);
 

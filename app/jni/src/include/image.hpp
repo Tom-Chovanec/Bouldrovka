@@ -9,13 +9,14 @@
 class Image : public  Object {
 private:
     SDL_FRect m_Rect;
-    const char* m_TextureName;
+    const char* m_TextureNameDark;
+    const char* m_TextureNameLight;
     SDL_FRect m_SpriteRect;
     SDL_FRect m_RenderRect;
     SDL_Color m_Color;
 
 public:
-    Image(const SDL_FRect& rect, const char* textureName, const SDL_FRect& spriteRect, const SDL_Color& color = {255, 255, 255, 0});
+    Image(const SDL_FRect& rect, const SDL_FRect& spriteRect, const char* textureNameLight, const char* textureNameDark, const SDL_Color& color = SDL_Color{255, 255, 255, 255});
 
     void update(const Context& context) override;
 

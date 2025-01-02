@@ -25,7 +25,12 @@ public:
         const SDL_Color& color
     );
 
+    void renderImage(const char* imageName, const SDL_FRect* dstRect);
+
     void renderRect(const SDL_FRect* rect, const SDL_Color& color);
+
+    void renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color);
+    void renderRoundedImage(const char* imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor);
 
     void clearScreen(const SDL_Color& color);
 

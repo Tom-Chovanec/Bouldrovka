@@ -108,7 +108,7 @@ void App::setupScenes() {
     pos = { 0.06, 0.1};
     m_Scenes[BOULDER_SELECT].addObject<Text>(pos, "regular4", "Bouldrové steny", TEXT_DARK_LIGHT, Renderer::TL);
 
-    dst = {0.06, 0.175, 0.88, 0.25};
+    dst = {0.06, 0.175, 0.88, 0.26};
     m_Scenes[BOULDER_SELECT].addObject<BoulderSelection>("background_light", dst);
 
     // -------- BOULDER SELECT -------

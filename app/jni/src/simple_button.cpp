@@ -24,47 +24,7 @@ SimpleButton::SimpleButton(
 
 void SimpleButton::render(const Context& context, Renderer& renderer) {
 
-    //top left
-    SDL_FRect cornerPos = {
-        m_RenderRect.x,
-        m_RenderRect.y,
-        m_Radius,
-        m_Radius
-    };
-    SDL_FRect sprite = {763, 763, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
-
-    //top right
-    cornerPos.x = m_RenderRect.x + m_RenderRect.w - m_Radius;
-    sprite = {497, 763, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
-
-    //bottom right
-    cornerPos.y = m_RenderRect.y + m_RenderRect.h - m_Radius;
-    sprite = {497, 497, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
-
-    //bottom left
-    cornerPos.x = m_RenderRect.x;
-    sprite = {763, 497, 256, 256};
-    renderer.renderSprite("icons", &sprite, &cornerPos, getColor(m_Color, gTheme));
-
-    SDL_FRect filler = {
-        m_RenderRect.x + m_Radius,
-        m_RenderRect.y,
-        m_RenderRect.w - m_Radius * 2,
-        m_RenderRect.h
-    };
-    renderer.renderRect(&filler, getColor(m_Color, gTheme));
-
-    filler = {
-        m_RenderRect.x,
-        m_RenderRect.y + m_Radius,
-        m_RenderRect.w,
-        m_RenderRect.h - m_Radius * 2
-    };
-    renderer.renderRect(&filler, getColor(m_Color, gTheme));
-
+    renderer.renderRoundedRect(&m_RenderRect, m_Radius, getColor(m_Color, gTheme));
     renderer.renderText(
         m_FontName,
         m_Text,

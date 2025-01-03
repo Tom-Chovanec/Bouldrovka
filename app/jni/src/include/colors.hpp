@@ -27,5 +27,5 @@ enum COLORS {
     COLORS_COUNT,
 };
 
-const SDL_Color& getColor(COLORS color, COLOR_THEME theme);
+const SDL_Color& getColor(COLORS color);
 

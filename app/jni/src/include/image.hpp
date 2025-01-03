@@ -9,14 +9,18 @@
 class Image : public  Object {
 private:
     SDL_FRect m_Rect;
-    const char* m_TextureNameDark;
-    const char* m_TextureNameLight;
+    std::string m_TextureNameDark;
+    std::string m_TextureNameLight;
     SDL_FRect m_SpriteRect;
     SDL_FRect m_RenderRect;
-    SDL_Color m_Color;
 
 public:
-    Image(const SDL_FRect& rect, const SDL_FRect& spriteRect, const char* textureNameLight, const char* textureNameDark, const SDL_Color& color = SDL_Color{255, 255, 255, 255});
+    Image(
+        const SDL_FRect& rect,
+        const SDL_FRect& spriteRect,
+        const char* textureNameLight,
+        const char* textureNameDark = ""
+    );
 
     void update(const Context& context) override;
 

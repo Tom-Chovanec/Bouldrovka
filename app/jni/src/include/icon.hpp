@@ -10,13 +10,13 @@
 class Icon : public  Object {
 private:
     SDL_FRect m_Rect;
-    const char* m_TextureName;
+    std::string m_TextureName;
     SDL_FRect m_SpriteRect;
     SDL_FRect m_RenderRect;
     COLORS m_Color;
 
 public:
-    Icon(const SDL_FRect& rect, const char* textureName, const SDL_FRect& spriteRect, COLORS color);
+    Icon(const SDL_FRect& rect, const std::string& textureName, const SDL_FRect& spriteRect, COLORS color);
 
     void update(const Context& context) override;
 

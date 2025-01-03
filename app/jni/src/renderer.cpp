@@ -9,7 +9,7 @@ Renderer::Renderer(const Context& context, ResourceManager& resourceManager) :
 }
 
 void Renderer::renderSprite(
-    const char* textureName,
+    const std::string& textureName,
     const SDL_FRect* spriteRect,
     const SDL_FRect* dstRect,
     const SDL_Color& color
@@ -18,7 +18,7 @@ void Renderer::renderSprite(
     SDL_RenderTexture(m_Context.renderer, m_ResourceManager.getTexture(textureName), spriteRect, dstRect);
 }
 
-void Renderer::renderImage(const char* imageName, const SDL_FRect* dstRect) {
+void Renderer::renderImage(const std::string& imageName, const SDL_FRect* dstRect) {
     SDL_RenderTexture(m_Context.renderer, m_ResourceManager.getTexture(imageName), NULL, dstRect);
 }
 
@@ -77,7 +77,7 @@ void Renderer::renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_
 }
 
 
-void Renderer::renderRoundedImage(const char* imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor) {
+void Renderer::renderRoundedImage(const std::string& imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor) {
     renderImage(imageName, rect);
 
     //top left
@@ -107,7 +107,7 @@ void Renderer::renderRoundedImage(const char* imageName, const SDL_FRect* rect, 
 }
 
 void Renderer::renderText(
-    const char* fontName,
+    const std::string& fontName,
     const std::string& text,
     Float2 pos,
     TEXT_ALIGNMENT textPosition,
@@ -115,7 +115,7 @@ void Renderer::renderText(
     int wrapWidth
 ) {
     if (m_TextTextures.count({text, fontName}) == 0) {
-        SDL_Surface* srf = TTF_RenderText_Blended_Wrapped(m_ResourceManager.getFont(fontName), text.c_str(), text.length(), SDL_Color{255, 255, 255, 255}, wrapWidth);
+        SDL_Surface* srf = TTF_RenderText_Blended_Wrapped(m_ResourceManager.getFont(fontName.c_str()), text.c_str(), text.length(), SDL_Color{255, 255, 255, 255}, wrapWidth);
         m_TextTextures[{text, fontName}] = SDL_CreateTextureFromSurface(m_Context.renderer, srf);
         m_TextSizes[{text, fontName}] = {srf->w, srf->h};
         SDL_DestroySurface(srf);

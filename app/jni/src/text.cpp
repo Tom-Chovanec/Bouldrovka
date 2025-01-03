@@ -16,7 +16,7 @@ Text::Text(
 }
 
 void Text::render(const Context& context, Renderer& renderer)  {
-    renderer.renderText(m_FontName, m_Text, m_RenderPos, m_TextAlignment, getColor(m_Color, gTheme));
+    renderer.renderText(m_FontName, m_Text, m_RenderPos, m_TextAlignment, getColor(m_Color));
 }
 
 void Text::update(const Context& context) {

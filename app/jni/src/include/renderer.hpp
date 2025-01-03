@@ -12,25 +12,25 @@ private:
     const Context& m_Context;
     ResourceManager& m_ResourceManager;
 
-    std::map<std::pair<const std::string&, const char*>, SDL_Texture*> m_TextTextures;
-    std::map<std::pair<const std::string&, const char*>, Int2> m_TextSizes;
+    std::map<std::pair<std::string, std::string>, SDL_Texture*> m_TextTextures;
+    std::map<std::pair<std::string, std::string>, Int2> m_TextSizes;
 
 public:
     Renderer(const Context& context, ResourceManager& resourceManager);
 
     void renderSprite(
-        const char* textureName,
+        const std::string& textureName,
         const SDL_FRect* spriteRect,
         const SDL_FRect* dstRect,
         const SDL_Color& color
     );
 
-    void renderImage(const char* imageName, const SDL_FRect* dstRect);
+    void renderImage(const std::string& imageName, const SDL_FRect* dstRect);
 
     void renderRect(const SDL_FRect* rect, const SDL_Color& color);
 
     void renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color);
-    void renderRoundedImage(const char* imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor);
+    void renderRoundedImage(const std::string& imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor);
 
     void clearScreen(const SDL_Color& color);
 
@@ -40,7 +40,7 @@ public:
     };
 
     void renderText(
-        const char* fontName,
+        const std::string& fontName,
         const std::string& text,
         Float2 pos,
         TEXT_ALIGNMENT textPosition,

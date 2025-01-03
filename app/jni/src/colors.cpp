@@ -39,7 +39,7 @@ std::array<std::array<SDL_Color, COLORS_COUNT>, THEMES_COUNT> Colors = {
 
 COLOR_THEME gTheme = DARK;
 
-const SDL_Color& getColor(COLORS color, COLOR_THEME theme) {
-    return Colors[theme][color];
+const SDL_Color& getColor(COLORS color) {
+    return Colors[gTheme][color];
 }
 

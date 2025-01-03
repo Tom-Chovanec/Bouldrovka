@@ -111,6 +111,9 @@ void App::setupScenes() {
     dst = {0.06, 0.175, 0.88, 0.25};
     m_Scenes[BOULDER_SELECT].addObject<BoulderSelection>("background_light", dst);
 
+    dst.y += 0.3;
+    m_Scenes[BOULDER_SELECT].addObject<BoulderSelection>("", dst);
+
     // -------- BOULDER SELECT -------
 }
 

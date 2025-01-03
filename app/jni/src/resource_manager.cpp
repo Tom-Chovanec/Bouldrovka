@@ -1,10 +1,9 @@
-
 #include "include/resource_manager.hpp"
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-bool ResourceManager::loadTexture(const Context& context, const char* path, const char* name) {
+bool ResourceManager::loadTexture(const Context& context, const char* path, const std::string& name) {
     m_Textures[name] = IMG_LoadTexture(context.renderer, path);
     if (m_Textures[name] == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load texture %s, error: %s", path, SDL_GetError());
@@ -13,7 +12,7 @@ bool ResourceManager::loadTexture(const Context& context, const char* path, cons
     return true;
 }
 
-bool ResourceManager::loadFont(const Context& context, const char* path, const char* name, float size) {
+bool ResourceManager::loadFont(const Context& context, const char* path, const std::string& name, float size) {
     m_Fonts[name] = TTF_OpenFont(path, size * context.windowSize.x);
     if (m_Fonts[name] == nullptr) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load font %s, error: %s", path, SDL_GetError());
@@ -22,17 +21,17 @@ bool ResourceManager::loadFont(const Context& context, const char* path, const c
     return true;
 }
 
-SDL_Texture* ResourceManager::getTexture(const char* textureName) {
+SDL_Texture* ResourceManager::getTexture(const std::string& textureName) {
     if (m_Textures.count(textureName) == 0) {
-        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Texture %s does not exits!", textureName);
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Texture %s does not exits!", textureName.c_str());
         return nullptr;
     }
     return m_Textures[textureName];
 }
 
-TTF_Font* ResourceManager::getFont(const char* fontName) {
+TTF_Font* ResourceManager::getFont(const std::string& fontName) {
     if (m_Fonts.count(fontName) == 0) {
-        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Font %s does not exits!", fontName);
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Font %s does not exits!", fontName.c_str());
         return nullptr;
     }
     return m_Fonts[fontName];

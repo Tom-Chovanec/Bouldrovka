@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SDL3/SDL.h>
-#include <chrono>
 
 struct Float2 {
     float x, y;
@@ -24,6 +23,4 @@ struct Context {
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
     SDL_FPoint mousePos = {0, 0};
-    std::chrono::duration<float, std::milli> prevTime;
-    std::chrono::duration<float, std::milli> deltaTime;
 };

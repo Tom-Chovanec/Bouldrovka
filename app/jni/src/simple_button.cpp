@@ -24,7 +24,7 @@ SimpleButton::SimpleButton(
 
 void SimpleButton::render(const Context& context, Renderer& renderer) {
 
-    renderer.renderRoundedRect(&m_RenderRect, m_Radius, getColor(m_Color, gTheme));
+    renderer.renderRoundedRect(&m_RenderRect, m_Radius, getColor(m_Color));
     renderer.renderText(
         m_FontName,
         m_Text,
@@ -33,7 +33,7 @@ void SimpleButton::render(const Context& context, Renderer& renderer) {
             m_RenderRect.y + m_RenderRect.h / 2
         },
         Renderer::MID,
-        getColor(m_TextColor, gTheme)
+        getColor(m_TextColor)
     );
 
 }

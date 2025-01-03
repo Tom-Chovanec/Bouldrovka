@@ -11,7 +11,7 @@ void Scene::setBackgroundColor(COLORS color) {
 }
 
 void Scene::render(const Context& context, Renderer& renderer) {
-    renderer.clearScreen(getColor(m_BackgroundColor, gTheme));
+    renderer.clearScreen(getColor(m_BackgroundColor));
     for (auto& object : m_Objects) {
         object->render(context, renderer);
     }

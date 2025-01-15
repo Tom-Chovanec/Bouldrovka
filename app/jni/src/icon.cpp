@@ -1,8 +1,9 @@
 #include "include/icon.hpp"
 #include "include/renderer.hpp"
 #include <SDL3/SDL_render.h>
+#include <string_view>
 
-Icon::Icon(const SDL_FRect& rect, const std::string& textureName, const SDL_FRect& spriteRect, COLORS color) 
+Icon::Icon(const SDL_FRect& rect, std::string_view textureName, const SDL_FRect& spriteRect, Colors::COLOR color) 
     : m_Rect(rect),
       m_TextureName(textureName),
       m_SpriteRect(spriteRect),

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include <string_view>
 
 #include "colors.hpp"
 #include "object.hpp"
@@ -10,13 +11,13 @@
 class Icon : public  Object {
 private:
     SDL_FRect m_Rect;
-    std::string m_TextureName;
+    std::string_view m_TextureName;
     SDL_FRect m_SpriteRect;
     SDL_FRect m_RenderRect;
-    COLORS m_Color;
+    Colors::COLOR m_Color;
 
 public:
-    Icon(const SDL_FRect& rect, const std::string& textureName, const SDL_FRect& spriteRect, COLORS color);
+    Icon(const SDL_FRect& rect, std::string_view textureName, const SDL_FRect& spriteRect, Colors::COLOR color);
 
     void update(const Context& context) override;
 

@@ -6,8 +6,8 @@
 Image::Image(
     const SDL_FRect& rect,
     const SDL_FRect& spriteRect,
-    const char* textureNameLight,
-    const char* textureNameDark
+    std::string_view textureNameLight,
+    std::string_view textureNameDark
 ) : 
     m_Rect(rect),
     m_TextureNameLight(textureNameLight),
@@ -18,7 +18,7 @@ Image::Image(
 }
 
 void Image::render(const Context& context, Renderer& renderer) {
-    if (gTheme == LIGHT) renderer.renderSprite(m_TextureNameLight, &m_SpriteRect, &m_RenderRect, SDL_Color{255, 255, 255, 255});
+    if (Colors::gTheme == Colors::LIGHT) renderer.renderSprite(m_TextureNameLight, &m_SpriteRect, &m_RenderRect, SDL_Color{255, 255, 255, 255});
     else renderer.renderSprite(m_TextureNameDark, &m_SpriteRect, &m_RenderRect, SDL_Color{255, 255, 255, 255});
 }
 

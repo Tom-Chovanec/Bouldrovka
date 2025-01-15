@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Bouldrovka)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-target_compile_features(cxx_std_17)
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#
+#target_compile_features(cxx_std_17)
 
 if(NOT TARGET SDL3::SDL3)
     find_package(SDL3 CONFIG)

@@ -2,7 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include <string>
+#include <string_view>
 
 #include "resource_manager.hpp"
 #include "common.hpp"
@@ -12,25 +12,25 @@ private:
     const Context& m_Context;
     ResourceManager& m_ResourceManager;
 
-    std::map<std::pair<std::string, std::string>, SDL_Texture*> m_TextTextures;
-    std::map<std::pair<std::string, std::string>, Int2> m_TextSizes;
+    std::map<std::pair<std::string_view, std::string_view>, SDL_Texture*> m_TextTextures;
+    std::map<std::pair<std::string_view, std::string_view>, Int2> m_TextSizes;
 
 public:
     Renderer(const Context& context, ResourceManager& resourceManager);
 
     void renderSprite(
-        const std::string& textureName,
+        std::string_view textureName,
         const SDL_FRect* spriteRect,
         const SDL_FRect* dstRect,
         const SDL_Color& color
-    );
+    ) const;
 
-    void renderImage(const std::string& imageName, const SDL_FRect* dstRect);
+    void renderImage(std::string_view imageName, const SDL_FRect* dstRect) const;
 
     void renderRect(const SDL_FRect* rect, const SDL_Color& color);
 
     void renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color);
-    void renderRoundedImage(const std::string& imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor);
+    void renderRoundedImage(std::string_view imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor);
 
     void clearScreen(const SDL_Color& color);
 
@@ -40,8 +40,8 @@ public:
     };
 
     void renderText(
-        const std::string& fontName,
-        const std::string& text,
+        std::string_view fontName,
+        std::string_view text,
         Float2 pos,
         TEXT_ALIGNMENT textPosition,
         const SDL_Color& color,

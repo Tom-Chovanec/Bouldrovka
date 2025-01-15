@@ -11,7 +11,7 @@
 class Scene {
 private:
     std::vector<std::unique_ptr<Object>> m_Objects;
-    COLORS m_BackgroundColor;
+    Colors::COLOR m_BackgroundColor;
 
 public:
     ~Scene();
@@ -22,7 +22,7 @@ public:
         m_Objects.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     }
 
-    void setBackgroundColor(COLORS color);
+    void setBackgroundColor(Colors::COLOR color);
 
     void render(const Context& context, Renderer& renderer);
 

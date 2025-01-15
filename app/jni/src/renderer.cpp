@@ -2,6 +2,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_surface.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <string_view>
 
 Renderer::Renderer(const Context& context, ResourceManager& resourceManager) : 
     m_Context(context),
@@ -9,16 +10,16 @@ Renderer::Renderer(const Context& context, ResourceManager& resourceManager) :
 }
 
 void Renderer::renderSprite(
-    const std::string& textureName,
+    std::string_view textureName,
     const SDL_FRect* spriteRect,
     const SDL_FRect* dstRect,
     const SDL_Color& color
-) {
+) const {
     SDL_SetTextureColorMod(m_ResourceManager.getTexture(textureName), color.r, color.g, color.b);
     SDL_RenderTexture(m_Context.renderer, m_ResourceManager.getTexture(textureName), spriteRect, dstRect);
 }
 
-void Renderer::renderImage(const std::string& imageName, const SDL_FRect* dstRect) {
+void Renderer::renderImage(std::string_view imageName, const SDL_FRect* dstRect) const {
     SDL_RenderTexture(m_Context.renderer, m_ResourceManager.getTexture(imageName), NULL, dstRect);
 }
 
@@ -77,7 +78,7 @@ void Renderer::renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_
 }
 
 
-void Renderer::renderRoundedImage(const std::string& imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor) {
+void Renderer::renderRoundedImage(std::string_view imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor) {
     renderImage(imageName, rect);
 
     //top left
@@ -107,15 +108,15 @@ void Renderer::renderRoundedImage(const std::string& imageName, const SDL_FRect*
 }
 
 void Renderer::renderText(
-    const std::string& fontName,
-    const std::string& text,
+    std::string_view fontName,
+    std::string_view text,
     Float2 pos,
     TEXT_ALIGNMENT textPosition,
     const SDL_Color& color,
     int wrapWidth
 ) {
     if (m_TextTextures.count({text, fontName}) == 0) {
-        SDL_Surface* srf = TTF_RenderText_Blended_Wrapped(m_ResourceManager.getFont(fontName.c_str()), text.c_str(), text.length(), SDL_Color{255, 255, 255, 255}, wrapWidth);
+        SDL_Surface* srf = TTF_RenderText_Blended_Wrapped(m_ResourceManager.getFont(fontName), text.data(), text.length(), SDL_Color{255, 255, 255, 255}, wrapWidth);
         m_TextTextures[{text, fontName}] = SDL_CreateTextureFromSurface(m_Context.renderer, srf);
         m_TextSizes[{text, fontName}] = {srf->w, srf->h};
         SDL_DestroySurface(srf);

@@ -9,8 +9,8 @@
 class Image : public  Object {
 private:
     SDL_FRect m_Rect;
-    std::string m_TextureNameDark;
-    std::string m_TextureNameLight;
+    std::string_view m_TextureNameDark;
+    std::string_view m_TextureNameLight;
     SDL_FRect m_SpriteRect;
     SDL_FRect m_RenderRect;
 
@@ -18,8 +18,8 @@ public:
     Image(
         const SDL_FRect& rect,
         const SDL_FRect& spriteRect,
-        const char* textureNameLight,
-        const char* textureNameDark = ""
+        std::string_view textureNameLight,
+        std::string_view textureNameDark = ""
     );
 
     void update(const Context& context) override;

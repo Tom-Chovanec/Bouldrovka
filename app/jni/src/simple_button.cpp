@@ -7,10 +7,10 @@
 SimpleButton::SimpleButton(
     const SDL_FRect& rect,
     float radius,
-    const char* fontName,
-    const std::string& text,
-    COLORS color,
-    COLORS textColor,
+    std::string_view fontName,
+    std::string_view text,
+    Colors::COLOR color,
+    Colors::COLOR textColor,
     const std::function<void(void)>& callback
 ) : 
     m_Rect(rect),

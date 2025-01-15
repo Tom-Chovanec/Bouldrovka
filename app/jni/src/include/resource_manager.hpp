@@ -3,24 +3,25 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <filesystem>
 #include <map>
-#include <string>
+#include <string_view>
 
 #include "common.hpp"
 
 class ResourceManager {
 private:
-    std::map<std::string, SDL_Texture*> m_Textures;
-    std::map<std::string, TTF_Font*> m_Fonts;
+    std::map<std::string_view, SDL_Texture*> m_Textures;
+    std::map<std::string_view, TTF_Font*> m_Fonts;
 
 public:
     ~ResourceManager();
 
-    bool loadTexture(const Context& context, const char* path, const std::string& name);
-    bool loadFont(const Context& context, const char* path, const std::string& name, float size);
+    bool loadTexture(const Context& context, std::filesystem::path path, std::string_view name);
+    bool loadFont(const Context& context, std::filesystem::path path, std::string_view name, float size);
 
-    SDL_Texture* getTexture(const std::string& textureName);
-    TTF_Font* getFont(const std::string& fontName);
+    SDL_Texture* getTexture(std::string_view textureName);
+    TTF_Font* getFont(std::string_view fontName);
 
     void clear();
 

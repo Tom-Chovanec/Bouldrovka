@@ -6,7 +6,7 @@ Scene::~Scene() {
     m_Objects.clear();
 }
 
-void Scene::setBackgroundColor(COLORS color) {
+void Scene::setBackgroundColor(Colors::COLOR color) {
     m_BackgroundColor = color;
 }
 

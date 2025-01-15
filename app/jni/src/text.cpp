@@ -1,11 +1,12 @@
 #include "include/text.hpp"
+#include <string_view>
 
 
 Text::Text(
     Float2 pos,
-    const char* fontName,
-    const std::string& text,
-    COLORS color,
+    std::string_view fontName,
+    std::string_view text,
+    Colors::COLOR color,
     Renderer::TEXT_ALIGNMENT textAlignment
 ) :
     m_Pos(pos),

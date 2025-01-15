@@ -14,8 +14,8 @@
 #include "include/simple_button.hpp"
 #include "include/text.hpp"
 
-App::App() : m_Renderer(m_Context, m_ResourceManager) {
-}
+
+App::App() : m_Renderer(m_Context, m_ResourceManager) {}
 
 App::~App() {
     SDL_DestroyRenderer(m_Context.renderer);
@@ -48,13 +48,13 @@ bool App::init() {
 
     switch (SDL_GetSystemTheme()) {
     case SDL_SYSTEM_THEME_UNKNOWN:
-        gTheme = LIGHT;
+        Colors::gTheme = Colors::LIGHT;
         break;
     case SDL_SYSTEM_THEME_LIGHT:
-        gTheme = LIGHT;
+        Colors::gTheme = Colors::LIGHT;
         break;
     case SDL_SYSTEM_THEME_DARK:
-        gTheme = DARK;
+        Colors::gTheme = Colors::DARK;
         break;
     }
 
@@ -83,30 +83,30 @@ void App::setupScenes() {
     dst = {0.5, 0.2, 0.2, 0.2};
     sprite = {537, 5, 482, 482};
 
-    m_Scenes[INTRO].addObject<Icon>(dst, "atlas2", sprite, PRIMARY);
+    m_Scenes[INTRO].addObject<Icon>(dst, "atlas2", sprite, Colors::COLOR::PRIMARY);
 
     dst = {0.5, 0.75, 0.6, 0.09};
 
-    m_Scenes[INTRO].addObject<SimpleButton>(dst, 0.1, "regular4", "Ideme na to!", PRIMARY, TEXT_LIGHT_LIGHT, [this]{m_CurrentScene = BOULDER_SELECT;});
+    m_Scenes[INTRO].addObject<SimpleButton>(dst, 0.1, "regular4", "Ideme na to!", Colors::COLOR::PRIMARY, Colors::COLOR::TEXT_LIGHT_LIGHT, [this]{m_CurrentScene = BOULDER_SELECT;});
     Float2 pos = {
         0.5,
         0.55
     };
-    m_Scenes[INTRO].addObject<Text>(pos, "regular5", "Vitaj v", TEXT_LIGHT_LIGHT);
+    m_Scenes[INTRO].addObject<Text>(pos, "regular5", "Vitaj v", Colors::COLOR::TEXT_LIGHT_LIGHT);
 
     pos.y = 0.6;
-    m_Scenes[INTRO].addObject<Text>(pos, "regular6", "Bouldrovke", TEXT_LIGHT_LIGHT);
+    m_Scenes[INTRO].addObject<Text>(pos, "regular6", "Bouldrovke", Colors::COLOR::TEXT_LIGHT_LIGHT);
     // -------- INTRO --------
 
     // -------- BOULDER SELECT -------
-    m_Scenes[BOULDER_SELECT].setBackgroundColor(WHITE);
+    m_Scenes[BOULDER_SELECT].setBackgroundColor(Colors::COLOR::WHITE);
 
     dst = {0.88, 0.06, 0.06, 0.06};
     sprite = {414, 5, 128, 128};
-    m_Scenes[BOULDER_SELECT].addObject<Icon>(dst, "atlas1", sprite, BLACK);
+    m_Scenes[BOULDER_SELECT].addObject<Icon>(dst, "atlas1", sprite, Colors::COLOR::BLACK);
 
     pos = { 0.06, 0.1};
-    m_Scenes[BOULDER_SELECT].addObject<Text>(pos, "regular4", "Bouldrové steny", TEXT_DARK_LIGHT, Renderer::TL);
+    m_Scenes[BOULDER_SELECT].addObject<Text>(pos, "regular4", "Bouldrové steny", Colors::COLOR::TEXT_DARK_LIGHT, Renderer::TL);
 
     dst = {0.06, 0.175, 0.88, 0.25};
     m_Scenes[BOULDER_SELECT].addObject<BoulderSelection>("background_light", dst);
@@ -139,10 +139,10 @@ SDL_PollEvent(&m_event); {
         case SDL_SYSTEM_THEME_UNKNOWN:
             break;
         case SDL_SYSTEM_THEME_LIGHT:
-            gTheme = LIGHT;
+            Colors::gTheme = Colors::LIGHT;
             break;
         case SDL_SYSTEM_THEME_DARK:
-            gTheme = DARK;
+            Colors::gTheme = Colors::DARK;
             break;
         }
         break;

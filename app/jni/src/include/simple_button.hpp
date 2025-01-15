@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <functional>
+#include <string_view>
 
 #include "colors.hpp"
 #include "object.hpp"
@@ -12,21 +13,21 @@ class SimpleButton : public  Object {
 private:
     SDL_FRect m_Rect;
     SDL_FRect m_RenderRect;
-    COLORS m_Color;
-    COLORS m_TextColor;
+    Colors::COLOR m_Color;
+    Colors::COLOR m_TextColor;
     float m_Radius;
-    const char* m_FontName;
-    std::string m_Text;
+    std::string_view m_FontName;
+    std::string_view m_Text;
     std::function<void(void)> m_Callback;
 
 public:
     SimpleButton(
         const SDL_FRect& rect,
         float radius,
-        const char* fontName,
-        const std::string& text,
-        COLORS color,
-        COLORS textColor,
+        std::string_view fontName,
+        std::string_view text,
+        Colors::COLOR color,
+        Colors::COLOR textColor,
         const std::function<void(void)>& m_Callback = NULL
     );
 

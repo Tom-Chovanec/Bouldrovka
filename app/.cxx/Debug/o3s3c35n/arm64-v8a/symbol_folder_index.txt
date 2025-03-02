@@ -1,0 +1,1 @@
+/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a

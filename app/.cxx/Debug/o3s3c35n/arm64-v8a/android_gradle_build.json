@@ -1,0 +1,172 @@
+{
+  "buildFiles": [
+    "/home/tom/projects/bouldrovka/app/jni/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/3rdparty.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/FindLibUSB.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/GetGitRevisionDescription.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/GetGitRevisionDescription.cmake.in",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/PreseedEmscriptenCache.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/PreseedMSVCCache.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/SDL3Config.cmake.in",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/macros.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/sdlchecks.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/sdlcompilers.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/sdlcpu.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/sdlmanpages.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/sdlplatform.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/cmake/sdltargets.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/include/build_config/SDL_build_config.h.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL/include/build_config/SDL_revision.h.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/cmake/Findwebp.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/cmake/GetGitRevisionDescription.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/cmake/PrivateSdlFunctions.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/cmake/sdlcpu.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/cmake/sdlmanpages.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_image/cmake/sdlplatform.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/cmake/GetGitRevisionDescription.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/cmake/PkgConfigHelper.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/cmake/PrivateSdlFunctions.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/cmake/sdlcpu.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/cmake/sdlmanpages.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/cmake/sdlplatform.cmake",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/external/freetype/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/external/harfbuzz/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/external/plutosvg/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/external/plutosvg/examples/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/external/plutovg/CMakeLists.txt",
+    "/home/tom/projects/bouldrovka/app/jni/SDL_ttf/external/plutovg/cmake/plutovgConfig.cmake.in",
+    "/home/tom/projects/bouldrovka/app/jni/src/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/opt/android-sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/opt/android-sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "SDL3-shared::@e7c329919722962a2ad4": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL3-shared",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3.so",
+      "runtimeFiles": []
+    },
+    "SDL3_image-shared::@5a11176e8da1d970966f": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL3_image-shared",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3_image.so",
+      "runtimeFiles": [
+        "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3.so"
+      ]
+    },
+    "SDL3_test::@e7c329919722962a2ad4": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL3_test",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL/libSDL3_test.a"
+    },
+    "SDL3_ttf-shared::@b80ba31c6455629d7a9d": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL3_ttf-shared",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3_ttf.so",
+      "runtimeFiles": [
+        "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3.so"
+      ]
+    },
+    "SDL_uclibc::@e7c329919722962a2ad4": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "SDL_uclibc",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL/libSDL_uclibc.a"
+    },
+    "camera2png::@2a0c0226138569548c2b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "camera2png",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/camera2png",
+      "runtimeFiles": []
+    },
+    "emoji2png::@2a0c0226138569548c2b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "emoji2png",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/emoji2png",
+      "runtimeFiles": []
+    },
+    "freetype::@8a7c27c9ba2264f03a1b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "freetype",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL_ttf/external/freetype/libfreetyped.a"
+    },
+    "harfbuzz::@8cd0a4378c0eafe198d3": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "harfbuzz",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL_ttf/external/harfbuzz/libharfbuzz.a"
+    },
+    "harfbuzz-subset::@8cd0a4378c0eafe198d3": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "harfbuzz-subset",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL_ttf/external/harfbuzz/libharfbuzz-subset.a"
+    },
+    "main::@145eef247bfb46b6828c": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "main",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libmain.so",
+      "runtimeFiles": [
+        "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3_ttf.so",
+        "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3_image.so",
+        "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/libSDL3.so"
+      ]
+    },
+    "plutosvg::@b1006cfc00fec50149f7": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "plutosvg",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL_ttf/external/plutosvg/libplutosvg.a"
+    },
+    "plutovg::@6be8b84db80081c29bf6": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "plutovg",
+      "output": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL_ttf/external/plutovg/libplutovg.a"
+    },
+    "svg2png::@2a0c0226138569548c2b": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "svg2png",
+      "output": "/home/tom/projects/bouldrovka/app/build/intermediates/cxx/Debug/o3s3c35n/obj/arm64-v8a/svg2png",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/opt/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/opt/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cxx",
+    "cpp",
+    "cc"
+  ]
+}

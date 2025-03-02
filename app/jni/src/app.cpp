@@ -13,6 +13,7 @@
 #include "include/renderer.hpp"
 #include "include/simple_button.hpp"
 #include "include/text.hpp"
+#include "include/hold_selection.hpp"
 
 
 App::App() : m_Renderer(m_Context, m_ResourceManager) {}
@@ -131,11 +132,15 @@ void App::setupScenes() {
     dst = {0, 0.2, 1, 0.8};
     sprite = {0, 0, 1230, 2700};
     m_Scenes[BOULDER].addObject<Image>(dst, sprite, "background_light", "background_dark");
+
+
+    dst = {0.85, 0.25, 0.15, 0.35};
+    m_Scenes[BOULDER].addObject<HoldSelection>(dst);
     // -------- BOULDER --------
 }
 
 bool App::isRunning() {
-return m_running;
+    return m_running;
 }
 
 void App::changeScene(SCENE scene) {

@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <array>
 #include <string_view>
 
 #include "resource_manager.hpp"
@@ -29,7 +30,7 @@ public:
 
     void renderRect(const SDL_FRect* rect, const SDL_Color& color);
 
-    void renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color);
+    void renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color, std::array<bool, 4> corners = {true, true, true, true});
     void renderRoundedImage(std::string_view imageName, const SDL_FRect* rect, float radius, const SDL_Color& backgroundColor);
 
     void clearScreen(const SDL_Color& color);

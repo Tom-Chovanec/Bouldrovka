@@ -5,6 +5,7 @@
 
 #include "object.hpp"
 #include "common.hpp"
+#include "colors.hpp"
 #include "renderer.hpp"
 
 class HoldSelection : public  Object {

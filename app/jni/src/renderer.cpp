@@ -30,46 +30,49 @@ void Renderer::renderRect( const SDL_FRect* rect, const SDL_Color& color) {
     SDL_RenderFillRect(m_Context.renderer, rect);
 }
 
-void Renderer::renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color) {
-    //top left
-    SDL_FRect cornerPos = {
-        rect->x,
-        rect->y,
-        radius,
-        radius
-    };
-    SDL_FRect sprite = {763, 763, 256, 256};
-    renderSprite("atlas1", &sprite, &cornerPos, color);
+void Renderer::renderRoundedRect(const SDL_FRect* rect, float radius, const SDL_Color& color, std::array<bool, 4> corners) {
+    SDL_FRect cornerPos;
+    SDL_FRect sprite;
 
-    //top right
-    cornerPos.x = rect->x + rect->w - radius;
-    sprite = {497, 763, 256, 256};
-    renderSprite("atlas1", &sprite, &cornerPos, color);
+    // Top-left corner
+    if (corners[0]) {
+        cornerPos = {rect->x, rect->y, radius, radius};
+        sprite = {763, 763, 256, 256};
+        renderSprite("atlas1", &sprite, &cornerPos, color);
+    }
 
-    //bottom right
-    cornerPos.y = rect->y + rect->h - radius;
-    sprite = {497, 497, 256, 256};
-    renderSprite("atlas1", &sprite, &cornerPos, color);
+    // Top-right corner
+    if (corners[1]) {
+        cornerPos = {rect->x + rect->w - radius, rect->y, radius, radius};
+        sprite = {497, 763, 256, 256};
+        renderSprite("atlas1", &sprite, &cornerPos, color);
+    }
 
-    //bottom left
-    cornerPos.x = rect->x;
-    sprite = {763, 497, 256, 256};
-    renderSprite("atlas1", &sprite, &cornerPos, color);
+    // Bottom-right corner
+    if (corners[2]) {
+        cornerPos = {rect->x + rect->w - radius, rect->y + rect->h - radius, radius, radius};
+        sprite = {497, 497, 256, 256};
+        renderSprite("atlas1", &sprite, &cornerPos, color);
+    }
 
-    SDL_FRect filler = {
-        rect->x + radius,
-        rect->y,
-        rect->w - radius * 2 + 1,
-        rect->h + 1
-    };
+    // Bottom-left corner
+    if (corners[3]) {
+        cornerPos = {rect->x, rect->y + rect->h - radius, radius, radius};
+        sprite = {763, 497, 256, 256};
+        renderSprite("atlas1", &sprite, &cornerPos, color);
+    }
+
+    // Fill horizontal and vertical middle areas
+    float leftInset = corners[0] || corners[3] ? radius : 0;
+    float rightInset = corners[1] || corners[2] ? radius : 0;
+    float topInset = corners[0] || corners[1] ? radius : 0;
+    float bottomInset = corners[2] || corners[3] ? radius : 0;
+
+    SDL_FRect filler;
+    filler = {rect->x + leftInset, rect->y, rect->w - leftInset - rightInset + 1, rect->h + 1};
     renderRect(&filler, color);
 
-    filler = {
-        rect->x,
-        rect->y + radius,
-        rect->w + 1,
-        rect->h - radius * 2 + 1
-    };
+    filler = {rect->x, rect->y + topInset, rect->w + 1, rect->h - topInset - bottomInset + 1};
     renderRect(&filler, color);
 }
 

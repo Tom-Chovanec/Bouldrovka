@@ -41,5 +41,4 @@ public:
     bool isRunning();
 
     void update();
-
 };

@@ -20,6 +20,7 @@ void BoulderSelection::render(const Context& context, Renderer& renderer) {
         m_RenderRect.w / 2,
         m_RenderRect.h
     };
+
     if (m_TextureName == "") {
         renderer.renderRoundedRect(&imageRect, 40, getColor(Colors::COLOR::PRIMARY));
         SDL_FRect iconSpriteRect = { 419, 143, 128, 128 };

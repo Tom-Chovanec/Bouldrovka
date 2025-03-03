@@ -1788,5 +1788,10 @@
   "directory": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a",
   "command": "/opt/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --sysroot=/opt/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dmain_EXPORTS -I/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL/include-revision -I/home/tom/projects/bouldrovka/app/jni/SDL/include -I/home/tom/projects/bouldrovka/app/jni/SDL_ttf/include -I/home/tom/projects/bouldrovka/app/jni/SDL_image/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fno-limit-debug-info  -fPIC -o src/CMakeFiles/main.dir/text.cpp.o -c /home/tom/projects/bouldrovka/app/jni/src/text.cpp",
   "file": "/home/tom/projects/bouldrovka/app/jni/src/text.cpp"
+},
+{
+  "directory": "/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a",
+  "command": "/opt/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --sysroot=/opt/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dmain_EXPORTS -I/home/tom/projects/bouldrovka/app/.cxx/Debug/o3s3c35n/arm64-v8a/SDL/include-revision -I/home/tom/projects/bouldrovka/app/jni/SDL/include -I/home/tom/projects/bouldrovka/app/jni/SDL_ttf/include -I/home/tom/projects/bouldrovka/app/jni/SDL_image/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fno-limit-debug-info  -fPIC -o src/CMakeFiles/main.dir/globals.cpp.o -c /home/tom/projects/bouldrovka/app/jni/src/globals.cpp",
+  "file": "/home/tom/projects/bouldrovka/app/jni/src/globals.cpp"
 }
 ]

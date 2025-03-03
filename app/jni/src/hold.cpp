@@ -1,22 +1,38 @@
 #include "include/hold.hpp"
 #include "include/colors.hpp"
 
+
+SDL_FRect getHoldSpriteRectFromDifficulty(DIFFICULTY difficulty) {
+    switch (difficulty) {
+    case EASY:
+        return {5, 419, 128, 128};
+    case MEDIUM:
+        return {5, 281, 128, 128};
+    case HARD:
+        return {5, 143, 128, 128};
+    case IMPOSSIBLE:
+        return {5, 5, 128, 128};
+    }
+}
+
+Colors::COLOR getHoldColorFromType(HOLD_TYPE type) {
+    switch (type) {
+    case TOP:
+        return Colors::TOP_HOLD;
+    case UPPER:
+        return Colors::UPPER_HOLD;
+    case LOWER:
+        return Colors::LOWER_HOLD;
+    case START:
+        return Colors::START_HOLD;
+    case FOOT:
+        return Colors::FOOT_HOLD;
+    }
+}
+
 Hold::Hold(Float2 pos, DIFFICULTY difficulty, HOLD_TYPE type)
 : m_Difficulty(difficulty), m_Type(type), m_Pos(pos) {
-    switch (m_Difficulty) {
-    case EASY:
-        m_SpriteRect = {5, 419, 128, 128};
-        break;
-    case MEDIUM:
-        m_SpriteRect = {5, 281, 128, 128};
-        break;
-    case HARD:
-        m_SpriteRect = {5, 143, 128, 128};
-        break;
-    case IMPOSSIBLE:
-        m_SpriteRect = {5, 5, 128, 128};
-        break;
-    };
+    m_SpriteRect = getHoldSpriteRectFromDifficulty(m_Difficulty);
 
     switch (m_Type) {
     case TOP:
@@ -36,7 +52,6 @@ Hold::Hold(Float2 pos, DIFFICULTY difficulty, HOLD_TYPE type)
         break;
     }
 }
-
 
 void Hold::render(const Context& context, const Renderer& renderer) const {
     renderer.renderSprite("atlas1", &m_SpriteRect, &m_RenderRect, Colors::getColor(m_Color));

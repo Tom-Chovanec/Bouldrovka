@@ -74,6 +74,7 @@ add_library(main SHARED
     scene.cpp
     simple_button.cpp
     text.cpp
+    globals.cpp
 )
 
 target_link_libraries(main PRIVATE SDL3::SDL3)

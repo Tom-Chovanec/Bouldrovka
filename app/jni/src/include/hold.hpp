@@ -3,6 +3,7 @@
 #include "colors.hpp"
 #include "common.hpp"
 #include "renderer.hpp"
+#include <SDL3/SDL_rect.h>
 
 enum DIFFICULTY {
     EASY = 0,
@@ -18,6 +19,9 @@ enum HOLD_TYPE {
     START,
     FOOT
 };
+
+SDL_FRect getHoldSpriteRectFromDifficulty(DIFFICULTY difficulty);
+Colors::COLOR getHoldColorFromType(HOLD_TYPE type);
 
 class Hold {
 private:
